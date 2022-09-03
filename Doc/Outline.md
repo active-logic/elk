@@ -114,6 +114,9 @@ public class Parser0{
 }
 ```
 
+So good so far. Now let's write a simple runner to process the graph:
+
+
 .
 .
 .
