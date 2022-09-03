@@ -46,28 +46,33 @@ We quickly confirm that unusual whitespaces (new line, carriage return) are corr
 
 ## Simple parser
 
-Once we have tokenized the input, an actual parser will transform the list of tokens into a tree-like structure. Let's write a simple parser. As an example let's write a parser that's going to generate branches, assuming only the '+' binary operator
+Once we have tokenized the input, an actual parser will transform the list of tokens into a tree-like structure. Let's write a simple parser. As an example let's write a parser that's going to generate branches, assuming only the '+' and '-' binary operators
 
 ```cs
-namespace Elk{
 public class Parser0{
 
+    public string[] Operators;
+
+    public Parser0() => Operators = new string[]{"+", "-"};
+
     public Node this[params S[] args]{ get{
-        List<object> E = ( from e in args select (object)e ).ToList();
-        for(int i = 1; i < E.Count - 1; i++){
-            if(E[i] as string != "+") continue;
-            var op = new BinaryOp(
-                E[i-1], E[i], E[i+1]
-            );
-            E.RemoveRange(i - 1, 3);
-            E.Insert(i - 1, op);
-            i--;
+        var E = ( from e in args select (object)e ).ToList();
+        for(var i = 1; i < E.Count - 1; i++){
+            foreach(var op in Operators){
+                if(E[i] as S != op) continue;
+                var node = new BinaryOp(E[i-1], E[i], E[i+1]);
+                E.RemoveRange(i - 1, 3);
+                E.Insert(i - 1, node);
+                i--;
+            }
         }
         return E[0] as Node;
     }}
 
-}}
+}
 ```
+
+Now let's add support for the * and / operators
 
 .
 .
