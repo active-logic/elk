@@ -72,7 +72,47 @@ public class Parser0{
 }
 ```
 
-Now let's add support for the * and / operators
+Now let's add support for the * and / operators; this needs a little more effort:
+
+```cs
+public class Parser0{
+
+    public string[][] Operators;
+
+    public Parser0() => Operators = new string[][]{
+        new string[]{"*", "/"},
+        new string[]{"+", "-"}
+    };
+
+    public Node this[params S[] args]{ get{
+        var E = ( from e in args select (object)e ).ToList();
+        return Parse(E);
+    }}
+
+    public Node Parse(List<object> args){
+        for(int i = 0; i < Operators.Length; i++){
+            Parse(args, Operators[i], out bool didReplace);
+        }
+        return args[0] as Node;
+    }
+
+    public void Parse(List<object> args, string[] ops,
+                      out bool didReplace){
+        didReplace = false;
+        for(var i = 1; i < args.Count - 1; i++){
+            foreach(var op in ops){
+                if(args[i] as S != op) continue;
+                var node = new BinaryOp(args[i-1], args[i], args[i+1]);
+                args.RemoveRange(i - 1, 3);
+                args.Insert(i - 1, node);
+                i--;
+                didReplace = true;
+            }
+        }
+    }
+
+}
+```
 
 .
 .

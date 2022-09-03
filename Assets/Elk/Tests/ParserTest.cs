@@ -11,6 +11,14 @@ public class ParserTest{
         );
     }
 
+    [Test] public void Test_MUL(){
+        var p = new Parser0();
+        Assert.AreEqual(
+            "(1*2)",
+            p["1", "*", "2"]?.ToString()
+        );
+    }
+
     [Test] public void Test_PLUS_PLUS(){
         var p = new Parser0();
         Assert.AreEqual(
@@ -24,6 +32,22 @@ public class ParserTest{
         Assert.AreEqual(
             "((1+2)-3)",
             p["1", "+", "2", "-", "3"]?.ToString()
+        );
+    }
+
+    [Test] public void Test_MUL_PLUS_ops(){
+        var p = new Parser0();
+        Assert.AreEqual(
+            "((1*2)+3)",
+            p["1", "*", "2", "+", "3"]?.ToString()
+        );
+    }
+
+    [Test] public void Test_PLUS_MUL_ops(){
+        var p = new Parser0();
+        Assert.AreEqual(
+            "(1+(2*3))",
+            p["1", "+", "2", "*", "3"]?.ToString()
         );
     }
 
