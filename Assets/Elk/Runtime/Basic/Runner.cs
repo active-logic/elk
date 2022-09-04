@@ -2,15 +2,16 @@ using S = System.String;
 using Ex = System.Exception;
 using System.Linq;
 using UnityEngine;
+using Elk.Basic.Graph;
 
-namespace Elk{
-public class Runner0{
+namespace Elk.Basic{
+public class Runner : Elk.Runner{
 
-    public object this[object arg]{ get{
+    public object Run(object arg){
         if(arg is BinaryOp){
             var op = (BinaryOp) arg;
-            var left = (int)this[op.arg0];
-            var right = (int)this[op.arg1];
+            var left  = (int)Run(op.arg0);
+            var right = (int)Run(op.arg1);
             switch(op.op){
                 case "*": return left * right;
                 case "/": return left / right;
@@ -24,6 +25,6 @@ public class Runner0{
             Debug.LogError("Suspicious indeed");
             return null;
         }
-    }}
+    }
 
 }}

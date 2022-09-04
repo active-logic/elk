@@ -1,10 +1,10 @@
 using S = System.String;
 using System.Linq;
 
-namespace Elk{
-public class Tokenizer0{
+namespace Elk.Basic{
+public class Tokenizer : Elk.Tokenizer{
 
-    public S[] this[S arg]
+    public string[] Tokenize(string arg)
     => (from x in arg.Split() where x.Length > 0 select x).ToArray();
 
 }}

@@ -1,4 +1,5 @@
 using S = System.String;
+using Elk.Util;
 
 namespace Elk{
 
@@ -6,38 +7,32 @@ public class Interpreter{
 
     Tokenizer tokenizer;
     Parser parser;
-    Transform transform;
-    Model model;
+    Runner runner;
 
     public Interpreter(){
-        tokenizer = new Tokenizer();
-        parser = new Parser();
-        transform = new Transform();
+        tokenizer = new Elk.Basic.Tokenizer();
+        parser = new Elk.Basic.Parser();
+        runner = new Elk.Basic.Runner();
     }
 
     public object this[S arg]{ get{
-        var tokens  = tokenizer[arg];
-        var graph   = parser[tokens];
-        var program = transform[graph, model];
-        return program.Run();
+        var tokens  = tokenizer.Tokenize(arg);
+        var graph   = parser.Parse(tokens);
+        return runner.Run(graph);
     }}
 
 }
 
-// ----------------------------------------------------------------
+public interface Tokenizer{
+    string[] Tokenize(string arg);
+}
 
-    public class Tokenizer{ public S[] this[S arg] => null; }
+public interface Parser{
+    object Parse(Sequence tokens);
+}
 
-    public class Parser{ public Node this[S[] tokens] => null; }
-
-    public class Node{}
-
-    public class Transform{
-        public Program this[Node source, Model model] => new Program();
-    }
-
-    public class Model{}
-
-    public class Program{ public object Run() => null; }
+public interface Runner{
+    object Run(object program);
+}
 
 }

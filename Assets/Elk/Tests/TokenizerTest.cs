@@ -1,33 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
+using Elk.Basic;
 
 namespace Elk.Test{
 public class TokenizerTest{
 
+    Elk.Basic.Tokenizer t;
+
+    [SetUp] public void Setup() => t = new Elk.Basic.Tokenizer();
+
     [Test] public void Test_T0_Pass(){
-        var t = new Tokenizer0();
         Assert.AreEqual(
             new string[]{"big", "time"},
-            t["big time"]
+            t.Tokenize("big time")
         );
     }
 
     [Test] public void Test_T0_Pass_withExtraSpace(){
-        var t = new Tokenizer0();
         Assert.AreEqual(
             new string[]{"big", "time"},
-            t["big          time  "]
+            t.Tokenize("big          time  ")
         );
     }
 
     [Test] public void Test_T0_Pass_withSpecialWhitespace(){
-        var t = new Tokenizer0();
         Assert.AreEqual(
             new string[]{"big", "time"},
-            t["big\n\rtime"]
+            t.Tokenize("big\n\rtime")
         );
     }
 

@@ -1,6 +1,7 @@
 # Implementing a simple interpreter
 
-For a language we need the following (1) a tokenizer, (2) a parser, (3) a model and (4) a graph transform.
+For a language we need at least the following (1) a tokenizer, (2) a parser, (3) a runner.
+
 Therefore, here is the code for a simple interpreter:
 
 ```cs
@@ -116,6 +117,39 @@ public class Parser0{
 
 So good so far. Now let's write a simple runner to process the graph:
 
+```cs
+public class Runner0{
+
+    public object this[object arg]{ get{
+        if(arg is BinaryOp){
+            var op = (BinaryOp) arg;
+            var left = (int)this[op.arg0];
+            var right = (int)this[op.arg1];
+            switch(op.op){
+                case "*": return left * right;
+                case "/": return left / right;
+                case "+": return left + right;
+                case "-": return left - right;
+                default: throw new Ex($"Unknown op {op.op}");
+            }
+        }else if(arg is string){
+            return int.Parse((string)arg);
+        }else{
+            Debug.LogError("Suspicious indeed");
+            return null;
+        }
+    }}
+
+}
+```
+
+Okay, we'd like to be able to parse function invocations, such as:
+
+```cs
+Reach(target, 1.5f)
+```
+
+At this point we can probably consolidate our parser, as a system which knows applying parsing rules.
 
 .
 .
