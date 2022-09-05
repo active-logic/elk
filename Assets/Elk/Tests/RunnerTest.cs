@@ -24,6 +24,6 @@ public class RunnerTest{
         Assert.That( Run(root), Is.EqualTo(6)  );
     }
 
-    object Run(object arg) => runner.Run(arg);
+    object Run(object arg) => runner.Run(arg, null);
 
 }}

@@ -7,7 +7,11 @@ public class Interpreter{
 
     Tokenizer tokenizer;
     Parser parser;
-    Runner runner;
+    public Runner runner;
+
+    public Interpreter(Tokenizer t, Parser p, Runner r){
+        tokenizer = t; parser = p; runner = r;
+    }
 
     public Interpreter(){
         tokenizer = new Elk.Basic.Tokenizer();
@@ -15,11 +19,12 @@ public class Interpreter{
         runner = new Elk.Basic.Runner();
     }
 
-    public object this[S arg]{ get{
+    public object this[S arg] => runner.Run(Parse(arg), null);
+
+    public object Parse(string arg){
         var tokens  = tokenizer.Tokenize(arg);
-        var graph   = parser.Parse(tokens);
-        return runner.Run(graph);
-    }}
+        return parser.Parse(tokens);
+    }
 
 }
 
@@ -32,7 +37,7 @@ public interface Parser{
 }
 
 public interface Runner{
-    object Run(object program);
+    object Run(object program, object context);
 }
 
 }

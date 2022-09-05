@@ -7,9 +7,9 @@ using UnityEngine.TestTools;
 namespace Elk.Test{
 public class InterpreterTest{
 
-    [Test] public void Test(){
+    [Test] public void Test_SimpleScript(){
         var i = new Interpreter();
-        Assert.That( i["abc"], Is.Null );
+        Assert.That( (int) i["2 + 2"] == 4 );
     }
 
 }}
