@@ -6,15 +6,15 @@ using Elk.Basic.Graph;
 namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
 // Form:
-// OneLineFunc => BODY ;
-public class OneLineFuncRule : LocalRule{
+// FuncDef => BODY ;
+public class FuncRule : LocalRule{
 
     string arrow = "=>";
     string terminal = ";";
 
     override public void Process(Sequence vec, int i){
         var i0 = i;
-        var func = vec.Get<OneLineFunc>(i++);
+        var func = vec.Get<FuncDef>(i++);
         if(func == null)                    return;
         if(vec.AsString(i++) != arrow)      return;
         if(vec.AsString(i + 1) != terminal) return;
@@ -25,6 +25,6 @@ public class OneLineFuncRule : LocalRule{
         vec.Replace(i0, repCount, func, this);
     }
 
-    override public string ToString() => "OneLineFuncRule";
+    override public string ToString() => "FuncRule";
 
 }}}

@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using Action = System.Action<object>;
 using Elk.Util;
-using FuncDef = Elk.Basic.Graph.OneLineFunc;
-//using UnityEngine;
+using FuncDef = Elk.Basic.Graph.FuncDef;
 
 namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
@@ -16,7 +15,7 @@ public partial class Parser : Elk.Parser{
     public Parser(Rule[] rules) => this.rules = rules;
 
     public Parser() => rules = new Rule[]{
-        new RuleSet( new OneLineFuncRule(), new OneLineFuncPrecursor() ),
+        new RuleSet( new FuncRule(), new FuncPrecursor() ),
         new RuleSet( new InvocationRule() ),
         new RuleSet(".", "*", "/"),
         new RuleSet("*", "/", "%"),

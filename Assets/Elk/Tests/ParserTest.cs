@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using FuncDef = Elk.Basic.Graph.OneLineFunc;
+using FuncDef = Elk.Basic.Graph.FuncDef;
 
 namespace Elk.Test{
 public class ParserTest{

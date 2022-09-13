@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Elk.Basic.Graph{
-public class OneLineFunc{
+public class FuncDef{
 
-    public readonly string   name;
+    public readonly string name;
     public readonly object[] parameters;
-    public object   body;
+    public object body;
 
-    public OneLineFunc(string name, IEnumerable<object> @params, object body){
+    public FuncDef(string name, IEnumerable<object> @params, object body){
         this.name = name;
         this.parameters = @params?.ToArray() ?? null;
         this.body = body;

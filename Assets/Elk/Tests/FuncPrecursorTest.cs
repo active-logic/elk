@@ -4,19 +4,19 @@ using UnityEngine;
 using Elk.Basic.Graph;
 
 namespace Elk.Test{
-public class OneLineFuncPrecursorTest{
+public class FuncPrecursorTest{
 
-    Elk.Basic.Parser.OneLineFuncPrecursor rule;
+    Elk.Basic.Parser.FuncPrecursor rule;
 
     [SetUp] public void Setup()
-    => rule = new Elk.Basic.Parser.OneLineFuncPrecursor();
+    => rule = new Elk.Basic.Parser.FuncPrecursor();
 
     [Test] public void Test_0_Arg(){
         var seq = new Sequence(
             "func", "main", "(", ")");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
-        Assert.That(seq[0] is OneLineFunc);
+        Assert.That(seq[0] is FuncDef);
     }
 
     [Test] public void Test_1_Arg(){
@@ -24,7 +24,7 @@ public class OneLineFuncPrecursorTest{
             "func", "main", "(", "3", ")");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
-        Assert.That(seq[0] is OneLineFunc);
+        Assert.That(seq[0] is FuncDef);
     }
 
     [Test] public void Test_2_Arg(){
@@ -32,7 +32,7 @@ public class OneLineFuncPrecursorTest{
             "func", "main", "(", "1", ",", "2", ")");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
-        Assert.That(seq[0] is OneLineFunc);
+        Assert.That(seq[0] is FuncDef);
     }
 
     [Test] public void Test_3_Arg(){
@@ -40,7 +40,7 @@ public class OneLineFuncPrecursorTest{
             "func", "main", "(", "1", ",", "2", ",", "3", ")");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
-        Assert.That(seq[0] is OneLineFunc);
+        Assert.That(seq[0] is FuncDef);
     }
 
 }}

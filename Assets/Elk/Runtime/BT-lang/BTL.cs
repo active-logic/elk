@@ -10,10 +10,12 @@ public class BTL : MonoBehaviour{
     public string output;
 
     void Update() => output
-        = interpreter.runner.Run(program, gameObject).ToString();
+        = interpreter.runner.Run(program, gameObject)?.ToString();
 
     object Parse(string path){
         var src = Resources.Load<TextAsset>(path).text;
+        if(src.StartsWith(BTLScriptChecker.Shebang))
+            src = src.Substring(5);
         return interpreter.Parse(src);
     }
 
@@ -25,7 +27,7 @@ public class BTL : MonoBehaviour{
     public static Interpreter NewInterpreter => new Interpreter(
         new Elk.Basic.Tokenizer(),
         new Elk.Basic.Parser(),
-        new AcRunner()
+        new Elk.Basic.Runner()
     );
 
 }}

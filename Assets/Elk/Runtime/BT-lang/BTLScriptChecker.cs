@@ -4,15 +4,16 @@ using System.IO;
 using Elk;
 
 namespace Activ.Script{
-public class ALScriptChecker : AssetPostprocessor{
+public class BTLScriptChecker : AssetPostprocessor{
 
+    public const string Shebang = "#!btl";
     Interpreter interpreter = new Interpreter();
 
     void OnPreprocessAsset()
     {
         if(!assetPath.Contains("Resources")) return;
         if(!assetPath.EndsWith(".txt")) return;
-        if(!Match(assetPath, "#!btl")) return;
+        if(!Match(assetPath, Shebang)) return;
         Debug.Log($"Process BTL file {assetPath}");
         var content = File.ReadAllText(assetPath).Substring(5);
         var obj = interpreter.Parse(content);

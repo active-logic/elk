@@ -11,14 +11,14 @@ public partial class Parser : Elk.Parser{
 // as an invocation; could also 'promote' said invocation, which
 // would be more concise but perhaps inconvenient later
 // for syntax err reporting
-public class OneLineFuncPrecursor : LocalRule{
+public class FuncPrecursor : LocalRule{
 
     string preamble;
 
-    public OneLineFuncPrecursor()
+    public FuncPrecursor()
     => preamble = "func";
 
-    public OneLineFuncPrecursor(string preamble)
+    public FuncPrecursor(string preamble)
     => this.preamble = preamble;
 
     override public void Process(Sequence vec, int i){
@@ -61,11 +61,11 @@ public class OneLineFuncPrecursor : LocalRule{
         if(arguments == null) i += 1;
         var repCount = i - i0;
         //ebug.Log($"rep count {repCount}");
-        vec.Replace(i0, repCount, new OneLineFunc(
+        vec.Replace(i0, repCount, new FuncDef(
             funcName, arguments, null
         ), this);
     }
 
-    override public string ToString() => "OneLineFuncPrecursor";
+    override public string ToString() => "FuncPrecursor";
 
 }}}
