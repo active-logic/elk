@@ -7,7 +7,7 @@ public class OneLineFunc{
 
     public readonly string   name;
     public readonly object[] parameters;
-    public readonly object   body;
+    public object   body;
 
     public OneLineFunc(string name, IEnumerable<object> @params, object body){
         this.name = name;

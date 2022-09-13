@@ -1,4 +1,5 @@
 using Elk.Util;
+using Action = System.Action<object>;
 using System.Linq;
 
 namespace Elk.Basic{
@@ -16,7 +17,6 @@ public class RuleSet : Rule{
     override public void Process(Sequence vector){
         for(int i = 0; i < vector.size; i++){
             foreach(var rule in rules){
-                UnityEngine.Debug.Log($"Apply rule {rule} at index {i}");
                 rule.Process(vector, i);
                 if(vector.didChange) return;
             }

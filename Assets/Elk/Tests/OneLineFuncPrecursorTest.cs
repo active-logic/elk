@@ -4,16 +4,16 @@ using UnityEngine;
 using Elk.Basic.Graph;
 
 namespace Elk.Test{
-public class OneLineFuncRuleTest{
+public class OneLineFuncPrecursorTest{
 
-    Elk.Basic.Parser.OneLineFuncRule rule;
+    Elk.Basic.Parser.OneLineFuncPrecursor rule;
 
     [SetUp] public void Setup()
-    => rule = new Elk.Basic.Parser.OneLineFuncRule();
+    => rule = new Elk.Basic.Parser.OneLineFuncPrecursor();
 
     [Test] public void Test_0_Arg(){
         var seq = new Sequence(
-            "func", "main", "(", ")", "=>", "noop", ";");
+            "func", "main", "(", ")");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is OneLineFunc);
@@ -21,7 +21,7 @@ public class OneLineFuncRuleTest{
 
     [Test] public void Test_1_Arg(){
         var seq = new Sequence(
-            "func", "main", "(", "3", ")", "=>", "noop", ";");
+            "func", "main", "(", "3", ")");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is OneLineFunc);
@@ -29,7 +29,7 @@ public class OneLineFuncRuleTest{
 
     [Test] public void Test_2_Arg(){
         var seq = new Sequence(
-            "func", "main", "(", "1", ",", "2", ")", "=>", "noop", ";");
+            "func", "main", "(", "1", ",", "2", ")");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is OneLineFunc);
@@ -37,7 +37,7 @@ public class OneLineFuncRuleTest{
 
     [Test] public void Test_3_Arg(){
         var seq = new Sequence(
-            "func", "main", "(", "1", ",", "2", ",", "3", ")", "=>", "noop", ";");
+            "func", "main", "(", "1", ",", "2", ",", "3", ")");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is OneLineFunc);

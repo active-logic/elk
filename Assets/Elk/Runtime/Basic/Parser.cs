@@ -2,18 +2,21 @@ using ArgEx = System.ArgumentException;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Action = System.Action<object>;
 using Elk.Util;
-using UnityEngine;
+using FuncDef = Elk.Basic.Graph.OneLineFunc;
+//using UnityEngine;
 
 namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
 
     Rule[] rules;
+    public Action logFunc;
 
     public Parser(Rule[] rules) => this.rules = rules;
 
     public Parser() => rules = new Rule[]{
-        new RuleSet( new OneLineFuncRule() ),
+        new RuleSet( new OneLineFuncRule(), new OneLineFuncPrecursor() ),
         new RuleSet( new InvocationRule() ),
         new RuleSet(".", "*", "/"),
         new RuleSet("*", "/", "%"),
@@ -21,14 +24,15 @@ public partial class Parser : Elk.Parser{
         new RuleSet("==", "!="),
         new RuleSet("|", "&"),
         new RuleSet("||", "&&"),
+        new RuleSet( new TypedSeqRule<FuncDef>() )
     };
 
     public object Parse(Sequence vector){
         for(int prec = 0; prec < rules.Length; prec++){
-            Debug.Log($"Apply prec level {prec}");
+            Log($"Apply prec level {prec}");
             rules[prec].Process(vector);
             if(vector.Check()){
-                Debug.Log("Reset prec");
+                Log("Reset prec");
                 prec = -1;
             }
         }
@@ -49,5 +53,7 @@ public partial class Parser : Elk.Parser{
     }
 
     public object this[params string[] tokens] => Parse(tokens);
+
+    void Log(object arg) => logFunc?.Invoke(arg);
 
 }}

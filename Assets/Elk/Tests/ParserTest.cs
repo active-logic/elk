@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using FuncDef = Elk.Basic.Graph.OneLineFunc;
 
 namespace Elk.Test{
 public class ParserTest{
@@ -52,14 +53,18 @@ public class ParserTest{
     [Test] public void Test_FuncDef_1(){
         Assert.AreEqual(
             "main → {body}",
-            p["func", "main", "(", ")", "=>", "body", ";"].ToString()
+            ((FuncDef[])(
+                p["func", "main", "(", ")", "=>", "body", ";"]
+            ))[0].ToString()
         );
     }
 
     [Test] public void Test_FuncDef_2(){
         Assert.AreEqual(
             "main(arg) → {(attack|flee)}",
-            p["func", "main", "(", "arg", ")", "=>", "attack", "|", "flee", ";"].ToString()
+            ((FuncDef[])(
+                p["func", "main", "(", "arg", ")", "=>", "attack", "|", "flee", ";"]
+            ))[0].ToString()
         );
     }
 
