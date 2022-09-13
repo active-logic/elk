@@ -13,7 +13,10 @@ public class BinaryRule : LocalRule{
         if(vector.AsString(i + 1) != op) return;
         vector.Replace(i, 3, new BinaryOp(
             vector[i], vector[i+1], vector[i+2]
-        ));
+        ), this);
     }
+
+    override public string ToString()
+    => $"BinaryRule({op})";
 
 }}}

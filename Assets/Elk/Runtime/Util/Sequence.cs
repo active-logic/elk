@@ -50,7 +50,8 @@ public class Sequence{
     public object Get(int index)
     => (index > lastIndex || index < 0) ? null : this[index];
 
-    public void Replace(int i, int count, object arg){
+    public void Replace(int i, int count, object arg, object src){
+        UnityEngine.Debug.Log($"Replace [{count}] tokens at index {i} via {src}");
         elements.RemoveRange(i, count);
         elements.Insert(i, arg);
         dirty = true;

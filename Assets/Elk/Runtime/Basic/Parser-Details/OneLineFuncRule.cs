@@ -73,7 +73,9 @@ public class OneLineFuncRule : LocalRule{
         //ebug.Log($"rep count {repCount}");
         vec.Replace(i0, repCount, new OneLineFunc(
             funcName, arguments, body
-        ));
+        ), this);
     }
+
+    override public string ToString() => "InvocationRule";
 
 }}}

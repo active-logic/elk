@@ -9,13 +9,14 @@ public class RuleSet : Rule{
 
     public RuleSet(params LocalRule[] rules) => this.rules = rules;
 
-    public RuleSet(string operators) => rules = (
+    public RuleSet(params string[] operators) => rules = (
         from op in operators select (LocalRule) new BinaryRule(op)
     ).ToArray();
 
     override public void Process(Sequence vector){
         for(int i = 0; i < vector.size; i++){
             foreach(var rule in rules){
+                UnityEngine.Debug.Log($"Apply rule {rule} at index {i}");
                 rule.Process(vector, i);
                 if(vector.didChange) return;
             }

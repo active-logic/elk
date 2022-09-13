@@ -2,7 +2,7 @@ using UnityEngine;
 using Elk;
 
 namespace Activ.Script{
-public class AL_Script : MonoBehaviour{
+public class BTL : MonoBehaviour{
 
     public string path;
     object π;
@@ -19,10 +19,13 @@ public class AL_Script : MonoBehaviour{
 
     object program => π != null ? π : (π = Parse(path));
 
-    Interpreter interpreter => ι != null ? ι : (ι = new Interpreter(
+    Interpreter interpreter
+    => ι != null ? ι : (ι = NewInterpreter);
+
+    public static Interpreter NewInterpreter => new Interpreter(
         new Elk.Basic.Tokenizer(),
         new Elk.Basic.Parser(),
         new AcRunner()
-    ));
+    );
 
 }}

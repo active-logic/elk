@@ -11,12 +11,12 @@ public class InvocationRule : LocalRule{
         var i0 = i;
         // First, check function name and opening parens
         if(vec.AsChar(i + 1) != '('){
-            //ebug.Log("missing '(' parens");
+            Debug.Log("missing '(' parens");
             return;
         }
         var funcName = vec.AsWord(i);
         if( funcName == null){
-            //ebug.Log($"no func name found: [{funcName}]");
+            Debug.Log($"no func name found: [{funcName}]");
             return;
         }
         i += 2;
@@ -38,17 +38,19 @@ public class InvocationRule : LocalRule{
             }
             i += 2;
         }
-        //Debug.Log($"Done parsing args ({i0} => {i})");
+        Debug.Log($"Done parsing args ({i0} => {i})");
         var repCount = 0;
         if(arguments == null){
             repCount = 3;
         }else{
             repCount = 2 + arguments.Count * 2;
         }
-        //Debug.Log($"rep count {repCount}");
+        Debug.Log($"rep count {repCount}");
         vec.Replace(i0, repCount, new Invocation(
             funcName, arguments
-        ));
+        ), this);
     }
+
+    override public string ToString() => "InvocationRule";
 
 }}}

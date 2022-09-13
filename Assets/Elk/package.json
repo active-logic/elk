@@ -1,0 +1,26 @@
+{
+  "name": "com.activ.elk",
+  "version": "0.0.1",
+  "displayName": "ELK",
+  "description": "Easy toolkit for building your own programming language",
+  "unity": "2018.4",
+  "unityRelease": "8f1",
+  "dependencies": {},
+  "keywords": [
+    "language",
+    "parser",
+    "interpreter",
+    "Unity"
+  ],
+  "author": {
+    "name": "Activ",
+    "email": "active.behaviours@gmail.com",
+    "url": "https://github.com/active-logic"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://eelstork.github.com/elk.git"
+  },
+  "type": "tool",
+  "hideInEditor": false
+}

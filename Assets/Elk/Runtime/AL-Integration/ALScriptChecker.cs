@@ -1,0 +1,36 @@
+using UnityEditor;
+using UnityEngine;
+using System.IO;
+using Elk;
+
+namespace Activ.Script{
+public class ALScriptChecker : AssetPostprocessor{
+
+    Interpreter interpreter = new Interpreter();
+
+    void OnPreprocessAsset()
+    {
+        if(!assetPath.Contains("Resources")) return;
+        if(!assetPath.EndsWith(".txt")) return;
+        if(!Match(assetPath, "#!btl")) return;
+        Debug.Log($"Process BTL file {assetPath}");
+        var content = File.ReadAllText(assetPath).Substring(5);
+        var obj = interpreter.Parse(content);
+        Debug.Log(obj);
+    }
+
+    public static bool Match(string filename, string contentPrefix){
+        using (var stream = File.OpenRead(filename))
+        using (var reader = new StreamReader(stream)){
+            var count = contentPrefix.Length;
+            var buffer = new char[count];
+            int n = reader.ReadBlock(buffer, 0, count);
+            if(n < count) return false;
+            for(int i = 0; i < count; i++){
+                if(contentPrefix[i] != buffer[i]) return false;
+            }
+            return true;
+        }
+    }
+
+}}
