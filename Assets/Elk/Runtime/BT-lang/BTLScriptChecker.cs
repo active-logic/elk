@@ -2,12 +2,14 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using Elk;
+using Cx = Elk.Basic.Context;
+using Interpreter = Elk.Basic.Interpreter;
 
-namespace Activ.Script{
+namespace Activ.BTL{
 public class BTLScriptChecker : AssetPostprocessor{
 
     public const string Shebang = "#!btl";
-    Interpreter interpreter = new Interpreter();
+    Interpreter<Cx> interpreter = new Interpreter<Cx>();
 
     void OnPreprocessAsset()
     {

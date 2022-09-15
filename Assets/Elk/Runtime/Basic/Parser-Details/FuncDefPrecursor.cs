@@ -39,17 +39,17 @@ public class FuncPrecursor : LocalRule{
         }
         i += 3;
         // Read arguments or bail out
-        List<object> arguments = null;
+        List<string> arguments = null;
         while(i < vec.size && vec.AsChar(i) != ')'){
             if(vec.AsChar( i + 1 ) == ')'){
-                if(arguments == null) arguments = new List<object>(3);
-                arguments.Add(vec[i]);
+                if(arguments == null) arguments = new List<string>(3);
+                arguments.Add((string)vec[i]);
                 i += 2;
                 //ebug.Log($"Did read final arg {arguments.Count}");
                 break;
             }else if(vec.AsChar( i + 1 ) == ','){
-                if(arguments == null) arguments = new List<object>(3);
-                arguments.Add(vec[i]);
+                if(arguments == null) arguments = new List<string>(3);
+                arguments.Add((string)vec[i]);
                 //ebug.Log($"Did read arg {arguments.Count}");
             }else{
                 //ebug.Log($"no ',' for arg {i-i0-2} (found {vec.Get(i+1)})");

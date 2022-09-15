@@ -8,8 +8,8 @@ namespace Elk.Test{
 public class InterpreterTest{
 
     [Test] public void Test_SimpleScript(){
-        var i = new Interpreter();
-        Assert.That( (int) i["2 + 2"] == 4 );
+        var i = new Elk.Basic.Interpreter();
+        Assert.That( (int) i["2 + 2", context: null] == 4 );
     }
 
 }}

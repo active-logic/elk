@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using Activ.Script;
+using Activ.BTL;
 
 namespace Elk.Test{
 public class BTLParserTest{

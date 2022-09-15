@@ -6,10 +6,10 @@ namespace Elk.Basic.Graph{
 public class FuncDef{
 
     public readonly string name;
-    public readonly object[] parameters;
+    public readonly string[] parameters;
     public object body;
 
-    public FuncDef(string name, IEnumerable<object> @params, object body){
+    public FuncDef(string name, IEnumerable<string> @params, object body){
         this.name = name;
         this.parameters = @params?.ToArray() ?? null;
         this.body = body;
@@ -27,5 +27,7 @@ public class FuncDef{
         }
         return @out.ToString() + " → {" + body + "}";
     }
+
+    public int paramCount => parameters?.Length ?? 0;
 
 }}
