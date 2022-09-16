@@ -5,30 +5,29 @@ using Elk.Bindings.CSharp;
 using Elk.Basic.Graph;
 
 namespace Elk.Basic{
-// Function + Properties resolver
-public partial class Runner{  // -Resolver
+public static class InvocationEval{
 
-    public object Invoke(Invocation inv, Context cx){
+    public static object Eval(Invocation inv, Runner ρ, Context cx){
+        if(cx == null)
+            throw new Ex($"Cannot invoke {inv.name} out of context");
         object @out;
-        if(TryInvokeInternalFunction(inv.name, inv.arguments, cx,
+        if(TryInvokeInternalFunction(inv.name, inv.arguments, ρ, cx,
                                      out @out)){
             return @out;
         }
-        var arguments = EvalArgs(inv.arguments, cx);
+        var arguments = EvalArgs(inv.arguments, ρ, cx);
         foreach(var target in cx.externals){
-            if(CSharpBindings.Invoke(target, inv.name, @arguments, out @out)){
+            if(CSharpBindings.Invoke(target, inv.name, @arguments,
+                                     out @out)){
                 return @out;
             }
         }
         throw new Ex($"Function not in scope: {inv.name}");
     }
 
-    public object EvalProperty(string name, Context cx)
-    => cx.HasKey(name) ? cx[name]
-                       : CSharpBindings.Fetch(cx.externals, name);
-
-    public bool TryInvokeInternalFunction(string name,
+    public static bool TryInvokeInternalFunction(string name,
                                           object[] args,
+                                          Runner ρ,
                                           Context cx,
                                           out object @out){
         //ebug.Log($"Try invoke internal: {name}");
@@ -39,7 +38,7 @@ public partial class Runner{  // -Resolver
                 x => FuncMatches(x, name, args?.Length ?? 0)
             );
             if(fdef != null){
-                @out = InvokeInternalFunction(fdef, args, cx);
+                @out = InvokeInternalFunction(fdef, args, ρ, cx);
                 return true;
             }
         }
@@ -47,7 +46,7 @@ public partial class Runner{  // -Resolver
         return false;
     }
 
-    bool FuncMatches(FuncDef fdef, string name, int argLength){
+    static bool FuncMatches(FuncDef fdef, string name, int argLength){
         if(fdef == null){
             Debug.LogError("fdef is null");
             return false;
@@ -60,21 +59,22 @@ public partial class Runner{  // -Resolver
         return fdef.name == name && fdef.paramCount == argLength;
     }
 
-    public object InvokeInternalFunction(FuncDef func,
-                                         object[] args,
-                                         Context cx){
-        var @in = EvalArgs(args, cx);
+    public static object InvokeInternalFunction(FuncDef func,
+                                                object[] args,
+                                                Runner ρ,
+                                                Context cx){
+        var @in = EvalArgs(args, ρ, cx);
         cx.Push(func.parameters, @in);
-        var @out = this.Eval(func.body, cx);
+        var @out = ρ.Eval(func.body, cx);
         cx.Pop();
         return @out;
     }
 
-    object[] EvalArgs(object[] args, Context cx){
+    static object[] EvalArgs(object[] args, Runner ρ, Context cx){
         var len = args?.Length ?? 0;
         var @out = new object[len];
         for(int i = 0; i < len; i++){
-            @out[i] = this.Eval(args[i], cx);
+            @out[i] = ρ.Eval(args[i], cx);
         }
         return @out;
     }
