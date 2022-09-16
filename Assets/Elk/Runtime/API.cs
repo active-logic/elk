@@ -17,7 +17,7 @@ public class Interpreter<Cx>{
     }
 
     public object this[S arg, Cx context]
-    => runner.Run(Parse(arg), context);
+    => runner.Eval(Parse(arg), context);
 
     public object Parse(string arg){
         var tokens = new Sequence(tokenizer.Tokenize(arg));
@@ -36,7 +36,7 @@ public interface Parser{
 }
 
 public interface Runner<Cx>{
-    object Run(object program, Cx context);
+    object Eval(object program, Cx context);
 }
 
 }

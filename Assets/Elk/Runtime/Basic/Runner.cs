@@ -3,6 +3,7 @@ using Ex = System.Exception;
 using System;
 using UnityEngine;
 using Elk.Basic.Graph;
+using Elk.Basic.Runtime;
 
 namespace Elk.Basic{
 public partial class Runner : Elk.Runner<Context>{
@@ -10,26 +11,15 @@ public partial class Runner : Elk.Runner<Context>{
     public string mainFuncName = "Main";
     bool didReportMainNotFound;
 
-    public object Run(object arg, Context cx){
+    public object Eval(object arg, Context cx){
         if(arg is BinaryOp){
-            var op = (BinaryOp) arg;
-            var left  = (int) Run(op.arg0, cx);
-            var right = (int) Run(op.arg1, cx);
-            switch(op.op){
-                case "*": return left * right;
-                case "/": return left / right;
-                case "+": return left + right;
-                case "-": return left - right;
-                default: throw new Ex($"Unknown op {op.op}");
-            }
+            return BinEval.Eval((BinaryOp)arg, this, cx);
         }else if(arg is string){
             var str = arg as string;
-            if(char.IsDigit(str[0])){ // TODO resolve upstream
-                return int.Parse(str);
-            }else{
-                if(cx == null) return null;
+            if(cx == null)
+                throw new Ex($"Var {arg} has no meaning out of context");
+            else
                 return EvalProperty(str, cx);
-            }
         }else if(arg is FuncDef[]){
             var main = Array.Find((FuncDef[])arg, x => x.name == mainFuncName);
             if(main == null){
@@ -37,7 +27,7 @@ public partial class Runner : Elk.Runner<Context>{
                     ref didReportMainNotFound);
                 return null;
             }
-            return Run(main.body, cx);
+            return Eval(main.body, cx);
         }if(arg is Invocation){
             if(cx == null) return null;
             return Invoke((Invocation)arg, cx);

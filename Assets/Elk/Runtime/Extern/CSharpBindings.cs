@@ -1,9 +1,29 @@
+using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using Ex = System.Exception;
+using Elk.Util;
 
 namespace Elk.Bindings.CSharp{
 public static class CSharpBindings{
+
+    public static bool Invoke(object arg, string func,
+                              object[] @params,
+                              out object @out){
+        var type = arg.GetType();
+        var typeArray = (
+            from e in @params
+            select e?.GetType() ?? typeof(object)
+        ).ToArray();
+        //ebug.Log($"Check {arg} for function {func}{typeArray.Format()}");
+        var method = type.GetMethod(func, typeArray);
+        if(method == null){
+            @out = null;
+            return false;
+        }
+        @out = method.Invoke(arg, @params);
+        return true;
+    }
 
     public static object Invoke(object arg, string func,
                                 object[] @params){
@@ -13,6 +33,9 @@ public static class CSharpBindings{
             select e?.GetType() ?? typeof(object)
         ).ToArray();
         var method = type.GetMethod(func, typeArray);
+        if(method == null){
+            throw new Ex($"Method: {func} not in {arg}");
+        }
         return method.Invoke(arg, @params);
     }
 

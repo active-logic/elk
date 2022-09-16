@@ -15,7 +15,7 @@ public class BTL : MonoBehaviour{
     void Update(){
         var π  = program;
         var cx = BTLContext.Create(π, Untype(@import));
-        output = interpreter.runner.Run(π, cx)?.ToString();
+        output = interpreter.runner.Eval(π, cx)?.ToString();
     }
 
     object Parse(string path){

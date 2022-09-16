@@ -1,4 +1,5 @@
 using Array = System.Array;
+using Ex = System.Exception;
 using UnityEngine;
 using Elk.Bindings.CSharp;
 using Elk.Basic.Graph;
@@ -8,11 +9,18 @@ namespace Elk.Basic{
 public partial class Runner{  // -Resolver
 
     public object Invoke(Invocation inv, Context cx){
+        object @out;
         if(TryInvokeInternalFunction(inv.name, inv.arguments, cx,
-                                     out object @out)){
+                                     out @out)){
             return @out;
         }
-        return CSharpBindings.Invoke(cx, inv.name, inv.arguments);
+        var arguments = EvalArgs(inv.arguments, cx);
+        foreach(var target in cx.externals){
+            if(CSharpBindings.Invoke(target, inv.name, @arguments, out @out)){
+                return @out;
+            }
+        }
+        throw new Ex($"Function not in scope: {inv.name}");
     }
 
     public object EvalProperty(string name, Context cx)
@@ -23,9 +31,9 @@ public partial class Runner{  // -Resolver
                                           object[] args,
                                           Context cx,
                                           out object @out){
-        Debug.Log($"Try invoke internal: {name}");
+        //ebug.Log($"Try invoke internal: {name}");
         foreach(var module in cx.modules){
-            Debug.Log($"Check module {module}");
+            //ebug.Log($"Check module {module}");
             var fdef = Array.Find(
                 module,
                 x => FuncMatches(x, name, args?.Length ?? 0)
@@ -44,7 +52,7 @@ public partial class Runner{  // -Resolver
             Debug.LogError("fdef is null");
             return false;
         }
-        Debug.Log($"Check fdef {fdef}");
+        //ebug.Log($"Check fdef {fdef}");
         if(fdef.name == null){
             Debug.LogError("fdef name is null");
             return false;
@@ -55,14 +63,19 @@ public partial class Runner{  // -Resolver
     public object InvokeInternalFunction(FuncDef func,
                                          object[] args,
                                          Context cx){
-        var len = args?.Length ?? 0;
-        var @in = new object[len];
-        for(int i = 0; i < len; i++){
-            @in[i] = this.Run(args[i], cx);
-        }
+        var @in = EvalArgs(args, cx);
         cx.Push(func.parameters, @in);
-        var @out = this.Run(func.body, cx);
+        var @out = this.Eval(func.body, cx);
         cx.Pop();
+        return @out;
+    }
+
+    object[] EvalArgs(object[] args, Context cx){
+        var len = args?.Length ?? 0;
+        var @out = new object[len];
+        for(int i = 0; i < len; i++){
+            @out[i] = this.Eval(args[i], cx);
+        }
         return @out;
     }
 
