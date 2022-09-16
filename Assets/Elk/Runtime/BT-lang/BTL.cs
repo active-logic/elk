@@ -9,6 +9,8 @@ public class BTL : MonoBehaviour{
     public string path;
     public Component[] @import;
     public string output;
+    [Multiline(6)]
+    public string graph;
     object π;
     Interpreter<Cx> ι;
 
@@ -16,6 +18,7 @@ public class BTL : MonoBehaviour{
         var π  = program;
         var cx = BTLContext.Create(π, Untype(@import));
         output = interpreter.runner.Eval(π, cx)?.ToString();
+        graph = cx.graph.Format();
     }
 
     object Parse(string path){

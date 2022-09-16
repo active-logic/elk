@@ -33,6 +33,8 @@ public static class CSharpOps{
         {">=", "op_GreaterThanOrEqual" },
         {"<<", "op_LeftShift" },
         {">>", "op_RightShift" },
+        {"&&", "op_LogicalAnd" },
+        {"||", "op_LogicalOr" },
         {"%", "op_Modulus" },
     };
 

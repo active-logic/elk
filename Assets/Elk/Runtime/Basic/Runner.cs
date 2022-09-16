@@ -15,7 +15,10 @@ public partial class Runner : Elk.Runner<Context>{
             case FuncDef[] module:
                 return ModuleEval.Eval(module, this, cx);
             case Invocation ι:
-                return InvocationEval.Eval(ι, this, cx);
+                cx.graph.Push(ι.name);
+                var @out = InvocationEval.Eval(ι, this, cx);
+                cx.graph.Pop(@out);
+                return @out;
             case object val when IsValue(val):
                 return val;
             default:

@@ -9,9 +9,11 @@ public class Context{
     public Stack<ArgMap> argumentStack;
     public IEnumerable<FuncDef[]> modules;
     public IEnumerable<object> externals;
+    public CallGraph graph;
 
     public Context(){
         argumentStack = new Stack<ArgMap>();
+        graph = new CallGraph();
     }
 
     public object this[string key]

@@ -15,7 +15,6 @@ public class BinaryOp{
         this.binding = CSharpOps.Binary[(string)op];
     }
 
-    override public S ToString()
-    => $"({arg0}{op}{arg1})";
+    override public S ToString() => $"({arg0}{op}{arg1})";
 
 }}
