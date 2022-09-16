@@ -41,6 +41,8 @@ public partial class Runner : Elk.Runner<Context>{
         }if(arg is Invocation){
             if(cx == null) return null;
             return Invoke((Invocation)arg, cx);
+        }else if(arg is bool || arg is Active.Core.status || arg is int || arg == null){
+            return arg;
         }else{
             Debug.LogError($"{arg} cannot be interpreted");
             return null;

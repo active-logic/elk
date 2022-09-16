@@ -35,10 +35,6 @@ public class BTL : MonoBehaviour{
     => ι != null ? ι : (ι = NewInterpreter);
 
     public static Interpreter<Cx> NewInterpreter
-    => new Interpreter<Cx>(
-        new Elk.Basic.Tokenizer(),
-        new Elk.Basic.Parser(),
-        new Elk.Basic.Runner()
-    );
+    => new Elk.Basic.Interpreter();
 
 }}

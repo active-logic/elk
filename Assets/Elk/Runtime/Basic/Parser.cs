@@ -39,16 +39,8 @@ public partial class Parser : Elk.Parser{
             ? vector[0]
             : throw new ArgEx(
                 $"Irreducible (count: {vector.size})\n"
-                + Format(vector)
+                + vector.Format()
             );
-    }
-
-    string Format(Sequence arg){
-        var builder = new StringBuilder();
-        for(int i = 0; i < arg.size; i++){
-            builder.Append( "|| " + arg[i].ToString() + "\n" );
-        }
-        return builder.ToString();
     }
 
     public object this[params string[] tokens] => Parse(tokens);

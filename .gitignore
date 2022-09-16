@@ -16,3 +16,5 @@ log.txt
 log.txt.meta
 Assets/InitTestScene*
 UserSettings/
+Assets/ActiveLogic/Demo.meta
+Assets/ActiveLogic/

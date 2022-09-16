@@ -4,9 +4,11 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Activ.BTL;
+using Active.Core;
+using Elk.Basic.Graph;
 
 namespace Elk.Test{
-public class BTLParserTest{
+public class BTLInterpreterTest{
 
     [Test] public void TestInvocation(){
         var i = BTL.NewInterpreter;
@@ -26,6 +28,20 @@ public class BTLParserTest{
     [Test] public void TestFunc_A(){
         var i = BTL.NewInterpreter;
         i.Parse("func Main() => Attack() || Roam();");
+    }
+
+    [Test] public void TestLiterals_1(){
+        var i = BTL.NewInterpreter;
+        var root = i.Parse("true || false") as BinaryOp;
+        Assert.That( root.arg0 is bool );
+        Assert.That( root.arg1 is bool );
+    }
+
+    [Test] public void TestLiterals_2(){
+        var i = BTL.NewInterpreter;
+        var root = i.Parse("done || fail") as BinaryOp;
+        Assert.That( root.arg0 is status );
+        Assert.That( root.arg1 is status );
     }
 
 }}

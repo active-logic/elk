@@ -25,7 +25,10 @@ public class Sequence{
 
     public int size => elements.Count;
 
-    public object this[int index] => elements[index];
+    public object this[int index]{
+        get => elements[index];
+        set => elements[index] = value;
+    }
 
     // -------------------------------------------------------------
 
@@ -65,6 +68,20 @@ public class Sequence{
         elements.RemoveRange(i, count);
         elements.Insert(i, arg);
         dirty = true;
+    }
+
+    public string Format(){
+        var builder = new System.Text.StringBuilder();
+        for(int i = 0; i < size; i++){
+            builder.Append( $"|| {this[i].ToString()} ({this[i].GetType().Name}\n");
+        }
+        return builder.ToString();
+    }
+
+    // =============================================================
+
+    public interface Transformer{
+        void Transform(Sequence vec);
     }
 
 }}
