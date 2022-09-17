@@ -1,5 +1,6 @@
 using S = System.String;
 using Elk.Util;
+using Invocation = Elk.Basic.Graph.Invocation;
 
 namespace Elk{
 
@@ -18,6 +19,9 @@ public class Interpreter<Cx>{
 
     public object this[S arg, Cx context]
     => runner.Eval(Parse(arg), context);
+
+    public object Run(Cx context)
+    => runner.Eval(new Invocation("Main"), context);
 
     public object Parse(string arg){
         var tokens = new Sequence(tokenizer.Tokenize(arg));

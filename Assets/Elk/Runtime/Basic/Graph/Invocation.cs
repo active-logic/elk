@@ -8,7 +8,7 @@ public class Invocation{
     public readonly string name;
     public readonly object[] arguments;
 
-    public Invocation(string name, IEnumerable<object> arguments){
+    public Invocation(string name, IEnumerable<object> arguments=null){
         this.name = name;
         this.arguments = arguments?.ToArray() ?? null;
     }

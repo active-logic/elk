@@ -17,7 +17,7 @@ public class BTL : MonoBehaviour{
     void Update(){
         var π  = program;
         var cx = BTLContext.Create(π, Untype(@import));
-        output = interpreter.runner.Eval(π, cx)?.ToString();
+        output = interpreter.Run(cx)?.ToString();
         graph = cx.graph.Format();
     }
 

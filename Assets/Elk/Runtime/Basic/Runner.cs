@@ -12,8 +12,6 @@ public partial class Runner : Elk.Runner<Context>{
                 return BinEval.Eval(op, this, cx);
             case string label:
                 return PropEval.Eval(label, cx);
-            case FuncDef[] module:
-                return ModuleEval.Eval(module, this, cx);
             case Invocation ι:
                 cx.graph.Push(ι.name);
                 var @out = InvocationEval.Eval(ι, this, cx);
