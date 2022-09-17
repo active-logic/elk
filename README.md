@@ -15,7 +15,7 @@ Unity; for now.
 
 ## Get started with BTL
 
-Add your BTL programs under *Assets/Resources* or any resources directory; the extension is *\*.txt*; the `#!btl` shebang helps reporting syntax errors (in the Unity console, upon saving your BTL file).
+Add your BTL programs under *Assets/Resources* or any resources directory; the extension is `\*.txt`; the `#!btl` shebang helps reporting syntax errors (in the Unity console, upon saving your BTL file).
 
 In BTL a behavior tree is a module defining several functions; the entry point is the `Step()` function.
 
