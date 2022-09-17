@@ -6,10 +6,11 @@ namespace Elk{
 
 public class Interpreter<Cx>{
 
-    protected Tokenizer tokenizer;
     public Sequence.Transformer typecaster;
-    protected Parser parser;
     public Runner<Cx> runner;
+    public string entry = "Main";
+    protected Tokenizer tokenizer;
+    protected Parser parser;
 
     public Interpreter(){}
 
@@ -21,7 +22,7 @@ public class Interpreter<Cx>{
     => runner.Eval(Parse(arg), context);
 
     public object Run(Cx context)
-    => runner.Eval(new Invocation("Main"), context);
+    => runner.Eval(new Invocation(entry), context);
 
     public object Parse(string arg){
         var tokens = new Sequence(tokenizer.Tokenize(arg));

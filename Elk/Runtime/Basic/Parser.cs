@@ -14,8 +14,8 @@ public partial class Parser : Elk.Parser{
 
     public Parser(Rule[] rules) => this.rules = rules;
 
-    public Parser() => rules = new Rule[]{
-        new RuleSet( new FuncRule(), new FuncPrecursor() ),
+    public Parser(string funcPreamble) => rules = new Rule[]{
+        new RuleSet( new FuncRule(), new FuncPrecursor(funcPreamble) ),
         new RuleSet( new InvocationRule() ),
         new RuleSet("."),
         new RuleSet("*", "/", "%"),

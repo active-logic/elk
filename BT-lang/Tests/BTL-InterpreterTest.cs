@@ -26,7 +26,7 @@ public class BTL_InterpreterTest{
     }
 
     [Test] public void TestFunc_A(){
-        i.Parse("func Main() => Attack() || Roam();");
+        i.Parse("task Main() => Attack() || Roam();");
     }
 
     [Test] public void TestLiterals_1(){

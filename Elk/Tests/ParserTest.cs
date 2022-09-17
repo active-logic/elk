@@ -6,7 +6,7 @@ public class ParserTest{
 
     Elk.Basic.Parser p;
 
-    [SetUp] public void Setup() => p = new Elk.Basic.Parser();
+    [SetUp] public void Setup() => p = new Elk.Basic.Parser("func");
 
     [Test] public void Test_PLUS(){
         Assert.AreEqual(

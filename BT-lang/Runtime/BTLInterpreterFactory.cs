@@ -9,7 +9,8 @@ namespace Activ.BTL{
 public static class BTLInterpreterFactory{
 
     public static Interpreter<Context> Create(){
-        var interpreter = new Elk.Basic.Interpreter();
+        var interpreter = new Elk.Basic.Interpreter("task");
+        interpreter.entry = "Step";
         interpreter.typecaster = new BTLTypeCaster();
         var runner = (Elk.Basic.Runner) interpreter.runner;
         runner.valuable =

@@ -6,17 +6,18 @@ using Elk.Basic.Graph;
 namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
 // Form
-// func NAME([arg0, ...])
+// ```
+// preamble NAME([arg0, ...])
+// ```
 // Precursor avoids NAME([arg0, ...]) getting parsed
 // as an invocation; could also 'promote' said invocation, which
 // would be more concise but perhaps inconvenient later
 // for syntax err reporting
 public class FuncPrecursor : LocalRule{
 
-    string preamble;
+    string preamble = "func";
 
-    public FuncPrecursor()
-    => preamble = "func";
+    public FuncPrecursor(){}
 
     public FuncPrecursor(string preamble)
     => this.preamble = preamble;

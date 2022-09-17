@@ -22,6 +22,12 @@ public class BTL : MonoBehaviour{
         graph = cx.graph.Format();
     }
 
+    void OnValidate(){
+        if(path.EndsWith(".txt")){
+            path = path.Substring(0, path.Length-4);
+        }
+    }
+
     object Parse(string path){
         var src = Resources.Load<TextAsset>(path).text;
         if(src.StartsWith(BTLScriptChecker.Shebang))
