@@ -46,7 +46,7 @@ in the above example, `Move` and `target` are external; they are defined in sepa
 The output of the sample program may be something like this:
 
 ```
-→ Main()
+→ Step()
   ✗ Attack()
     ✗ Reach(null)
   → Roam()
