@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Active.Core; using static Active.Raw;
 using Elk.Util; using Elk.Basic.Graph;
+using Sequence = Elk.Util.Sequence;
 
 namespace BTL_Test{
 public class BTL_TypeCasterTest{
