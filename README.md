@@ -1,6 +1,6 @@
 *ELK and BT-Lang are under development; do not use in production; this repository is shared for early feedback around BT-Lang development; planned alpha: Oct 15 2022.*
 
-# ELK / BT-Lang
+# ELK / BT-lang
 
 This Unity package includes the following:
 - BT-Lang ("BTL", pronounced *beetle* or *behtel*) is a scripting language for stateless behavior trees
