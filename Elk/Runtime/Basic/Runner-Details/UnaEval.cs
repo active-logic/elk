@@ -16,11 +16,6 @@ public class UnaEval{
             operation.binding, BF.Static | BF.Public
         );
         if(method != null){
-            // NOTE - leaving here until proven
-            UnityEngine.Debug.Log(
-                 $"Call C# native overload: "
-               + $"{operation.binding} ({operand}?)"
-            );
             return method.Invoke(null, new object[]{operand} );
         }else{
             return DumbEval(operand, operation.op, ρ, cx);
@@ -37,7 +32,7 @@ public class UnaEval{
             case bool boolVal: return EvalBool(op, boolVal);
             case int  intVal:  return EvalInt(op, intVal);
         }
-        throw new Ex($"Unsupported operation: {X} {op} ? ({X.GetType()})");
+        throw new Ex($"Unsupported operation: {X}{op} ({X.GetType()})");
     }
 
     object EvalBool(string op, bool X){

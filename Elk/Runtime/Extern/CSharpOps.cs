@@ -9,7 +9,7 @@ public static class CSharpOps{
     public static Map Unary = new Map()
     {
         {"+", "op_UnaryPlus" },
-        {"-", "op_UnaryMinus" },
+        {"-", "op_UnaryNegation" },
         {"++", "op_Increment" },
         {"--", "op_Decrement" },
         {"!", "op_LogicalNot" },
