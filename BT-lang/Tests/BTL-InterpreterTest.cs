@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using Elk;
-using BinaryOp = Elk.Basic.Graph.BinaryOp;
+using BinaryExp = Elk.Basic.Graph.BinaryExp;
 using Context = Elk.Basic.Context;
 using Activ.BTL; using Active.Core;
 
@@ -30,13 +30,13 @@ public class BTL_InterpreterTest{
     }
 
     [Test] public void TestLiterals_1(){
-        var root = i.Parse("true || false") as BinaryOp;
+        var root = i.Parse("true || false") as BinaryExp;
         Assert.That( root.arg0 is bool );
         Assert.That( root.arg1 is bool );
     }
 
     [Test] public void TestLiterals_2(){
-        var root = i.Parse("done || fail") as BinaryOp;
+        var root = i.Parse("done || fail") as BinaryExp;
         Assert.That( root.arg0 is status );
         Assert.That( root.arg1 is status );
     }
