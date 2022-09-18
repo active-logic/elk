@@ -53,7 +53,7 @@ The output of the sample program may be something like this:
     → Move((0.78, 0.63, 0.00))
 ```
 
-Multiline statements are supported; multi-statement functions are not supported; parentheses (for scoping) are not supported; comments are not supported yet; calculus (2+2) is supported but this may be dropped later; active logic unaries are not supported just yet; active logic binary ops *should be* supported.
+Multiline statements are supported; multi-statement functions are not supported; parentheses (for scoping) are not supported; comments are not supported yet; calculus (2+2) is supported but this may be dropped later; active logic unary/binary ops are supported except unary (+/-).
 
 Refer to **issues** (or file an issue) for planned features.
 
