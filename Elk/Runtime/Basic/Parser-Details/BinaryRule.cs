@@ -9,11 +9,13 @@ public class BinaryRule : LocalRule{
 
     public BinaryRule(object op) => this.op = op.ToString();
 
-    override public void Process(Sequence vector, int i){
-        if(vector.AsString(i + 1) != op) return;
-        vector.Replace(i, 3, new BinaryOp(
-            vector[i], vector[i+1], vector[i+2]
-        ), this);
+    override public void Process(Sequence vec, int i){
+        var x  = vec.Get(i);
+        var op = vec.AsString(i + 1);
+        var y  = vec.Get(i + 2);
+        // TODO possible error since "null" converts to null
+        if(op != this.op || y == null) return;
+        vec.Replace(i, 3, new BinaryExp( vec[i], op, vec[i+2]), this);
     }
 
     override public string ToString()

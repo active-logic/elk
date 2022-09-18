@@ -5,6 +5,7 @@ using System.Text;
 using Action = System.Action<object>;
 using Elk.Util;
 using FuncDef = Elk.Basic.Graph.FuncDef;
+using static Elk.Basic.Parser.RuleSet;
 
 namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
@@ -15,15 +16,15 @@ public partial class Parser : Elk.Parser{
     public Parser(Rule[] rules) => this.rules = rules;
 
     public Parser(string funcPreamble) => rules = new Rule[]{
-        new RuleSet( new FuncRule(), new FuncPrecursor(funcPreamble) ),
-        new RuleSet( new InvocationRule() ),
-        new RuleSet("."),
-        new RuleSet("*", "/", "%"),
-        new RuleSet("+", "-"),
-        new RuleSet("==", "!="),
-        new RuleSet("|", "&"),
-        new RuleSet("||", "&&"),
-        new RuleSet( new TypedSeqRule<FuncDef>() )
+        Rst( new FuncRule(), new FuncPrecursor(funcPreamble)),
+        Rst( ".", new InvocationRule()),
+        Una("! ~ ++ --"),
+        Bin("* / %"),
+        Bin("+ -"),
+        Bin("== !="),
+        Bin("| &"),
+        Bin("|| &&"),
+        Rst( new TypedSeqRule<FuncDef>() )
     };
 
     public object Parse(Sequence vector){

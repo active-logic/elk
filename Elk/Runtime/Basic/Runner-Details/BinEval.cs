@@ -7,7 +7,7 @@ using Elk.Basic.Graph;
 namespace Elk.Basic.Runtime{
 public class BinEval{
 
-    public object Eval(BinaryOp operation,
+    public object Eval(BinaryExp operation,
                        Runner ρ, Context cx){
         var left = ρ.Eval(operation.arg0, cx);
         // TODO - CS binding calls should be in 'Extern'

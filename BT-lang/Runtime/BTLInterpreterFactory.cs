@@ -13,9 +13,8 @@ public static class BTLInterpreterFactory{
         interpreter.entry = "Step";
         interpreter.typecaster = new BTLTypeCaster();
         var runner = (Elk.Basic.Runner) interpreter.runner;
-        runner.valuable =
-            x => x is bool || x is int || x is status;
-        runner.binEval = new BTLBinEval();
+        runner.literal = (x => x is bool || x is int || x is status);
+        runner.bin = new BTLBinEval();
         return interpreter;
     }
 
