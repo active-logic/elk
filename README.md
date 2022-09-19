@@ -26,13 +26,9 @@ In BTL a behavior tree is a module defining several functions; the entry point i
 
 task Step() => Attack() || Roam();
 
-task Attack() => Reach(target) && Strike(target);
+task Attack() => Reach(target) && Attack(target);
 
 task Roam() => Move(rdir);
-
-task Reach(target) => fail;
-
-task Strike(target) => fail;
 ```
 
 Add a BTL program to a game object via the BTL component.
@@ -50,7 +46,7 @@ The output of the sample program may be something like this:
   ✗ Attack()
     ✗ Reach(null)
   → Roam()
-    → Move((0.78, 0.63, 0.00))
+    → Move((-0.99, 0.00, -0.14))
 ```
 
 Multiline statements are supported; multi-statement functions are not supported; parentheses (for scoping) are not supported; comments are not supported yet; calculus (2+2) is supported but this may be dropped later; active logic unary/binary ops are supported except unary (+/-).
