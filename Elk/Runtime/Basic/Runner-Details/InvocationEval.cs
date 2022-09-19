@@ -4,6 +4,7 @@ using UnityEngine;
 using Elk.Util;
 using Elk.Bindings.CSharp;
 using Elk.Basic.Graph;
+using Active.Core; using static Active.Raw;
 
 namespace Elk.Basic{
 public class InvocationEval{
@@ -11,24 +12,27 @@ public class InvocationEval{
     public object Eval(Invocation ι, Runner ρ, Context cx){
         var values = EvalArgs(ι.arguments, ρ, cx);
         cx.graph.Push(ι.name + values.NeatFormat());
-        var @out = DoEval(ι, values, ρ, cx);
-        cx.graph.Pop(@out);
+        var @out = DoEval(ι, values, ρ, cx, out bool found);
+        cx.graph.Pop(@out, found);
         return @out;
     }
 
     public object DoEval(Invocation inv, object[] values,
-                                Runner ρ, Context cx){
+                         Runner ρ, Context cx, out bool found){
         object @out;
         if(Invoke(inv.name, inv.arguments, values, ρ, cx, out @out)){
+            found = true;
             return @out;
         }
         foreach(var target in cx.externals){
             if(CSharpBindings.Invoke(target, inv.name, values,
                                      out @out)){
+                found = true;
                 return @out;
             }
         }
-        throw new Ex($"{inv.name}(...) not found");
+        found = false;
+        return fail;
     }
 
     public bool Invoke(string name, object[] args,
