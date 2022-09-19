@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Elk.Basic.Graph{
-public class Invocation{
+public class Invocation : Expression{
 
     public readonly string name;
     public readonly object[] arguments;

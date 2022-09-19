@@ -6,7 +6,11 @@ public class ParserTest{
 
     Elk.Basic.Parser p;
 
-    [SetUp] public void Setup() => p = new Elk.Basic.Parser("func");
+    [SetUp] public void Setup(){
+        p = new Elk.Basic.Parser("func");
+        // NOTE enable for additional debug info
+        // p.log = UnityEngine.Debug.Log;
+    }
 
     [Test] public void Test_NOT() => Assert.AreEqual(
         "(!true)",
@@ -36,6 +40,11 @@ public class ParserTest{
     [Test] public void Test_MUL_PLUS_ops() => Assert.AreEqual(
         "((1*2)+3)",
         p["1", "*", "2", "+", "3"]?.ToString()
+    );
+
+    [Test] public void Test_UNARY_PREC_quirk() => Assert.AreEqual(
+        "((-2)+3)",
+        p["-", "2", "+", "3"]?.ToString()
     );
 
     [Test] public void Test_PLUS_MUL_ops() => Assert.AreEqual(

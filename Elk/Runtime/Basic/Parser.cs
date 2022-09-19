@@ -11,14 +11,14 @@ namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
 
     Rule[] rules;
-    public Action logFunc;
+    public Action log;
 
     public Parser(Rule[] rules) => this.rules = rules;
 
     public Parser(string funcPreamble) => rules = new Rule[]{
         Rst( new FuncRule(), new FuncPrecursor(funcPreamble)),
         Rst( ".", new InvocationRule()),
-        Una("! ~ ++ --"),
+        Una("! ~ ++ -- + -"),
         Bin("* / %"),
         Bin("+ -"),
         Bin("== !="),
@@ -28,6 +28,7 @@ public partial class Parser : Elk.Parser{
     };
 
     public object Parse(Sequence vector){
+        vector.log = this.log;
         for(int prec = 0; prec < rules.Length; prec++){
             Log($"Apply prec level {prec}");
             rules[prec].Process(vector);
@@ -46,6 +47,6 @@ public partial class Parser : Elk.Parser{
 
     public object this[params string[] tokens] => Parse(tokens);
 
-    void Log(object arg) => logFunc?.Invoke(arg);
+    void Log(object arg) => log?.Invoke(arg);
 
 }}
