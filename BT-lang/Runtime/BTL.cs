@@ -3,23 +3,24 @@ using UnityEngine;
 using Elk;
 using Cx = Elk.Basic.Context;
 using Active.Core;
+using History = Active.Core.Details.History;
 
 namespace Activ.BTL{
-public class BTL : MonoBehaviour{
+public class BTL : MonoBehaviour, LogSource{
 
     public string path;
     public Component[] @import;
-    public string output;
-    [Multiline(6)]
-    public string graph;
-    object π;
+    string output; string log; object π;
     Interpreter<Cx> ι;
+    History _history;
+    public bool useHistory = true;
 
     void Update(){
         var π  = program;
         var cx = BTLContextFactory.Create(π, Untype(@import));
         output = interpreter.Run(cx)?.ToString();
-        graph = cx.graph.Format();
+        log = cx.graph.Format();
+        if(useHistory) history.Log(log, transform);
     }
 
     void OnValidate(){
@@ -44,6 +45,16 @@ public class BTL : MonoBehaviour{
     Interpreter<Cx> interpreter
     => ι != null ? ι : (ι = BTLInterpreterFactory.Create());
 
+    // History related ---------------------------------------------
 
+    public History history => useHistory
+        ? _history ?? (_history = new History())
+        : _history = null;
+
+    // <LogSource> =================================================
+
+    History LogSource.GetHistory() => history;
+    bool    LogSource.IsLogging()  => true;
+    string  LogSource.GetLog()     => log;
 
 }}
