@@ -73,7 +73,7 @@ public class Sequence{
     public string Format(){
         var builder = new System.Text.StringBuilder();
         for(int i = 0; i < size; i++){
-            builder.Append( $"|| {this[i].ToString()} ({this[i].GetType().Name}\n");
+            builder.Append( $"|| {this[i].ToString()} ({this[i].GetType().Name})\n");
         }
         return builder.ToString();
     }

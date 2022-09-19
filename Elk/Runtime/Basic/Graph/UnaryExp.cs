@@ -2,7 +2,7 @@ using S = System.String;
 using Elk.Bindings.CSharp;
 
 namespace Elk.Basic.Graph{
-public class UnaryExp{
+public class UnaryExp : Expression{
 
     public readonly string op;
     public readonly object arg;
