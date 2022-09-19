@@ -10,7 +10,7 @@ public class InvocationEval{
 
     public object Eval(Invocation ι, Runner ρ, Context cx){
         var values = EvalArgs(ι.arguments, ρ, cx);
-        cx.graph.Push(ι.name + values.Format());
+        cx.graph.Push(ι.name + values.NeatFormat());
         var @out = DoEval(ι, values, ρ, cx);
         cx.graph.Pop(@out);
         return @out;
@@ -28,7 +28,7 @@ public class InvocationEval{
                 return @out;
             }
         }
-        throw new Ex($"Function not in scope: {inv.name}");
+        throw new Ex($"{inv.name}(...) not found");
     }
 
     public bool Invoke(string name, object[] args,

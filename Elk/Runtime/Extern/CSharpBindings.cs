@@ -11,9 +11,11 @@ public static class CSharpBindings{
                               object[] @params,
                               out object @out){
         var type = arg.GetType();
+        // TODO (1) transitional; if a null is passed need to reflect
+        // harder
         var typeArray = (
             from e in @params
-            select e?.GetType() ?? typeof(object)
+            select e?.GetType() ?? typeof(Transform)  // (1)
         ).ToArray();
         //ebug.Log($"Check {arg} for function {func}{typeArray.Format()}");
         var method = type.GetMethod(func, typeArray);
