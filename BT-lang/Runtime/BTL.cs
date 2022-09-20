@@ -29,6 +29,10 @@ public class BTL : MonoBehaviour, LogSource{
         }
     }
 
+    void OnDisable(){
+        log = "DISABLED";
+    }
+
     object Parse(string path){
         var src = Resources.Load<TextAsset>(path).text;
         if(src.StartsWith(BTLScriptChecker.Shebang))
