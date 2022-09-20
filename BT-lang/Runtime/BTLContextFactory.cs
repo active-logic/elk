@@ -12,7 +12,7 @@ public static class BTLContextFactory{
             externals = externals,
         };
         cx.graph.returnValueFormatter = x => {
-            var str = x?.ToString() ?? "null";
+            var str = x?.ToString() ?? "∅";
             if(x is Active.Core.status){
                 var s = (Active.Core.status) x;
                 if(s.failing) str = "✗";

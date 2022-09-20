@@ -11,7 +11,9 @@ public static class CSharpBindings{
                               object[] @params,
                               out object @out){
         var type = arg.GetType();
-        // TODO (1) transitional? reflect harder if null?
+        // NOTE when an argument is null, in general setting
+        // 'object' as type is likely to return no compatible
+        // function - reflect harder? #25
         var typeArray = (
             from e in @params
             select e?.GetType() ?? typeof(object)  // (1)

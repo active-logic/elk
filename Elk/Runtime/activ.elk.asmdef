@@ -1,9 +1,7 @@
 {
     "name": "activ.elk",
     "rootNamespace": "",
-    "references": [
-        "GUID:0ac1f3691e2014712a8da587ee61dc19"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

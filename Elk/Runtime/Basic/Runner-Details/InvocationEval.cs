@@ -4,7 +4,6 @@ using UnityEngine;
 using Elk.Util;
 using Elk.Bindings.CSharp;
 using Elk.Basic.Graph;
-using Active.Core; using static Active.Raw;
 
 namespace Elk.Basic{
 public class InvocationEval{
@@ -32,7 +31,8 @@ public class InvocationEval{
             }
         }
         found = false;
-        return fail;
+        // TODO - #25: raise? 
+        return null;
     }
 
     public bool Invoke(string name, object[] args,

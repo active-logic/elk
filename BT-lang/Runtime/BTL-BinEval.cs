@@ -32,6 +32,9 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
             case status s: return EvalStatus(
                 op, s, right, ρ, cx
             );
+            case null: return EvalStatus(  // TODO #25
+                op, fail, right, ρ, cx
+            );
         }
         throw new Ex($"Unsupported operation: {X} {op} ? ({X.GetType()})");
     }
