@@ -9,17 +9,17 @@ namespace Activ.BTL{
 public class BTLScriptChecker : AssetPostprocessor{
 
     public const string Shebang = "#!btl";
-    Interpreter<Cx> interpreter = new Interpreter<Cx>();
+    Interpreter<Cx> interpreter = BTLInterpreterFactory.Create();
 
     void OnPreprocessAsset()
     {
         if(!assetPath.Contains("Resources")) return;
         if(!assetPath.EndsWith(".txt")) return;
         if(!Match(assetPath, Shebang)) return;
-        Debug.Log($"Process BTL file {assetPath}");
+        //ebug.Log($"Process BTL file {assetPath}");
         var content = File.ReadAllText(assetPath).Substring(5);
         var obj = interpreter.Parse(content);
-        Debug.Log(obj);
+        //ebug.Log(obj);
     }
 
     public static bool Match(string filename, string contentPrefix){
