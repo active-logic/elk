@@ -63,6 +63,7 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
 
     status ToStatus(object arg)
     => arg is status s ? s : arg is bool b ? (status)b
+    : arg is null ? fail  // TODO #25
     : throw new Ex($"Don't know how to convert {arg} to status");
 
     object EvalFloat(string op, float X, float Y){
