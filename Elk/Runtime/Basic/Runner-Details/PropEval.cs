@@ -4,14 +4,7 @@ using Elk.Bindings.CSharp;
 namespace Elk.Basic.Runtime{
 public class PropEval{
 
-    public object Eval(string label, Context cx){
-        if(cx == null){
-            throw new Ex($"Var {label} has no meaning out of context");
-        }else if(cx.HasKey(label)){
-            return cx[label];
-        }else{
-            return CSharpBindings.Fetch(cx.externals, label);
-        }
-    }
+    public object Eval(string label, Context cx)
+    => cx.HasKey(label) ? cx[label] : cx.externals.Eval(label);
 
 }}

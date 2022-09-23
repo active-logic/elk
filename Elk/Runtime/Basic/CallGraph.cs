@@ -20,11 +20,11 @@ public class CallGraph{
         stack.Push(node);
     }
 
-    public void Pop(object returnValue, bool found){
+    public void Pop(object returnValue){
         var str = returnValueFormatter?.Invoke(returnValue)
                   ?? returnValue?.ToString() ?? "null";
         var node = stack.Pop();
-        node.info = str + " " + node.info + (!found ? " [not found]" : null);
+        node.info = str + " " + node.info;
     }
 
     public string Format(){

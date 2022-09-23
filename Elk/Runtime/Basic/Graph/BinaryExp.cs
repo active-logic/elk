@@ -8,7 +8,6 @@ public class BinaryExp : Expression{
     public readonly string op;
     public readonly string binding;
 
-    // TODO probably should be binary exp?
     public BinaryExp(object arg0, string op, object arg1){
         this.arg0 = arg0;
         this.arg1 = arg1;

@@ -11,28 +11,17 @@ public class InvocationEval{
     public object Eval(Invocation ι, Runner ρ, Context cx){
         var values = EvalArgs(ι.arguments, ρ, cx);
         cx.graph.Push(ι.name + values.NeatFormat());
-        var @out = DoEval(ι, values, ρ, cx, out bool found);
-        cx.graph.Pop(@out, found);
+        var @out = DoEval(ι, values, ρ, cx);
+        cx.graph.Pop(@out);
         return @out;
     }
 
     public object DoEval(Invocation inv, object[] values,
-                         Runner ρ, Context cx, out bool found){
+                         Runner ρ, Context cx){
         object @out;
-        if(Invoke(inv.name, inv.arguments, values, ρ, cx, out @out)){
-            found = true;
+        if(Invoke(inv.name, inv.arguments, values, ρ, cx, out @out))
             return @out;
-        }
-        foreach(var target in cx.externals){
-            if(CSharpBindings.Invoke(target, inv.name, values,
-                                     out @out)){
-                found = true;
-                return @out;
-            }
-        }
-        found = false;
-        // TODO - #25: raise? 
-        return null;
+        return cx.externals.Invoke(inv.name, values);
     }
 
     public bool Invoke(string name, object[] args,

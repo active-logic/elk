@@ -32,9 +32,6 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
             case status s: return EvalStatus(
                 op, s, right, ρ, cx
             );
-            case null: return EvalStatus(  // TODO #25
-                op, fail, right, ρ, cx
-            );
         }
         throw new Ex($"Unsupported operation: {X} {op} ? ({X.GetType()})");
     }
@@ -63,7 +60,6 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
 
     status ToStatus(object arg)
     => arg is status s ? s : arg is bool b ? (status)b
-    : arg is null ? fail  // TODO #25
     : throw new Ex($"Don't know how to convert {arg} to status");
 
     object EvalFloat(string op, float X, float Y){
