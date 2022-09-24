@@ -10,14 +10,16 @@ public class BTL : MonoBehaviour, LogSource{
 
     public string path;
     public Component[] @import;
-    string output; string log; object π;
+    string log, output, loadedFrom;
+    object π;
     Interpreter<Cx> ι;
     History _history;
     public bool useHistory = true;
 
     void Update(){
-        var π  = program;
-        var cx = BTLContextFactory.Create(π, Untype(@import));
+        if(path != loadedFrom && IsValidPath(path)) π = null;
+        var p  = program;
+        var cx = BTLContextFactory.Create(p, Untype(@import));
         output = interpreter.Run(cx)?.ToString();
         log = cx.graph.Format();
         if(useHistory) history.Log(log, transform);
@@ -29,18 +31,23 @@ public class BTL : MonoBehaviour, LogSource{
         }
     }
 
-    void OnDisable(){
-        log = "DISABLED";
-    }
+    void OnDisable() => log = "DISABLED";
+
+    bool IsValidPath(string path)
+    => Resources.Load<TextAsset>(path) != null;
 
     object Parse(string path){
         var src = Resources.Load<TextAsset>(path).text;
         if(src.StartsWith(BTLScriptChecker.Shebang))
             src = src.Substring(5);
+        loadedFrom = path;
         return interpreter.Parse(src);
     }
 
-    object program => π != null ? π : (π = Parse(path));
+    public object program{
+        private get => π != null ? π : (π = Parse(path));
+        set => π = value;
+    }
 
     // TODO not so great
     object[] Untype(Component[] arg)
