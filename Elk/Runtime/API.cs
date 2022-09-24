@@ -6,17 +6,25 @@ namespace Elk{
 
 public class Interpreter<Cx>{
 
-    public Sequence.Transformer typecaster;
-    public Runner<Cx> runner;
     public string entry = "Main";
-    protected Tokenizer tokenizer;
-    protected Parser parser;
+    //
+    protected Tokenizer            tokenizer;
+    public    Sequence.Transformer typecaster;
+    protected Parser               parser;
+    protected Validator            validator;
+    public    Runner<Cx>           runner;
+    //
+    public bool allowSubPrograms;
+
+    // Constructors ------------------------------------------------
 
     public Interpreter(){}
 
     public Interpreter(Tokenizer t, Parser p, Runner<Cx> r){
         tokenizer = t; parser = p; runner = r;
     }
+
+    // Props -------------------------------------------------------
 
     public object this[S arg, Cx context]
     => runner.Eval(Parse(arg), context);
@@ -27,7 +35,10 @@ public class Interpreter<Cx>{
     public object Parse(string arg){
         var tokens = new Sequence(tokenizer.Tokenize(arg));
         typecaster?.Transform(tokens);
-        return parser.Parse(tokens);
+        var @out = parser.Parse(tokens);
+        UnityEngine.Debug.Log($"Output type: {@out.GetType()}");
+        validator.Validate(@out, allowSubPrograms);
+        return @out;
     }
 
 }
@@ -38,6 +49,10 @@ public interface Tokenizer{
 
 public interface Parser{
     object Parse(Sequence tokens);
+}
+
+public interface Validator{
+    void Validate(object program, bool allowSubPrograms);
 }
 
 public interface Runner<Cx>{

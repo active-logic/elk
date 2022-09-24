@@ -9,9 +9,10 @@ public class BTL_InterpreterTest{
 
     Interpreter<Context> i;
 
-    [SetUp] public void Setup()
-    => i = BTLInterpreterFactory.Create();
-
+    [SetUp] public void Setup(){
+        i = BTLInterpreterFactory.Create();
+        i.allowSubPrograms = true;
+    }
 
     [Test] public void TestInvocation(){
         i.Parse("Attack()");

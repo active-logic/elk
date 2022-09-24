@@ -15,6 +15,12 @@ public class FuncDef{
         this.body = body;
     }
 
+    public int paramCount => parameters?.Length ?? 0;
+
+    public bool MatchesSignatureOf(FuncDef that)
+    => that.name == this.name
+    && that.paramCount == this.paramCount;
+
     override public string ToString(){
         if(parameters == null) return name + " → {" + body + "}";
         var @out = new StringBuilder();
@@ -27,7 +33,5 @@ public class FuncDef{
         }
         return @out.ToString() + " → {" + body + "}";
     }
-
-    public int paramCount => parameters?.Length ?? 0;
 
 }}
