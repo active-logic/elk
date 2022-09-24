@@ -14,12 +14,16 @@ public class BTLScriptChecker : AssetPostprocessor{
     void OnPreprocessAsset()
     {
         if(!assetPath.Contains("Resources")) return;
-        if(!assetPath.EndsWith(".txt")) return;
-        if(!Match(assetPath, Shebang)) return;
+        if(!assetPath.EndsWith(".txt"))      return;
+        if(!Match(assetPath, Shebang))       return;
         //ebug.Log($"Process BTL file {assetPath}");
         var content = File.ReadAllText(assetPath).Substring(5);
         var obj = interpreter.Parse(content);
-        //ebug.Log(obj);
+        foreach(var bt in Object.FindObjectsOfType<BTL>()){
+            if(assetPath.Contains(bt.path)){
+                bt.program = obj;
+            }
+        }
     }
 
     public static bool Match(string filename, string contentPrefix){
