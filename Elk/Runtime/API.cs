@@ -36,7 +36,6 @@ public class Interpreter<Cx>{
         var tokens = new Sequence(tokenizer.Tokenize(arg));
         typecaster?.Transform(tokens);
         var @out = parser.Parse(tokens);
-        UnityEngine.Debug.Log($"Output type: {@out.GetType()}");
         validator.Validate(@out, allowSubPrograms);
         return @out;
     }
