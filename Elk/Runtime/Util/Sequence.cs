@@ -1,16 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
+// TODO unwanted dep
+using FuncDef = Elk.Basic.Graph.FuncDef;
+using System.Text;
+using Ex = System.Exception;
 
 namespace Elk.Util{
 public class Sequence{
 
-    List<object> elements;
+    List<Token> elements;
     public bool dirty{ get; private set; }
     public System.Action<object> log;
 
-    public Sequence(params string[] args){
-        elements = (from x in args select (object)x).ToList();
-    }
+    public Sequence(params Token[] args)
+    => elements = args.ToList();
+
+    public Sequence(params string[] args)
+    => elements = (from x in args select new Token(x, 0)).ToList();
 
     public static implicit operator Sequence(string[] args)
     => new Sequence(args);
@@ -26,8 +32,11 @@ public class Sequence{
     public int size => elements.Count;
 
     public object this[int index]{
-        get => elements[index];
-        set => elements[index] = value;
+        get => elements[index].content;
+        set{
+            if(value is Token) throw new Ex("Pass content not token");
+            elements[index].content = value;
+        }
     }
 
     // -------------------------------------------------------------
@@ -55,28 +64,53 @@ public class Sequence{
     }
 
     public object Get(int index)
-    => (index > lastIndex || index < 0) ? null : this[index];
+    => (index > lastIndex || index < 0) ? null
+       : this[index];
 
     public T Get<T>(int index) where T : class
-    => (index > lastIndex || index < 0) ? null : this[index] as T;
+    => (index > lastIndex || index < 0) ? null
+       : this[index] as T;
+
+    public int LineNumber(int index) => elements.Line(index);
 
     // -------------------------------------------------------------
 
     // NOTE last arg here only for logging purposes
     public void Replace(int i, int count, object arg, object src){
         log?.Invoke($"Replace [{count}] tokens at index {i} via {src}");
+        var lineNum = LineNumber(i);
         elements.RemoveRange(i, count);
-        elements.Insert(i, arg);
+        elements.Insert(i, new Token(arg, lineNum));
         dirty = true;
     }
 
     public string Format(){
-        var builder = new System.Text.StringBuilder();
+        var builder = new StringBuilder();
+        for(int i = 0; i < size; i++)
+            builder.Append(ElemToString(this[i]));
+        return builder.ToString();
+    }
+
+    public string XFormat(){
+        var builder = new StringBuilder();
         for(int i = 0; i < size; i++){
-            builder.Append( $"|| {this[i].ToString()} ({this[i].GetType().Name})\n");
+            var e = this[i];
+            switch(e){
+            case FuncDef[] functions:
+                foreach(var f in functions){
+                    builder.Append( $"|| {f.ToString()}\n");
+                }
+                break;
+            default:
+                builder.Append(ElemToString(e));
+                break;
+            }
         }
         return builder.ToString();
     }
+
+    string ElemToString(object arg)
+    => $"|| {arg.ToString()} ({arg.GetType().Name})\n";
 
     // =============================================================
 

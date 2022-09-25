@@ -18,11 +18,15 @@ public class BTLScriptChecker : AssetPostprocessor{
         if(!Match(assetPath, Shebang))       return;
         //ebug.Log($"Process BTL file {assetPath}");
         var content = File.ReadAllText(assetPath).Substring(5);
-        var obj = interpreter.Parse(content);
-        foreach(var bt in Object.FindObjectsOfType<BTL>()){
-            if(assetPath.Contains(bt.path)){
-                bt.program = obj;
+        try{
+            var obj = interpreter.Parse(content);
+            foreach(var bt in Object.FindObjectsOfType<BTL>()){
+                if(assetPath.Contains(bt.path)){
+                    bt.program = obj;
+                }
             }
+        }catch(ParsingException ex){
+            throw new ParsingException(ex.Message + $" in {assetPath}");
         }
     }
 

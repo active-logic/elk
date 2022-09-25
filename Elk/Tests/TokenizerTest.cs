@@ -1,51 +1,79 @@
 using NUnit.Framework;
 using Elk.Basic;
+using Elk.Util;
 
 namespace Elk_Test{
-public class TokenizerTest : BasicTokenizerTest{
+public class TokenizerTest{
 
-    public override void Setup()
+    protected Elk.Tokenizer t;
+
+    [SetUp] public void Setup()
     => t = new Elk.Basic.Tokenizer();
+
+    // -------------------------------------------------------------
+
+    [Test] public void Test_T0_Pass(){
+        Assert.AreEqual(
+            new string[]{"big", "time"},
+            t.Tokenize("big time").ToStringArray()
+        );
+    }
+
+    [Test] public void Test_T0_Pass_withExtraSpace(){
+        Assert.AreEqual(
+            new string[]{"big", "time"},
+            t.Tokenize("big          time  ").ToStringArray()
+        );
+    }
+
+    [Test] public void Test_T0_Pass_withSpecialWhitespace(){
+        Assert.AreEqual(
+            new string[]{"big", "time"},
+            t.Tokenize("big\n\rtime").ToStringArray()
+        );
+    }
+
+    // -------------------------------------------------------------
 
     [Test] public void Test_Parens_Pass(){
         Assert.AreEqual(
             new string[]{"(", ")"},
-            t.Tokenize("()")
+            t.Tokenize("()").ToStringArray()
         );
     }
 
     [Test] public void Test_SymbolIsBreakingAfterLetter(){
         Assert.AreEqual(
             new string[]{"foo", "("},
-            t.Tokenize("foo(")
+            t.Tokenize("foo(").ToStringArray()
         );
     }
 
     [Test] public void Test_SymbolIsBreakingBeforeLetter(){
         Assert.AreEqual(
             new string[]{"+", "foo"},
-            t.Tokenize("+foo")
+            t.Tokenize("+foo").ToStringArray()
         );
     }
 
     [Test] public void Test_DoubleChar_Pass(){
         Assert.AreEqual(
             new string[]{"++", "5"},
-            t.Tokenize("++5")
+            t.Tokenize("++5").ToStringArray()
         );
     }
 
     [Test] public void Test_DoubleChar_Ignore(){
         Assert.AreEqual(
             new string[]{"*", "*", "5"},
-            t.Tokenize("**5")
+            t.Tokenize("**5").ToStringArray()
         );
     }
 
     [Test] public void Test_Arrow_Op(){
         Assert.AreEqual(
             new string[]{"foo", "=>", "5"},
-            t.Tokenize("foo=>5")
+            t.Tokenize("foo=>5").ToStringArray()
         );
     }
 

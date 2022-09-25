@@ -10,11 +10,12 @@ public class BTL : MonoBehaviour, LogSource{
 
     public string path;
     public Component[] @import;
+    public bool useHistory = true;
+    //
     string log, output, loadedFrom;
     object π;
     Interpreter<Cx> ι;
     History _history;
-    public bool useHistory = true;
 
     void Update(){
         if(path != loadedFrom && IsValidPath(path)) π = null;
@@ -41,7 +42,11 @@ public class BTL : MonoBehaviour, LogSource{
         if(src.StartsWith(BTLScriptChecker.Shebang))
             src = src.Substring(5);
         loadedFrom = path;
-        return interpreter.Parse(src);
+        try{
+            return interpreter.Parse(src);
+        }catch(ParsingException ex){
+            throw new ParsingException(ex.Message + $" in {path}.txt");
+        }
     }
 
     public object program{

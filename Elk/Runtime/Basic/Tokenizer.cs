@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using Elk.Util;
 
 namespace Elk.Basic{
 public class Tokenizer : Elk.Tokenizer{
@@ -7,18 +8,19 @@ public class Tokenizer : Elk.Tokenizer{
     public char decimalDot = '.';
     public string doubleSymbols = "+-&|=";
 
-    public string[] Tokenize(string arg){
+    public Token[] Tokenize(string arg){
         StringBuilder word = new StringBuilder();
-        List<string> tokens = new List<string>();
+        List<Token> tokens = new List<Token>();
+        int line = 1;
         foreach(char c in arg){
             if(char.IsWhiteSpace(c) || char.IsControl(c)){
                 if(word.Length > 0){
-                    tokens.Add(word.ToString());
+                    tokens.Add(word, line);
                     word = new StringBuilder();
                 }
             }else if (char.IsLetterOrDigit(c)){
                 if(word.Length > 0 && IsBreaking(word[word.Length-1])){
-                    tokens.Add(word.ToString());
+                    tokens.Add(word, line);
                     word = new StringBuilder();
                 }
                 word.Append(c);
@@ -26,14 +28,14 @@ public class Tokenizer : Elk.Tokenizer{
                 // TODO in general I think one operator followed by another
                 // should be an error, however may want to support +=, -=, ...
                 if(!(Double(c, word) || IsDecimalDot(c, word) || IsArrowHead(c, word))){
-                    tokens.Add(word.ToString());
+                    tokens.Add(word, line);
                     word = new StringBuilder();
                 }
                 word.Append(c);
             }
+            if(c.IsNewLine()) line++;
         }
-        var lastWord = word.ToString();
-        if(lastWord.Length > 0) tokens.Add(lastWord);
+        if(word.Length > 0) tokens.Add(word, line);
         return tokens.ToArray();
     }
 
