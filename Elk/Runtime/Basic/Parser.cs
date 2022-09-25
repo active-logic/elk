@@ -10,6 +10,7 @@ using static Elk.Basic.Parser.RuleSet;
 namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
 
+    public static bool showErrorDetails = false;
     Rule[] rules;
     public Action log;
 
@@ -39,10 +40,24 @@ public partial class Parser : Elk.Parser{
         }
         return vector.isSingleton
             ? vector[0]
-            : throw new ArgEx(
-                $"Irreducible (count: {vector.size})\n"
-                + vector.Format()
+            : throw new ParsingException(
+                $"{ErrorInfo(vector)}{ErrorDetails(vector)}"
             );
+    }
+
+    public string ErrorInfo(Sequence vector){
+        for(var i = 0; i < vector.size; i++){
+            var e = vector[i];
+            if(e is FuncDef) continue;
+            if(e is FuncDef[]) continue;
+            return $"error at line {vector.LineNumber(i)}";
+        }
+        return "Unknown error";
+    }
+
+    public string ErrorDetails(Sequence vector){
+        if(!showErrorDetails) return null;
+        return "\n" + vector.XFormat();
     }
 
     public object this[params string[] tokens] => Parse(tokens);

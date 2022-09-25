@@ -43,7 +43,7 @@ public class Interpreter<Cx>{
 }
 
 public interface Tokenizer{
-    string[] Tokenize(string arg);
+    Token[] Tokenize(string arg);
 }
 
 public interface Parser{
