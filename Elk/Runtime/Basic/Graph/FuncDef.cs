@@ -1,3 +1,4 @@
+using UnityEngine;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ public class FuncDef{
     public readonly string[] parameters;
     public object body;
 
-    public FuncDef(string name, IEnumerable<string> @params, object body){
+    public FuncDef(
+        string name, IEnumerable<string> @params, object body
+    ){
         this.name = name;
         this.parameters = @params?.ToArray() ?? null;
         this.body = body;
@@ -18,8 +21,22 @@ public class FuncDef{
     public int paramCount => parameters?.Length ?? 0;
 
     public bool MatchesSignatureOf(FuncDef that)
-    => that.name == this.name
-    && that.paramCount == this.paramCount;
+    => Matches(that.name, that.paramCount);
+
+    public bool Matches(string name, int paramCount)
+    => name == this.name && paramCount == this.paramCount;
+
+    bool FuncMatches(FuncDef fdef, string name, int argLength){
+        if(fdef == null){
+            Debug.LogError("fdef is null");
+            return false;
+        }
+        if(fdef.name == null){
+            Debug.LogError("fdef name is null");
+            return false;
+        }
+        return fdef.name == name && fdef.paramCount == argLength;
+    }
 
     override public string ToString(){
         if(parameters == null) return name + " → {" + body + "}";
