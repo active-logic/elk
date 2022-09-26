@@ -10,7 +10,7 @@ using static Elk.Basic.Parser.RuleSet;
 namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
 
-    public static bool showErrorDetails = false;
+    public static bool showErrorDetails = true;
     Rule[] rules;
     public Action log;
 
@@ -18,6 +18,7 @@ public partial class Parser : Elk.Parser{
 
     public Parser(string funcPreamble) => rules = new Rule[]{
         Rst( new FuncRule(), new FuncPrecursor(funcPreamble)),
+        Rst( new RecallRule() ),
         Rst( ".", new InvocationRule()),
         Una("! ~ ++ -- + -"),
         Bin("* / %"),

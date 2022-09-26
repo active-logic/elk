@@ -20,7 +20,9 @@ public class BTL : MonoBehaviour, LogSource{
     void Update(){
         if(path != loadedFrom && IsValidPath(path)) π = null;
         var p  = program;
-        var cx = BTLContextFactory.Create(p, Untype(@import));
+        var cx = BTLContextFactory.Create(
+            p, new BTLHistory(history), Untype(@import)
+        );
         output = interpreter.Run(cx)?.ToString();
         log = cx.graph.Format();
         if(useHistory) history.Log(log, transform);
@@ -38,14 +40,18 @@ public class BTL : MonoBehaviour, LogSource{
     => Resources.Load<TextAsset>(path) != null;
 
     object Parse(string path){
-        var src = Resources.Load<TextAsset>(path).text;
+        if(string.IsNullOrEmpty(path)) throw new ParsingException($"Empty BTL path in ({gameObject.name})");
+        var src = Resources.Load<TextAsset>(path)?.text;
+        if(src == null) throw new ParsingException($"Invalid path {path} ({gameObject.name})");
         if(src.StartsWith(BTLScriptChecker.Shebang))
             src = src.Substring(5);
         loadedFrom = path;
         try{
             return interpreter.Parse(src);
         }catch(ParsingException ex){
-            throw new ParsingException(ex.Message + $" in {path}.txt");
+            throw new ParsingException(
+                ex.Message + $" in {path}.txt", ex
+            );
         }
     }
 

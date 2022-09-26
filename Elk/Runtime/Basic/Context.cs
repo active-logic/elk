@@ -10,6 +10,7 @@ public class Context{
     public IEnumerable<FuncDef[]> modules;
     public IEnumerable<object> externals;
     public CallGraph graph;
+    public Elk.History history;
 
     public Context(){
         argumentStack = new Stack<ArgMap>();

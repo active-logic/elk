@@ -1,3 +1,4 @@
+using Elk;
 using Elk.Basic;
 using FuncDef = Elk.Basic.Graph.FuncDef;
 using Active.Core;
@@ -5,11 +6,13 @@ using Active.Core;
 namespace Activ.BTL{
 public static class BTLContextFactory{
 
-    public static Context Create(object program,
-                                 params object[] externals){
+    public static Context Create(
+        object program, History history, params object[] externals
+    ){
         var cx = new Context(){
             modules = new FuncDef[][]{ (FuncDef[])program },
             externals = externals,
+            history = history
         };
         cx.graph.returnValueFormatter = x => {
             var str = x?.ToString() ?? "∅";

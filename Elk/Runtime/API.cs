@@ -50,6 +50,11 @@ public interface Parser{
     object Parse(Sequence tokens);
 }
 
+public interface History{
+    bool Did(string action);
+    bool Did(string action, string since, bool strict);
+}
+
 public interface Validator{
     void Validate(object program, bool allowSubPrograms);
 }
