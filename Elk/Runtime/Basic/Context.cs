@@ -10,6 +10,8 @@ public class Context{
     public IEnumerable<FuncDef[]> modules;
     public IEnumerable<object> externals;
     public CallGraph graph;
+    public Elk.Memory.Record record;
+    public Elk.Memory.Cog cog;
 
     public Context(){
         argumentStack = new Stack<ArgMap>();
@@ -20,11 +22,20 @@ public class Context{
     => argumentStack.Peek()[key];
 
     public bool HasKey(string name){
+        if(argumentStack.Count == 0) return false;
         var map = argumentStack.Peek();
         return map.ContainsKey(name);
     }
 
-    public void Push(string[] parameters, object[] arguments){
+    public void StackPush(string arg) => graph.Push(arg);
+
+    public void StackPop(object value){
+        var callInfo = graph.Peek();
+        cog.Commit(callInfo, value, record);
+        graph.Pop(value);
+    }
+
+    public void PushArguments(string[] parameters, object[] arguments){
         var map = new ArgMap();
         var len = parameters?.Length ?? 0;
         for(int i = 0; i < len; i++){
@@ -33,6 +44,6 @@ public class Context{
         argumentStack.Push(map);
     }
 
-    public void Pop() => argumentStack.Pop();
+    public void PopArguments() => argumentStack.Pop();
 
 }}

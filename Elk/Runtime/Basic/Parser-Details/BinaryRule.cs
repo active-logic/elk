@@ -10,6 +10,7 @@ public class BinaryRule : LocalRule{
     public BinaryRule(object op) => this.op = op.ToString();
 
     override public void Process(Sequence vec, int i){
+        if(!Validate(vec, i)) return;
         var x  = vec.Get(i);
         var op = vec.AsString(i + 1);
         var y  = vec.Get(i + 2);
@@ -17,6 +18,8 @@ public class BinaryRule : LocalRule{
         if(op != this.op || y == null) return;
         vec.Replace(i, 3, new BinaryExp( vec[i], op, vec[i+2]), this);
     }
+
+    protected virtual bool Validate(Sequence vec, int i) => true;
 
     override public string ToString()
     => $"BinaryRule({op})";

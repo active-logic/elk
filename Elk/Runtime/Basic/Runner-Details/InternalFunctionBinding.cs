@@ -14,9 +14,9 @@ public class InternalFunctionBinding : InvocationBinding{
     override protected object Invoke(
         object[] values, Runner<Context> ρ, Context cx
     ){
-        cx.Push(function.parameters, values);
+        cx.PushArguments(function.parameters, values);
         var @out = ρ.Eval(function.body, cx);
-        cx.Pop();
+        cx.PopArguments();
         return @out;
     }
 

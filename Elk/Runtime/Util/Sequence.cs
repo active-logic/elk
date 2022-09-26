@@ -15,6 +15,9 @@ public class Sequence{
     public Sequence(params Token[] args)
     => elements = args.ToList();
 
+    public Sequence(params object[] args)
+    => elements = (from x in args select new Token(x, 0)).ToList();
+
     public Sequence(params string[] args)
     => elements = (from x in args select new Token(x, 0)).ToList();
 

@@ -23,6 +23,7 @@ public class Invocation : Expression{
         if(arguments == null) return $"{name}()";
         var @out = new StringBuilder();
         @out.Append(name);
+        @out.Append("(");
         for(int i = 0; i < arguments.Length; i++){
             @out.Append(
                 $"{arguments[i]}" +
