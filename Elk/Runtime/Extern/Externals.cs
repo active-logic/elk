@@ -1,16 +1,21 @@
 using System.Collections;
+using System.Reflection;
 using Ex = System.Exception;
+using Elk.Basic.Runtime;
 
 namespace Elk.Bindings.CSharp{
-public static class IEnumerableExt{
+public static class Externals{
 
-    public static object Invoke(
+    public static InvocationBinding Bind(
         this IEnumerable cx, string func, object[] args
     ){
-        foreach(var e in cx)
-            if(e.Invoke(func, args, out object @out))
-                return @out;
-        throw new Ex($"Not found ({func})");
+        foreach(var obj in cx){
+            var method = obj.Bind(func, args);
+            if(method != null){
+                return new ExternalFunctionBinding(obj, method);
+            }
+        }
+        return null;
     }
 
     public static object Eval(

@@ -4,7 +4,7 @@ using Elk.Basic.Graph;
 using Elk.Basic.Runtime;
 
 namespace Elk.Basic{
-public partial class Runner : Elk.Runner<Context>{
+public class Runner : Elk.Runner<Context>{
 
     public UnaEval una;
     public BinEval bin;
@@ -29,6 +29,13 @@ public partial class Runner : Elk.Runner<Context>{
             case object val when literal(val): return val;
             case null: return arg;
             default: throw new Ex($"Cannot evaluate {arg}");
+        }
+    }
+
+    public void EvalArgs(object[] args, object[] @out, Context cx){
+        var len = args?.Length ?? 0;
+        for(int i = 0; i < len; i++){
+            @out[i] = this.Eval(args[i], cx);
         }
     }
 

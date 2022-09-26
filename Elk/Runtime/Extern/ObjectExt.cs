@@ -1,5 +1,11 @@
+using System.Reflection;
+
 namespace Elk.Bindings.CSharp{
 public static class ObjectExt{
+
+    public static MethodInfo Bind(
+        this object self, string func, object[] args
+    ) => self.GetType().GetMethod(func, args);
 
     public static bool Invoke(
         this object self, string func, object[] args, out object @out
