@@ -18,6 +18,8 @@ public readonly struct xchar{
     public static implicit operator char(xchar self)
     => self.character;
 
+    public bool IsNewLine() => character == '\n';
+
     public static IEnumerable<xchar> ToXChar(string arg){
         int line = 1, offset = 1;
         return from c in arg
