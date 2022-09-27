@@ -50,7 +50,7 @@ public partial class Parser : Elk.Parser{
             var e = vector[i];
             if(e is FuncDef) continue;
             if(e is FuncDef[]) continue;
-            return $"error at line {vector.LineNumber(i)}";
+            return $"error at line {vector.LineNumber(i)}\n...";
         }
         return "Unknown error";
     }

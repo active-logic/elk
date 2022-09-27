@@ -7,12 +7,17 @@ public class Tokenizer : Elk.Tokenizer{
 
     public char decimalDot = '.';
     public string doubleSymbols = "+-&|=";
+    CommentParser commentParser = new CommentParser();
 
     public Token[] Tokenize(string arg){
         StringBuilder word = new StringBuilder();
         List<Token> tokens = new List<Token>();
+        var xchars = commentParser.Parse(arg);
+        // NOTE - when a word is formed its line number is the same
+        // as the next character's.
         int line = 1;
-        foreach(char c in arg){
+        foreach(xchar c in xchars){
+            line = c.line;
             if(char.IsWhiteSpace(c) || char.IsControl(c)){
                 if(word.Length > 0){
                     tokens.Add(word, line);
@@ -25,15 +30,15 @@ public class Tokenizer : Elk.Tokenizer{
                 }
                 word.Append(c);
             }else{
-                // TODO in general I think one operator followed by another
-                // should be an error, however may want to support +=, -=, ...
-                if(!(Double(c, word) || IsDecimalDot(c, word) || IsArrowHead(c, word))){
+                // TODO sometimes one operator followed by another
+                // is an error, however... +=, -=, ...
+                if(!(Double(c, word) || IsDecimalDot(c, word)
+                                     || IsArrowHead(c, word))){
                     tokens.Add(word, line);
                     word = new StringBuilder();
                 }
                 word.Append(c);
             }
-            if(c.IsNewLine()) line++;
         }
         if(word.Length > 0) tokens.Add(word, line);
         return tokens.ToArray();
