@@ -10,6 +10,7 @@ public class Runner : Elk.Runner<Context>{
     public BinEval bin;
     public PropEval prp;
     public InvocationEval inv;
+    public RecallEval rec;
     public Func<object, bool> literal;
 
     public Runner(){
@@ -17,6 +18,7 @@ public class Runner : Elk.Runner<Context>{
         una = new UnaEval();
         prp = new PropEval();
         inv = new InvocationEval();
+        rec = new RecallEval();
         literal = IsLiteral;
     }
 
@@ -26,6 +28,7 @@ public class Runner : Elk.Runner<Context>{
             case UnaryExp  op: return una.Eval(op, this, cx);
             case string label: return prp.Eval(label, cx);
             case Invocation ι: return inv.Eval(ι, this, cx);
+            case Recall     r: return rec.Eval(r, this, cx);
             case object val when literal(val): return val;
             case null: return arg;
             default: throw new Ex($"Cannot evaluate {arg}");

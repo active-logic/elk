@@ -24,7 +24,7 @@ public static class Externals{
         foreach(var e in cx)
             if(e.Eval(label, out object @out))
                 return @out;
-        throw new Ex($"Not found ({label})");
+        throw new Ex($"Property not found: [{label}]");
     }
 
 }}

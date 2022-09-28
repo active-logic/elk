@@ -4,6 +4,7 @@ using Elk;
 using Cx = Elk.Basic.Context;
 using Active.Core;
 using History = Active.Core.Details.History;
+using Record = Elk.Memory.Record;
 
 namespace Activ.BTL{
 public class BTL : MonoBehaviour, LogSource{
@@ -11,16 +12,23 @@ public class BTL : MonoBehaviour, LogSource{
     public string path;
     public Component[] @import;
     public bool useHistory = true;
+    public Record record;
+    public BTLCog cognition;
     //
     string log, output, loadedFrom;
     object π;
     Interpreter<Cx> ι;
     History _history;
 
+    void Awake(){
+        record = new Record(gameObject.name);
+        cognition = new BTLCog(this);
+    }
+
     void Update(){
         if(path != loadedFrom && IsValidPath(path)) π = null;
         var p  = program;
-        var cx = BTLContextFactory.Create(p, Untype(@import));
+        var cx = BTLContextFactory.Create(this, p, Untype(@import));
         output = interpreter.Run(cx)?.ToString();
         log = cx.graph.Format();
         if(useHistory) history.Log(log, transform);
@@ -38,14 +46,18 @@ public class BTL : MonoBehaviour, LogSource{
     => Resources.Load<TextAsset>(path) != null;
 
     object Parse(string path){
-        var src = Resources.Load<TextAsset>(path).text;
+        if(string.IsNullOrEmpty(path)) throw new ParsingException($"Empty BTL path in ({gameObject.name})");
+        var src = Resources.Load<TextAsset>(path)?.text;
+        if(src == null) throw new ParsingException($"Invalid path {path} ({gameObject.name})");
         if(src.StartsWith(BTLScriptChecker.Shebang))
             src = src.Substring(5);
         loadedFrom = path;
         try{
             return interpreter.Parse(src);
         }catch(ParsingException ex){
-            throw new ParsingException(ex.Message + $" in {path}.txt");
+            throw new ParsingException(
+                ex.Message + $" in {path}.txt", ex
+            );
         }
     }
 

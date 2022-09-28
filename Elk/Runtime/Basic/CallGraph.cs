@@ -20,6 +20,8 @@ public class CallGraph{
         stack.Push(node);
     }
 
+    public string Peek() => stack.Peek().info;
+
     public void Pop(object returnValue){
         var str = returnValueFormatter?.Invoke(returnValue)
                   ?? returnValue?.ToString() ?? "null";
