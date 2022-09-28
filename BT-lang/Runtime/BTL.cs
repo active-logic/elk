@@ -1,10 +1,10 @@
 using System.Linq;
 using UnityEngine;
-using Elk;
+using Elk; using Elk.Basic;
 using Cx = Elk.Basic.Context;
+using Record = Elk.Memory.Record;
 using Active.Core;
 using History = Active.Core.Details.History;
-using Record = Elk.Memory.Record;
 
 namespace Activ.BTL{
 public class BTL : MonoBehaviour, LogSource{
@@ -45,24 +45,12 @@ public class BTL : MonoBehaviour, LogSource{
     bool IsValidPath(string path)
     => Resources.Load<TextAsset>(path) != null;
 
-    object Parse(string path){
-        if(string.IsNullOrEmpty(path)) throw new ParsingException($"Empty BTL path in ({gameObject.name})");
-        var src = Resources.Load<TextAsset>(path)?.text;
-        if(src == null) throw new ParsingException($"Invalid path {path} ({gameObject.name})");
-        if(src.StartsWith(BTLScriptChecker.Shebang))
-            src = src.Substring(5);
-        loadedFrom = path;
-        try{
-            return interpreter.Parse(src);
-        }catch(ParsingException ex){
-            throw new ParsingException(
-                ex.Message + $" in {path}.txt", ex
-            );
-        }
-    }
+    object Build(string path) => new Builder(
+        interpreter.reader, BTLScriptChecker.Shebang
+    ).Build(path);
 
     public object program{
-        private get => π != null ? π : (π = Parse(path));
+        private get => π != null ? π : (π = Build(path));
         set => π = value;
     }
 

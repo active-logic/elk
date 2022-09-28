@@ -11,24 +11,20 @@ public class BTL_InterpreterTest{
 
     [SetUp] public void Setup(){
         i = BTLInterpreterFactory.Create();
-        i.allowSubPrograms = true;
+        i.reader.validator = null;
     }
 
-    [Test] public void TestInvocation(){
-        i.Parse("Attack()");
-    }
+    [Test] public void TestInvocation()
+    => i.Parse("Attack()");
 
-    [Test] public void TestLogicalOr_2(){
-        i.Parse("Attack() || Roam");
-    }
+    [Test] public void TestLogicalOr_2()
+    => i.Parse("Attack() || Roam");
 
-    [Test] public void TestLogicalOr_1(){
-        i.Parse("Attack() || Roam()");
-    }
+    [Test] public void TestLogicalOr_1()
+    => i.Parse("Attack() || Roam()");
 
-    [Test] public void TestFunc_A(){
-        i.Parse("task Main() => Attack() || Roam();");
-    }
+    [Test] public void TestFunc_A()
+    => i.Parse("task Main() => Attack() || Roam();");
 
     [Test] public void TestLiterals_1(){
         var root = i.Parse("true || false") as BinaryExp;

@@ -26,9 +26,11 @@ public class UnaryRule : LocalRule{
 
     bool IsOperand(object arg){
         switch(arg){
+            case null:
+                return false;
             case Expression:
                 return true;
-            case string str when char.IsLetterOrDigit(str[0]):
+            case string str when str.Length > 0 && char.IsLetterOrDigit(str[0]):
                 return true;
             case object obj when obj.IsNumber():
                 return true;

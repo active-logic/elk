@@ -11,7 +11,7 @@ public static class BTLInterpreterFactory{
     public static Interpreter<Context> Create(){
         var interpreter = new Elk.Basic.Interpreter("task");
         interpreter.entry = "Step";
-        interpreter.typecaster = new BTLTypeCaster();
+        interpreter.reader.typecaster = new BTLTypeCaster();
         var runner = (Elk.Basic.Runner) interpreter.runner;
         runner.literal = (x => x is bool || x is int || x is status);
         runner.bin = new BTLBinEval();

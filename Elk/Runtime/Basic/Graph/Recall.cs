@@ -1,4 +1,3 @@
-using S = System.String;
 using Elk.Bindings.CSharp;
 
 namespace Elk.Basic.Graph{
@@ -14,8 +13,8 @@ public class Recall : Expression{
         this.strict = strict;
     }
 
-    override public S ToString()
-    => since != null ? $"(did [{action}] since [{since}])"
-                     : $"(did [{action}])";
+    override public string ToString()
+    => since != null ? $"(did {action} since {since})"
+                     : $"(did {action})";
 
 }}

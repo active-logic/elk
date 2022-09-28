@@ -27,8 +27,7 @@ Two steps:
 - (1) Extend [BTLCog][../BT-lang/Runtime/BTLCog.cs] or implement the [Cog](../Elk/Runtime/Memory/Cog.cs) interface (see inline doc for details)
 - (2) Given a BTL component, assign `cognition`:
 
-cs
-```
-MyCog cog = new Cog();
+```cs
+var cog = new MyCog();
 this.GetComponent<BTL>().cognition = cog;
 ```

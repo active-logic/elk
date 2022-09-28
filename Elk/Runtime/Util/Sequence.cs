@@ -76,6 +76,17 @@ public class Sequence{
 
     public int LineNumber(int index) => elements.Line(index);
 
+    public T[] ReadSeveral<T>(ref int index) where T : class{
+        List<T> @out = null;
+        for(; index < this.size; index++){
+            var elem = this.Get<T>(index);
+            if(elem == null) break;
+            if(@out == null) @out = new List<T>(8);
+            @out.Add(elem);
+        }
+        return @out?.ToArray();
+    }
+
     // -------------------------------------------------------------
 
     // NOTE last arg here only for logging purposes
