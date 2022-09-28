@@ -9,7 +9,7 @@ public class InterpreterTest{
 
     [Test] public void Test_SimpleScript(){
         var i = new Elk.Basic.Interpreter("func");
-        i.allowSubPrograms = true;
+        i.reader.validator = null;
         Assert.That( (int) i["2 + 2", context: null] == 4 );
     }
 

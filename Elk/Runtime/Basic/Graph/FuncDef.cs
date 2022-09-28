@@ -48,7 +48,7 @@ public class FuncDef{
                 ((i < parameters.Length - 1) ? ',' : ')')
             );
         }
-        return @out.ToString() + " → {" + body + "}";
+        return "(" + @out.ToString() + " → {" + body + "})";
     }
 
 }}

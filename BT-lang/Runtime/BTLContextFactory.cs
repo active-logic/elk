@@ -1,6 +1,6 @@
 using Elk;
 using Elk.Basic;
-using FuncDef = Elk.Basic.Graph.FuncDef;
+using Elk.Basic.Graph;
 using Active.Core;
 
 namespace Activ.BTL{
@@ -9,8 +9,9 @@ public static class BTLContextFactory{
     public static Context Create(
         BTL owner, object program, params object[] externals
     ){
+        var module = (Module) program;
         var cx = new Context(){
-            modules   = new FuncDef[][]{ (FuncDef[])program },
+            modules   = new FuncDef[][]{ module.functions },
             externals = externals,
             record    = owner.record,
             cog      = owner.cognition

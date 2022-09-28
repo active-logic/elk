@@ -1,4 +1,3 @@
-using S = System.String;
 using Elk.Bindings.CSharp;
 
 namespace Elk.Basic.Graph{
@@ -16,6 +15,6 @@ public class UnaryExp : Expression{
         CSharpOps.Unary.TryGetValue(op, out binding);
     }
 
-    override public S ToString() => $"({op}{arg})";
+    override public string ToString() => $"({op}{arg})";
 
 }}

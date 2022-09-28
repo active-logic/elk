@@ -8,6 +8,7 @@ using FuncDef = Elk.Basic.Graph.FuncDef;
 using static Elk.Basic.Parser.RuleSet;
 
 namespace Elk.Basic{
+// TODO separate parser vs default parser
 public partial class Parser : Elk.Parser{
 
     public static bool showErrorDetails = true;
@@ -17,6 +18,7 @@ public partial class Parser : Elk.Parser{
     public Parser(Rule[] rules) => this.rules = rules;
 
     public Parser(string funcPreamble) => rules = new Rule[]{
+        Rst( new StrongImportRule() ),
         Rst( new FuncRule(), new FuncPrecursor(funcPreamble)),
         Rst( new RecallRule() ),
         Rst( new AccessRule(), new InvocationRule()),
@@ -26,7 +28,7 @@ public partial class Parser : Elk.Parser{
         Bin("== !="),
         Bin("| &"),
         Bin("|| &&"),
-        Rst( new TypedSeqRule<FuncDef>() )
+        Rst( new ModuleRule() )
     };
 
     public object Parse(Sequence vector){

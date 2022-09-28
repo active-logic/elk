@@ -22,6 +22,9 @@ public class Runner : Elk.Runner<Context>{
         literal = IsLiteral;
     }
 
+    public object Invoke(string func, Context cx)
+    => Eval(new Invocation(func), cx);
+
     public object Eval(object arg, Context cx){
         switch(arg){
             case BinaryExp op: return bin.Eval(op, this, cx);
