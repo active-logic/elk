@@ -24,11 +24,17 @@ In BTL a behavior tree is a module defining several functions; the entry point i
 ```
 #!btl
 
-task Step() => Attack() || Roam();
+task Step()
+=> Flee(threat!) || DoAttack(target!) || Roam();
 
-task Attack() => Reach(target) && Attack(target);
+task DoAttack(target)
+=> Reach(target) && Attack(target) || Face(target);
 
-task Roam() => Move(rdir);
+task Flee(threat)
+=> lowHealth && Evade(threat, safetyRange);
+
+task Roam()
+=> Move(rdir);
 ```
 
 Add a BTL program to a game object via the BTL component.
