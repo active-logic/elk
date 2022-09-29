@@ -4,24 +4,15 @@ using Active.Core; using static Active.Raw;
 using Sequence = Elk.Util.Sequence;
 
 namespace Activ.BTL.Imp{
-public class TypeCaster : Sequence.Transformer{
+public class TypeCaster : Elk.Basic.TypeCaster{
 
-    public void Transform(Sequence vec){
-        for(int i = 0; i < vec.size; i++){
-            vec[i] = TransformToken((string)vec[i]);
-        }
-    }
-
-    object TransformToken(string arg){
-        if(char.IsDigit(arg[0])) return int.Parse(arg);
-        switch(arg){
-            case "true" : return true;
-            case "false" : return false;
+    override public object TransformToken(string arg){
+        object obj = base.TransformToken(arg);
+        switch(obj){
             case "fail": return fail;
             case "cont": return cont;
             case "done": return done;
-            case "null": return null;
-            default: return arg;
+            default: return obj;
         }
     }
 

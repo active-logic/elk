@@ -10,17 +10,22 @@ public class TypeCaster : Sequence.Transformer{
         }
     }
 
-    object TransformToken(string arg){
-        if(char.IsDigit(arg[0])) return int.Parse(arg);
+    public virtual object TransformToken(string arg){
+        if(char.IsDigit(arg[0])){
+            if(arg.EndsWith("f")){
+                return float.Parse(arg.Substring(0, arg.Length-1));
+            }else{
+                return int.Parse(arg);
+            }
+        }
         switch(arg){
             case "true" : return true;
             case "false" : return false;
-//            case "fail": return fail;
-//            case "cont": return cont;
-//            case "done": return done;
             case "null": return null;
             default: return arg;
         }
     }
+
+
 
 }}
