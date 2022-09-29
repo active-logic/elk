@@ -18,6 +18,7 @@ public class UnaryRule : LocalRule{
         var op  = vec.AsString(i);
         var arg = vec.Get(i + 1);
         if(op != this.op) return;
+        if(!IsOperand(arg)) return;
         vec.Replace(i, 2, new UnaryExp( vec[i+1], op), this);
     }
 

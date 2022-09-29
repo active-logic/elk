@@ -15,6 +15,7 @@ public class UnaryExp : Expression{
         CSharpOps.Unary.TryGetValue(op, out binding);
     }
 
-    override public string ToString() => $"({op}{arg})";
+    override public string ToString()
+    => postfix ? $"({arg}{op})" : $"({op}{arg})";
 
 }}

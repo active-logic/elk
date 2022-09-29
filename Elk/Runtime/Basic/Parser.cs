@@ -25,6 +25,7 @@ public partial class Parser : Elk.Parser{
         Una("! ~ ++ -- + -"),
         Bin("* / %"),
         Bin("+ -"),
+        PostUna("! ?"),
         Bin("< > <= >="),
         Bin("== !="),
         Bin("| &"),

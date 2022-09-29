@@ -7,12 +7,25 @@ using Elk.Basic.Runtime;
 namespace Elk.Basic{
 public class InvocationEval{
 
-    public object Eval(Invocation ι, Runner ρ, Context cx){
-        ρ.EvalArgs(ι.arguments, @out: ι.values, cx);
+    public object Eval(Invocation ι, bool didEvalArgs,
+                       Runner ρ, Context cx){
+        if(!didEvalArgs){
+            ρ.EvalArgs(ι.arguments, @out: ι.values, cx);
+        }
         cx.StackPush(ι.name + ι.values.NeatFormat());
         var @out = DoEval(ι, ρ, cx);
         cx.StackPop(@out);
         return @out;
+    }
+
+    public object Bypass(
+        Invocation ι, bool didEvalArgs, object sub, Context cx
+    ){
+        cx.StackPush(
+            ι.name + (didEvalArgs ? ι.values.NeatFormat() : "(-)")
+        );
+        cx.StackPop(sub);
+        return sub;
     }
 
     // PROVISIONAL - evaluate invocation arguments, then return
