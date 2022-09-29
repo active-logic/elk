@@ -7,18 +7,22 @@ using Active.Core;
 using History = Active.Core.Details.History;
 
 namespace Activ.BTL{
-public class BTL : MonoBehaviour, LogSource{
+public partial class BTL : MonoBehaviour, LogSource{
 
     public string path;
     public Component[] @import;
+    public string[] requirements;
     public bool useHistory = true;
     public Record record;
     public BTLCog cognition;
     //
     string log, output, loadedFrom;
     object π;
+    object[] externals;
     Interpreter<Cx> ι;
     History _history;
+
+    void Start() => EvalExternals();
 
     void Awake(){
         record = new Record(gameObject.name);
@@ -28,7 +32,7 @@ public class BTL : MonoBehaviour, LogSource{
     void Update(){
         if(path != loadedFrom && IsValidPath(path)) π = null;
         var p  = program;
-        var cx = BTLContextFactory.Create(this, p, Untype(@import));
+        var cx = BTLContextFactory.Create(this, p, externals);
         output = interpreter.Run(cx)?.ToString();
         log = cx.graph.Format();
         if(useHistory) history.Log(log, transform);
@@ -53,10 +57,6 @@ public class BTL : MonoBehaviour, LogSource{
         private get => π != null ? π : (π = Build(path));
         set => π = value;
     }
-
-    // TODO not so great
-    object[] Untype(Component[] arg)
-    => (from c in @import select (object)c).ToArray();
 
     Interpreter<Cx> interpreter
     => ι != null ? ι : (ι = BTLInterpreterFactory.Create());
