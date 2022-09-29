@@ -32,6 +32,10 @@ public class RuleSet : Rule{
         from arg in operators.Split() select new UnaryRule(arg)
     );
 
+    public static RuleSet PostUna(string operators) => new RuleSet(
+        from arg in operators.Split() select new PostfixUnaryRule(arg)
+    );
+
     public static RuleSet Bin(string operators) => new RuleSet(
         from arg in operators.Split() select new BinaryRule(arg)
     );

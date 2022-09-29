@@ -10,7 +10,10 @@ public class UnaEval{
     public object Eval(UnaryExp operation,
                        Runner ρ, Context cx){
         var operand = ρ.Eval(operation.arg, cx);
-        // TODO - CS binding calls should be in 'Extern'
+        // TODO - CS binding calls should be in 'extern'
+        if(operand == null) throw new Ex(
+            $"Null arg to unary '{operation.op}' is not allowed."
+        );
         var type = operand.GetType();
         var method = type.GetMethod(
             operation.binding, BF.Static | BF.Public

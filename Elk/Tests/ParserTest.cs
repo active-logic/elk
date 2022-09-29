@@ -73,6 +73,11 @@ public class ParserTest{
         p["1", "+", "2", "-", "3"]?.ToString()
     );
 
+    [Test] public void Test_PostfixUnary() => Assert.AreEqual(
+        "Attack((player!))",
+        p["Attack", "(", "player", "!", ")"]?.ToString()
+    );
+
     [Test] public void Test_UNARY_PREC_quirk() => Assert.AreEqual(
         "((-2)+3)",
         p["-", "2", "+", "3"]?.ToString()

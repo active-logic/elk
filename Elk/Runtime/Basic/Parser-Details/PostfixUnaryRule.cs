@@ -14,7 +14,7 @@ public class PostfixUnaryRule : LocalRule{
         var op   = vec.AsString(i + 1);
         if(op != this.op) return;
         vec.Replace(i, 2,
-            new UnaryExp( vec[i+1], op, postfix: true),
+            new UnaryExp( arg, op, postfix: true),
             this
         );
     }
