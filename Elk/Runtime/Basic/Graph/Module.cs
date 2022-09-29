@@ -6,10 +6,10 @@ using System.Linq;
 namespace Elk.Basic.Graph{
 public class Module{
 
-    public readonly StrongImport[] includes;
+    public readonly Include[] includes;
     public FuncDef[] functions;
 
-    public Module(StrongImport[] includes, FuncDef[] functions){
+    public Module(Include[] includes, FuncDef[] functions){
         this.includes = includes;
         this.functions = functions;
     }

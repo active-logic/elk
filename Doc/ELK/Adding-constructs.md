@@ -31,7 +31,7 @@ This is more definite than a parser test:
     var seq = new Sequence("with", "encounters", ";");
     rule.Process(seq, 0);
     Assert.AreEqual(1, seq.size);
-    Assert.That(seq[0] is StrongImport);
+    Assert.That(seq[0] is Include);
 }
 ```
 
@@ -43,13 +43,13 @@ using Elk.Util; using Elk.Basic.Graph;
 
 namespace Elk.Basic{
 public partial class Parser : Elk.Parser{
-public class StrongImportRule : LocalRule{
+public class IncludeRule : LocalRule{
 
     override public void Process(Sequence vec, int i){
         // stub
     }
 
-    override public string ToString() => $"StrongImportRule";
+    override public string ToString() => $"IncludeRule";
 
 }}}
 
@@ -58,11 +58,11 @@ public class StrongImportRule : LocalRule{
 Graph node; often little more than a typed data holder
 ```cs
 namespace Elk.Basic.Graph{
-public class StrongImport{
+public class Include{
 
     public readonly string module;
 
-    public StrongImport(string module) => this.module = module;
+    public Include(string module) => this.module = module;
 
     override public string ToString() => $"(with {module};)";
 
@@ -76,7 +76,7 @@ Local rules are provided a sequence with an index; the rule is used to find a ma
 As an example, `AsString(index)` checks for a string object at the specified index. If the entry at 'index' is not a string (or overflow) null is returned.
 
 ```cs
-public class StrongImportRule : LocalRule{
+public class IncludeRule : LocalRule{
 
     override public void Process(Sequence vec, int i){
         var i0 = i;
@@ -84,10 +84,10 @@ public class StrongImportRule : LocalRule{
         var arg = vec.AsString(i++);
         if(arg == null) return;
         if(vec.AsString(i++) != ";") return;
-        vec.Replace(i0, i - i0, new StrongImport(arg), this);
+        vec.Replace(i0, i - i0, new Include(arg), this);
     }
 
-    override public string ToString() => $"StrongImportRule";
+    override public string ToString() => $"IncludeRule";
 
 }
 ```
@@ -96,7 +96,7 @@ After implementing the rule, if correct the rule test will pass. The parser test
 
 ```cs
 public Parser(string funcPreamble) => rules = new Rule[]{
-    Rst( new StrongImportRule() ),
+    Rst( new IncludeRule() ),
     // more rules
     // ...
     Una("! ~ ++ -- + -"),
@@ -119,7 +119,7 @@ task Step()
 => Encounter(player) || Support(player) || Roam();
 ```
 
-Elk error reporting is not smart; the only thing it does understand is unification errors. In the above case, parsing is successful - short of the parser knowing what to do with a `{StrongImport, Funcdef}` sequence. Since parsing does not end with exactly one node at the root, parsing has failed.
+Elk error reporting is not smart; the only thing it does understand is unification errors. In the above case, parsing is successful - short of the parser knowing what to do with a `{Include, Funcdef}` sequence. Since parsing does not end with exactly one node at the root, parsing has failed.
 
 Ordinarily the solution is to represent the new construct via an interface. For example "Invocation" and "BinaryExp" both implement "Expression"; the consequence is that parsing allows expression trees involving invocations and binary expressions.
 
