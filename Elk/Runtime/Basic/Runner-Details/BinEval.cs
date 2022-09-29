@@ -1,3 +1,4 @@
+using System;
 using Ex = System.Exception;
 using O = System.Object;
 using BF = System.Reflection.BindingFlags;
@@ -15,10 +16,8 @@ public class BinEval{
         var binding = operation.binding;
         if(binding != null){
             var right = ρ.Eval(operation.arg1, cx);
-            //ebug.Log($"Phase 0: {binding}({left}, {right})");
             CastOperands(ref left, ref right);
             var type = left.GetType();
-            //ebug.Log($"Phase 1: {binding}({left}, {right})");
             var method = type.GetMethod(
                 binding, BF.Static | BF.Public
             );
@@ -27,28 +26,32 @@ public class BinEval{
                 return method.Invoke(null, new object[]{left, right} );
             }
         }
-        return DumbEval(left, operation.arg1,
-                        (string)operation.op, ρ, cx);
+        return Eval_obj_x_obj(left, operation.arg1,
+                              (string)operation.op, ρ, cx);
     }
 
     protected virtual void CastOperands(ref object x, ref object y){}
 
-    // NOTE - C# native ops need a dumb eval because they're not
-    // exposed via reflection (say 2 + 2); without 'dynamic' this
-    // is a pain (also, short-circuit operators cause not *directly*
-    // overloaded)
-    protected virtual object DumbEval(object X, object right,
-                                      string op, Runner ρ,
-                                      Context cx){
+    // NOTE - afaik until C#6 support for concise handling of
+    // numeric types is weak.
+    public virtual object Eval_obj_x_obj(object X, object right,
+                                   string op, Runner ρ,
+                                   Context cx){
+        return Eval_obj_x_obj(X, op, ρ.Eval(right, cx));
+    }
+
+    // NOTE - can convert Y to the desired type via IConvertible or
+    // Convert.To... but on its own too powerful, will round numbers
+    public virtual object Eval_obj_x_obj(object X, string op, object Y){
         switch(X){
             case float floatVal: return EvalFloat(
-                op, floatVal, (float)ρ.Eval(right, cx)
+                op, floatVal, (float)Y
             );
             case int intVal: return EvalInt(
-                op, intVal, (int)ρ.Eval(right, cx)
+                op, intVal,  (int)Y
             );
         }
-        throw new Ex($"Unsupported operation: {X} {op} ? ({X.GetType()})");
+        throw new Ex($"Unsupported: {X} {op} {Y} ({X.GetType()}, {Y.GetType()})");
     }
 
     object EvalFloat(string op, float X, float Y){
@@ -59,6 +62,11 @@ public class BinEval{
             //
             case "+": return X + Y;
             case "-": return X - Y;
+            //
+            case "<": return X < Y;
+            case ">": return X > Y;
+            case "<=": return X <= Y;
+            case ">=": return X >= Y;
             //
             case "==": return X == Y;
             case "!=": return X != Y;
@@ -75,6 +83,11 @@ public class BinEval{
             //
             case "+": return X + Y;
             case "-": return X - Y;
+            //
+            case "<": return X < Y;
+            case ">": return X > Y;
+            case "<=": return X <= Y;
+            case ">=": return X >= Y;
             //
             case "==": return X == Y;
             case "!=": return X != Y;

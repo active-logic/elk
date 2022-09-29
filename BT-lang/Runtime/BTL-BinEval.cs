@@ -17,20 +17,18 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
         }
     }
 
-    override protected object DumbEval(object X, object right, string op,
-                                       Runner ρ, Context cx){
+    override public object Eval_obj_x_obj(
+        object X, object right, string op, Runner ρ, Context cx
+    ){
         switch(X){
-            case float f: return EvalFloat(
-                op, f, (float)ρ.Eval(right, cx)
-            );
-            case int i: return EvalInt(
-                op, i, (int)ρ.Eval(right, cx)
-            );
             case bool b: return EvalBool(
                 op, b, right, ρ, cx
             );
             case status s: return EvalStatus(
                 op, s, right, ρ, cx
+            );
+            default: return base.Eval_obj_x_obj(
+                X, right, op, ρ, cx
             );
         }
         throw new Ex($"Unsupported operation: {X} {op} ? ({X.GetType()})");
@@ -61,37 +59,5 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
     status ToStatus(object arg)
     => arg is status s ? s : arg is bool b ? (status)b
     : throw new Ex($"Don't know how to convert {arg} to status");
-
-    object EvalFloat(string op, float X, float Y){
-        switch(op){
-            case "*": return X * Y;
-            case "/": return X / Y;
-            case "%": return X % Y;
-            //
-            case "+": return X + Y;
-            case "-": return X - Y;
-            //
-            case "==": return X == Y;
-            case "!=": return X != Y;
-            //
-            default: throw new Ex($"Unimplemented op {op}");
-        }
-    }
-
-    object EvalInt(string op, int X, int Y){
-        switch(op){
-            case "*": return X * Y;
-            case "/": return X / Y;
-            case "%": return X % Y;
-            //
-            case "+": return X + Y;
-            case "-": return X - Y;
-            //
-            case "==": return X == Y;
-            case "!=": return X != Y;
-            //
-            default: throw new Ex($"Unimplemented op {op}");
-        }
-    }
 
 }}
