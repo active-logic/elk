@@ -32,6 +32,7 @@ public class Runner : Elk.Runner<Context>{
             case string label: return prp.Eval(label, cx);
             case Invocation ι: return inv.Eval(ι, this, cx);
             case Recall     r: return rec.Eval(r, this, cx);
+            case Singleton  s: return Eval(s.content, cx);
             case object val when literal(val): return val;
             case null: return arg;
             default: throw new Ex($"Cannot evaluate {arg}");

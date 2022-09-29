@@ -18,7 +18,7 @@ public partial class Parser : Elk.Parser{
     public Parser(Rule[] rules) => this.rules = rules;
 
     public Parser(string funcPreamble) => rules = new Rule[]{
-        Rst( new StrongImportRule() ),
+        Rst( new IncludeRule() ),
         Rst( new FuncRule(), new FuncPrecursor(funcPreamble)),
         Rst( new RecallRule() ),
         Rst( new AccessRule(), new InvocationRule()),
@@ -28,6 +28,7 @@ public partial class Parser : Elk.Parser{
         Bin("== !="),
         Bin("| &"),
         Bin("|| &&"),
+        Rst( new ParensRule() ),
         Rst( new ModuleRule() )
     };
 

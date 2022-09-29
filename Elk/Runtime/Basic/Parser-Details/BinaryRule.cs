@@ -14,9 +14,16 @@ public class BinaryRule : LocalRule{
         var x  = vec.Get(i);
         var op = vec.AsString(i + 1);
         var y  = vec.Get(i + 2);
+        // TODO need for this signals lack of typing in tokens
+        if(IsParens(x) || IsParens(y)) return;
         // TODO possible error since "null" converts to null
         if(op != this.op || y == null) return;
         vec.Replace(i, 3, new BinaryExp( vec[i], op, vec[i+2]), this);
+    }
+
+    bool IsParens(object arg){
+        if(arg is string str) return str == "(" || str == ")";
+        else return false;
     }
 
     protected virtual bool Validate(Sequence vec, int i) => true;
