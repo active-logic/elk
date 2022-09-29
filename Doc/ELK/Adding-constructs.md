@@ -1,8 +1,10 @@
-# ELK notes
+# Adding new constructs [WIP DOC]
 
-## Adding a construct
+In general you can achieve new things in Elk without designing and implementing new constructs from scratch.
 
-In general you can achieve new things in Elk without implementing constructs from scratch. For example you can use `BinaryRule` to implement a new binary operator. Still, in these notes I walk through the whole process, from designing a new parsing rule to fitting the interpreter with an evaluator (a function that knows how to interpret a bit of program).
+As an example you can use `BinaryRule` to implement a new binary operator.
+
+Still, in these notes I walk through the whole process, from designing a new parsing rule to fitting the interpreter with an evaluator (a function that knows how to interpret a bit of program).
 
 As an example let's have a look at the work needed to add the strong import construct.
 
