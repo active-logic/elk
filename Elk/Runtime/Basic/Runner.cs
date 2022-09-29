@@ -35,7 +35,7 @@ public class Runner : Elk.Runner<Context>{
             case Singleton  s: return Eval(s.content, cx);
             case object val when literal(val): return val;
             case null: return arg;
-            default: throw new Ex($"Cannot evaluate {arg}");
+            default: throw new Ex($"Cannot evaluate {arg} of type {arg.GetType()}");
         }
     }
 

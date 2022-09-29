@@ -19,6 +19,13 @@ public class TokenizerTest{
         );
     }
 
+    [Test] public void Test_Tokenize_Num_With_Suffix(){
+        Assert.AreEqual(
+            new string[]{"big", "5f"},
+            t.Tokenize("big 5f").ToStringArray()
+        );
+    }
+
     [Test] public void Test_T0_Pass_withExtraSpace(){
         Assert.AreEqual(
             new string[]{"big", "time"},
