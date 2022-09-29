@@ -1,10 +1,12 @@
 using Elk.Basic;
 using Elk.Basic.Graph;
 using Active.Core; using static Active.Core.status;
-using UnityEngine;
 
 namespace Activ.BTL{
 public class BTLRunner : Elk.Basic.Runner{
+
+    override protected bool IsLiteral(object x)
+    => x is status || base.IsLiteral(x);
 
     override protected Pass Intercept(Invocation ι, Context cx){
         var args = ι.arguments;
@@ -36,7 +38,6 @@ public class BTLRunner : Elk.Basic.Runner{
             stop = false;
             return ρ.Eval(arg, cx);
         }else if(!IsWard(exp)){
-            Debug.Log($"UNARY EXP NOT WARD: {exp}");
             s = cont();
             stop = false;
             return ρ.Eval(arg, cx);

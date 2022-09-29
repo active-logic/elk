@@ -14,7 +14,6 @@ public static class BTLInterpreterFactory{
         interpreter.reader.typecaster = new BTLTypeCaster();
         var runner = new BTLRunner();
         interpreter.runner = runner;
-        runner.literal = (x => x is bool || x is int || x is status);
         runner.bin = new BTLBinEval();
         return interpreter;
     }

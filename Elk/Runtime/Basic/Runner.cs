@@ -11,7 +11,6 @@ public class Runner : Elk.Runner<Context>{
     public PropEval prp;
     public InvocationEval inv;
     public RecallEval rec;
-    public Func<object, bool> literal;
 
     public Runner(){
         bin = new BinEval();
@@ -19,7 +18,6 @@ public class Runner : Elk.Runner<Context>{
         prp = new PropEval();
         inv = new InvocationEval();
         rec = new RecallEval();
-        literal = IsLiteral;
     }
 
     public object Invoke(string func, Context cx)
@@ -39,16 +37,10 @@ public class Runner : Elk.Runner<Context>{
                 }
             case Recall     r: return rec.Eval(r, this, cx);
             case Singleton  s: return Eval(s.content, cx);
-            case object val when literal(val): return val;
-            case null: return arg;
+            case object val when IsLiteral(val): return val;
             default: throw new Ex($"Cannot evaluate {arg} of type {arg.GetType()}");
         }
     }
-
-    // Override this method to intercept invocations; return true
-    // and set the substitute if the invocation was resolved
-    virtual protected Pass Intercept(Invocation ι, Context cx)
-    => new Pass();
 
     public void EvalArgs(object[] args, object[] @out, Context cx){
         var len = args?.Length ?? 0;
@@ -57,6 +49,13 @@ public class Runner : Elk.Runner<Context>{
         }
     }
 
-    static bool IsLiteral(object arg) => arg is bool || arg is int;
+    // Override to intercept invocations; ref 'Pass.cs'
+    virtual protected Pass Intercept(Invocation ι, Context cx)
+    => new Pass();
+
+    // Whereas unknown types will cause an error, traversed literals
+    // are returned 'as is'
+    virtual protected bool IsLiteral(object arg)
+    => arg is bool || arg is int || arg is float || arg is null;
 
 }}
