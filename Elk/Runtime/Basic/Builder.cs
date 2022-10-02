@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Elk;
 using Elk.Basic.Graph;
-//using UnityEngine;
 
 namespace Elk.Basic{
 public class Builder{
@@ -17,10 +16,7 @@ public class Builder{
         this.shebang = shebang;
     }
 
-    public Module Build(
-        string path,
-        List<string> paths=null
-    ){
+    public Module Build(string path, List<string> paths=null){
         if(paths == null) paths = new List<string>();
         paths.Add(path);
         var module = Parse(path);
