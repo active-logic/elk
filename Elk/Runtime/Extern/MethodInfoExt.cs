@@ -18,7 +18,12 @@ public static class MethodInfoExt{
         }
         for(int i = 0; i < maxParamCount; i++){
             var p = parameters[i];
-            if(i > argCount && p.IsOptional) break;
+            // When parameter index runs beyond argument count,
+            // either we're missing optional parameters (fine)
+            // or we are missing required parameters (mismatch)
+            if(i >= argCount){
+                return p.IsOptional ? true : false;
+            }
             if(argTypes[i] == null){
                 //ebug.Log($"- [{i}]: {p.ParameterType} matches through wildcard");
                 continue;
