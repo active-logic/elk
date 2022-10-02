@@ -21,6 +21,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     object[] externals;
     Interpreter<Cx> ι;
     History _history;
+    bool useScene = false;
 
     void Start() => EvalExternals();
 
@@ -32,7 +33,9 @@ public partial class BTL : MonoBehaviour, LogSource{
     void Update(){
         if(path != loadedFrom && IsValidPath(path)) π = null;
         var p  = program;
-        var cx = BTLContextFactory.Create(this, p, externals);
+        var cx = BTLContextFactory.Create(
+            this, p, useScene, externals
+        );
         output = interpreter.Run(cx)?.ToString();
         log = cx.graph.Format();
         if(useHistory) history.Log(log, transform);
@@ -49,9 +52,15 @@ public partial class BTL : MonoBehaviour, LogSource{
     bool IsValidPath(string path)
     => Resources.Load<TextAsset>(path) != null;
 
-    object Build(string path) => new Builder(
-        interpreter.reader, BTLScriptChecker.Shebang
-    ).Build(path);
+    object Build(string path){
+        var ph      = new BTLPathHandler();
+        var builder = new Builder(
+            interpreter.reader, ph, BTLScriptChecker.Shebang
+        );
+        var program = builder.Build(path);
+        useScene = ph.useScene;
+        return program;
+    }
 
     public object program{
         private get => π != null ? π : (π = Build(path));

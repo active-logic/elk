@@ -2,17 +2,20 @@ using Elk;
 using Elk.Basic;
 using Elk.Basic.Graph;
 using Active.Core;
+using UnityEngine;
 
 namespace Activ.BTL{
 public static class BTLContextFactory{
 
     public static Context Create(
-        BTL owner, object program, params object[] externals
+        BTL owner, object program, bool useScene,
+        params object[] externals
     ){
         var module = (Module) program;
         var cx = new Context(){
             modules   = new FuncDef[][]{ module.functions },
             externals = externals,
+            domain    = useScene ? FindInScene : null,
             record    = owner.record,
             cog      = owner.cognition
         };
@@ -28,5 +31,8 @@ public static class BTLContextFactory{
         };
         return cx;
     }
+
+    public static object FindInScene(string arg)
+    => GameObject.Find(arg)?.transform;
 
 }}
