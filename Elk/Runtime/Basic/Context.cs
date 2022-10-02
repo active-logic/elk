@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FuncDef = Elk.Basic.Graph.FuncDef;
 using ArgMap = System.Collections.Generic
@@ -7,6 +8,7 @@ namespace Elk.Basic{
 public class Context{
 
     public Stack<ArgMap> argumentStack;
+    public Func<string, object> domain;
     public IEnumerable<FuncDef[]> modules;
     public IEnumerable<object> externals;
     public CallGraph graph;

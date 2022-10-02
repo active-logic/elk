@@ -15,6 +15,7 @@ public class Module{
     }
 
     public void Merge(Module other, string path){
+        if(other == null) return;
         foreach(var fdef in other.functions){
             if(Array.Find(
                 functions,
