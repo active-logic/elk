@@ -15,7 +15,7 @@ public static class BTLContextFactory{
         var cx = new Context(){
             modules   = new FuncDef[][]{ module.functions },
             externals = externals,
-            domain    = useScene ? FindInScene : null,
+            domain    = useScene ? owner.findInScene : null,
             record    = owner.record,
             cog      = owner.cognition
         };
