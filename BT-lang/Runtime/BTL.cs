@@ -13,7 +13,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     public Component[] @import;
     public string[] requirements;
     public bool useHistory = true;
-    public bool recordIntents = false;
+    public bool recordIntents = true;
     public Record record;
     public BTLCog cognition;
     //
