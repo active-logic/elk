@@ -39,20 +39,6 @@ public class Record{
 
     public void Append(string @event, float time){
         events.Add(new Frame(@event, time));
-        //ebug.Log($"{name} added {@event} at {time:0.00} ({events.Count})");
-    }
-
-    public class Frame{
-        float time;
-        string @event;
-
-        public Frame(string e, float t){
-            time = t;
-            @event = e;
-        }
-
-        public bool Matches(string arg) => @event == arg;
-
     }
 
 }}

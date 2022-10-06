@@ -13,6 +13,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     public Component[] @import;
     public string[] requirements;
     public bool useHistory = true;
+    public bool recordIntents = false;
     public Record record;
     public BTLCog cognition;
     //
@@ -23,6 +24,9 @@ public partial class BTL : MonoBehaviour, LogSource{
     History _history;
     bool useScene = false;
 
+    public void Record(string action, object args, status @out)
+    => cognition.CommitAction(action, args, @out, record);
+
     void Start() => EvalExternals();
 
     void Awake(){
@@ -31,6 +35,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     }
 
     void Update(){
+        if(string.IsNullOrEmpty(path)) return;
         if(path != loadedFrom && IsValidPath(path)) π = null;
         var p  = program;
         var cx = BTLContextFactory.Create(
@@ -42,6 +47,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     }
 
     void OnValidate(){
+        if(path == null) return;
         if(path.EndsWith(".txt")){
             path = path.Substring(0, path.Length-4);
         }
@@ -66,6 +72,11 @@ public partial class BTL : MonoBehaviour, LogSource{
         private get => π != null ? π : (π = Build(path));
         set => π = value;
     }
+
+    public System.Func<string, object> findInScene{ get{
+        var finder = GetComponent<Finder>();
+        return finder != null ? finder.FindInScene : null;
+    }}
 
     Interpreter<Cx> interpreter
     => ι != null ? ι : (ι = BTLInterpreterFactory.Create());

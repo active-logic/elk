@@ -10,7 +10,10 @@ public partial class BTL{
     void EvalExternals(){
         List<object> ext = new List<object>();
         foreach(var c in @import) ext.Add(c);
-        foreach(var type in requirements) ext.Add(Req(type));
+        foreach(var type in requirements){
+            if(string.IsNullOrEmpty(type)) continue;
+            ext.Add(Req(type));
+        }
         externals = ext.ToArray();
     }
 

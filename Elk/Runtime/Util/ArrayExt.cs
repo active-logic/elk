@@ -13,25 +13,30 @@ public static class ArrayExt{
     ).ToArray();
 
     // NOTE: concise but not so clean
+    // TODO if no good remove it
     public static string Format(this object[] arr)
     => "(" + string.Join(", ", arr) + ")";
 
-    public static string NeatFormat(this object[] arr){
+    // TODO clarity? this is mainly for
+    // rendering arguments in ELK memory record
+    public static string NeatFormat(this Array arr){
         var o = new StringBuilder();
         o.Append("(");
         var len = arr.Length;
         for(int i = 0; i < len; i++){
-            o.Append(ToCleanString(arr[i]));
+            o.Append(ToCleanString(arr.GetValue(i)));
             if(i < len -1) o.Append(", ");
         }
         o.Append(")");
         return o.ToString();
     }
 
-    static string ToCleanString(object arg){
+    // TODO clarity? this is mainly for
+    // rendering arguments in ELK memory record
+    public static string ToCleanString(object arg){
         switch(arg){
             case GameObject go: return go.name;
-            case Transform t:   return t.gameObject.name;
+            case Component c:   return c.gameObject.name;
             case null: return "null";
             default: return arg.ToString();
         }

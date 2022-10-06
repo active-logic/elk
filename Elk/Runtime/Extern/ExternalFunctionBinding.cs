@@ -3,6 +3,7 @@ using Elk.Util;
 using Elk.Basic;
 using Elk.Basic.Graph;
 using Elk.Basic.Runtime;
+using UnityEngine;
 
 namespace Elk.Bindings.CSharp{
 public class ExternalFunctionBinding : InvocationBinding{
@@ -17,6 +18,14 @@ public class ExternalFunctionBinding : InvocationBinding{
 
     override protected object Invoke(
         object[] values, Runner<Context> ρ, Context cx
-    ) => method.Invoke(target, values);
+    ){
+        try{
+            return method.Invoke(target, values);
+        }catch(TargetParameterCountException ex){
+            Debug.LogError(
+                $"Wrong param count calling {method.Name} ({values.Length})");
+            throw(ex);
+        }
+    }
 
 }}
