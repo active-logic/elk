@@ -24,4 +24,9 @@ public interface Runner<Cx>{
 
 }
 
+// For deferred/client side stack recording
+public interface Stack{
+    void Commit(object result);
+}
+
 }

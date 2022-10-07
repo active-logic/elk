@@ -20,6 +20,8 @@ public class Context{
         graph = new CallGraph();
     }
 
+    public Elk.Stack callStack => graph.CallStack(cog, record);
+
     public object this[string key]
     => argumentStack.Peek()[key];
 
@@ -33,7 +35,7 @@ public class Context{
 
     public void StackPop(object value){
         var callInfo = graph.Peek();
-        cog.Commit(callInfo, value, record);
+        cog.CommitCall(callInfo, value, record);
         graph.Pop(value);
     }
 
