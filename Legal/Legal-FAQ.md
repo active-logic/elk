@@ -6,6 +6,6 @@ If you absolutely need a commercial license (such as: making a game, and your te
 
 Commercial licenses will be made avaible via the Unity Asset Store (ETA: October 2022) and other venues.
 
-## Why not the MIT license
+## Why not the MIT license?
 
 Early testing shows BTL gives game developers an *edge*; five free lunches is good enough!
