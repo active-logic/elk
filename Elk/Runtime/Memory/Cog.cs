@@ -12,6 +12,8 @@ public interface Cog{
 
     // Called by the runtime when a function has evaluated;
     // in this case, either record or discard the call
-    void Commit(string call, object returnValue, Record record);
+    void CommitCall(string call, object returnValue, Record record);
+
+    void CommitAction(string call, object returnValue, Record record);
 
 }}

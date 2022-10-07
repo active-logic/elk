@@ -6,12 +6,6 @@ using System.Text;
 namespace Elk.Util{
 public static class ArrayExt{
 
-    public static Type[] Types(this object[] arr, bool nullIsObj
-    ) => (
-        from x in arr select x?.GetType()
-        ?? (nullIsObj ? typeof(object) : null)
-    ).ToArray();
-
     // NOTE: concise but not so clean
     // TODO if no good remove it
     public static string Format(this object[] arr)

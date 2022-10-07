@@ -20,30 +20,37 @@ public class BTLCog : Cog{
     ) => cx.record.Contains(@event, since, strict);
 
     // Called by elk runtime to submit function calls
-    // (in context: 'intent')
-    public void Commit(string call, object output, Record record){
+    public void CommitCall(string call, object output, Record record){
         if(recordIntents) DoCommit(call, output, record);
+    }
+
+    public void CommitAction(string call, object output, Record record){
+        DoCommit(call, output, record);
     }
 
     // Called by clients (via BTL.CommitAction) when a memorable
     // event or action has occurred
-    public void CommitAction(
-        string action, object args, status @out, Record record
+    public void CommitEvent(
+        string action, string args, status @out, Record record
     ){
-        string call;
-        switch(args){
-            case System.Array array:
-                call = $"{action}({array.NeatFormat()})";
-                break;
-            default:
-                call = $"{action}({ArrayExt.ToCleanString(args)})";
-                break;
-        }
-        DoCommit(call, @out, record);
+        DoCommit($"{action}({args})", @out, record);
     }
 
+    public static string ArgsToString(object args){
+        switch(args){
+            case System.Array array:
+                return array.NeatFormat();
+            default:
+                return ArrayExt.ToCleanString(args);
+        }
+    }
+
+    // NOTE may want to be more generous in what we record here;
+    // negative results (and others) can be useful
     public void DoCommit(string call, object output, Record record){
-        if(output is status task && task.complete){
+        bool complete = (output is status task && task.complete)
+                     || (output is bool flag && flag);
+        if(complete){
             var time = Time.time;
             record.Append("self." + call, Time.time);
             foreach(var other in instances){

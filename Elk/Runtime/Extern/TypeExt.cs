@@ -14,14 +14,14 @@ public static class TypeExt{
     ){
         var method = self.GetMethod(
             func,
-            args?.Types(nullIsObj : true) ?? NoArgs
+            args?.ParameterTypes(nullIsObj : true) ?? NoArgs
         );
         if(method != null){
             return method;
         }
         return self.FindMethod(
             func,
-            args?.Types(nullIsObj : false) ?? NoArgs
+            args?.ParameterTypes(nullIsObj : false) ?? NoArgs
         );
     }
 

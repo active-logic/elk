@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Elk.Memory;
 
 namespace Elk.Basic{
 public class CallGraph{
@@ -8,6 +9,9 @@ public class CallGraph{
     Node root;
     Stack<Node> stack = new Stack<Node>();
     public Func<object, string> returnValueFormatter;
+
+    public Elk.Stack CallStack(Cog client, Record record)
+    => new StackTrace(stack.Peek(), client, record);
 
     public void Push(string arg){
         var node = new Node(arg);
@@ -46,16 +50,18 @@ public class CallGraph{
 
     // =============================================================
 
-    class Node{
+    public class Node{
 
+        public Node parent;
         public string info;
-        public List<Node> children;
+        public List<Node> children {get; private set;}
 
         public Node(string info) => this.info = info;
 
         public void Add(Node arg){
             if(children == null) children = new List<Node>(2);
             children.Add(arg);
+            arg.parent = this;
         }
 
     }

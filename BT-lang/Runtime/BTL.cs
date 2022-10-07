@@ -13,7 +13,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     public Component[] @import;
     public string[] requirements;
     public bool useHistory = true;
-    public bool recordIntents = true;
+    public bool recordIntents = false;
     public Record record;
     public BTLCog cognition;
     //
@@ -23,9 +23,21 @@ public partial class BTL : MonoBehaviour, LogSource{
     Interpreter<Cx> ι;
     History _history;
     bool useScene = false;
+    // refreshed at every iteration; keeping this handy
+    // for clients to access the stack
+    Context context;
 
-    public void Record(string action, object args, status @out)
-    => cognition.CommitAction(action, args, @out, record);
+    public Elk.Stack stack => context?.callStack;
+
+    // Use this function to record events; BTL takes care of
+    // recording what agents are doing but doesn't keep track of
+    // non-actions, such as snowfall, physics and apperception
+    // (spotted "x")
+    // NOTE convert args early via BTLCog.ArgsToString(object)
+    public void RecordEvent(string action, string args, status @out)
+    => cognition.CommitEvent(action, args, @out, record);
+
+    // -------------------------------------------------------------
 
     void Start() => EvalExternals();
 
@@ -38,12 +50,13 @@ public partial class BTL : MonoBehaviour, LogSource{
         if(string.IsNullOrEmpty(path)) return;
         if(path != loadedFrom && IsValidPath(path)) π = null;
         var p  = program;
-        var cx = BTLContextFactory.Create(
+        context = BTLContextFactory.Create(
             this, p, useScene, externals
         );
-        output = interpreter.Run(cx)?.ToString();
-        log = cx.graph.Format();
+        output = interpreter.Run(context)?.ToString();
+        log = context.graph.Format();
         if(useHistory) history.Log(log, transform);
+        context = null;
     }
 
     void OnValidate(){
