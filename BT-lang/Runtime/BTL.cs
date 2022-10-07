@@ -14,20 +14,33 @@ public partial class BTL : MonoBehaviour, LogSource{
     public string[] requirements;
     public bool useHistory = true;
     public bool recordIntents = false;
+    public bool sparse = true;
     public Record record;
     public BTLCog cognition;
     //
     string log, output, loadedFrom;
-    object π;
+    // TODO don't see a point in making this public but see
+    // BTL script checker
+    public object program;
     object[] externals;
     Interpreter<Cx> ι;
     History _history;
     bool useScene = false;
+    bool suspend = false;
     // refreshed at every iteration; keeping this handy
     // for clients to access the stack
     Context context;
 
     public Elk.Stack stack => context?.callStack;
+
+    public void Hold(bool flag, object src){
+        if(!sparse){ suspend = false; return; }
+        if(flag){
+            suspend = true;
+        }else{
+            suspend = false;
+        }
+    }
 
     // Use this function to record events; BTL takes care of
     // recording what agents are doing but doesn't keep track of
@@ -47,11 +60,11 @@ public partial class BTL : MonoBehaviour, LogSource{
     }
 
     void Update(){
+        if(suspend) return;
         if(string.IsNullOrEmpty(path)) return;
-        if(path != loadedFrom && IsValidPath(path)) π = null;
-        var p  = program;
+        EvalProgram();
         context = BTLContextFactory.Create(
-            this, p, useScene, externals
+            this, program, useScene, externals
         );
         output = interpreter.Run(context)?.ToString();
         log = context.graph.Format();
@@ -68,6 +81,13 @@ public partial class BTL : MonoBehaviour, LogSource{
 
     void OnDisable() => log = "DISABLED";
 
+    void EvalProgram(){
+        if(loadedFrom != path && IsValidPath(path)){
+            program    = Build(path);
+            loadedFrom = path;
+        }
+    }
+
     bool IsValidPath(string path)
     => Resources.Load<TextAsset>(path) != null;
 
@@ -79,11 +99,6 @@ public partial class BTL : MonoBehaviour, LogSource{
         var program = builder.Build(path);
         useScene = ph.useScene;
         return program;
-    }
-
-    public object program{
-        private get => π != null ? π : (π = Build(path));
-        set => π = value;
     }
 
     public System.Func<string, object> findInScene{ get{
