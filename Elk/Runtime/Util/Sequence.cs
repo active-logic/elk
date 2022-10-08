@@ -15,11 +15,12 @@ public class Sequence{
     public Sequence(params Token[] args)
     => elements = args.ToList();
 
+    // TODO minimally offset should increase
     public Sequence(params object[] args)
-    => elements = (from x in args select new Token(x, 0)).ToList();
+    => elements = (from x in args select new Token(x, 0, 0)).ToList();
 
     public Sequence(params string[] args)
-    => elements = (from x in args select new Token(x, 0)).ToList();
+    => elements = (from x in args select new Token(x, 0, 0)).ToList();
 
     public static implicit operator Sequence(string[] args)
     => new Sequence(args);
@@ -60,10 +61,24 @@ public class Sequence{
 
     public string AsString(int index) => Get(index) as string;
 
+    public string AsWord(int index, out float id){
+        id = Id(index);
+        var str = AsString(index);
+        if(str == null) return null;
+        return char.IsLetter(str[0]) ? str : null;
+    }
+
     public string AsWord(int index){
         var str = AsString(index);
         if(str == null) return null;
         return char.IsLetter(str[0]) ? str : null;
+    }
+
+    public float Id(int index){
+        switch(Get(index)){
+            case Token token: return token.id;
+            default: return -1f;
+        }
     }
 
     public object Get(int index)
@@ -74,7 +89,9 @@ public class Sequence{
     => (index > lastIndex || index < 0) ? null
        : this[index] as T;
 
-    public int LineNumber(int index) => elements.Line(index);
+    public int LineNumber(int index) => elements.LineNumber(index);
+
+    public int LineOffset(int index) => elements.LineOffset(index);
 
     public T[] ReadSeveral<T>(ref int index) where T : class{
         List<T> @out = null;
@@ -92,9 +109,10 @@ public class Sequence{
     // NOTE last arg here only for logging purposes
     public void Replace(int i, int count, object arg, object src){
         log?.Invoke($"Replace [{count}] tokens at index {i} via {src}");
-        var lineNum = LineNumber(i);
+        var lineNum    = LineNumber(i);
+        var lineOffset = LineOffset(i);
         elements.RemoveRange(i, count);
-        elements.Insert(i, new Token(arg, lineNum));
+        elements.Insert(i, new Token(arg, lineNum, lineOffset));
         dirty = true;
     }
 

@@ -21,7 +21,7 @@ public class Runner : Elk.Runner<Context>{
     }
 
     public object Invoke(string func, Context cx)
-    => Eval(new Invocation(func), cx);
+    => Eval(new Invocation(func, id: 0f), cx);
 
     public object Eval(object arg, Context cx){
         switch(arg){

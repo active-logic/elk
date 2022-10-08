@@ -12,7 +12,7 @@ public class RecallRuleTest{
     => rule = new Elk.Basic.Parser.RecallRule();
 
     [Test] public void Test_did(){
-        var inv = new Invocation("foo");
+        var inv = new Invocation("foo", 0f);
         var seq = new Sequence("did", inv);
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
@@ -20,8 +20,8 @@ public class RecallRuleTest{
     }
 
     [Test] public void Test_did_since(){
-        var inv0 = new Invocation("foo");
-        var inv1 = new Invocation("bar");
+        var inv0 = new Invocation("foo", 0f);
+        var inv1 = new Invocation("bar", 0f);
         var seq = new Sequence("did", inv0, "since", inv1);
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
@@ -31,8 +31,8 @@ public class RecallRuleTest{
     }
 
     [Test] public void Test_did_since_strict(){
-        var inv0 = new Invocation("foo");
-        var inv1 = new Invocation("bar");
+        var inv0 = new Invocation("foo", 0f);
+        var inv1 = new Invocation("bar", 0f);
         var seq = new Sequence("did", inv0, "since", inv1, "!");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);

@@ -14,7 +14,7 @@ public class InvocationRule : LocalRule{
             //ebug.Log("missing '(' parens");
             return;
         }
-        var funcName = vec.AsWord(i);
+        var funcName = vec.AsWord(i, out float id);
         if( funcName == null){
             //ebug.Log($"no func name found: [{funcName}]");
             return;
@@ -47,7 +47,7 @@ public class InvocationRule : LocalRule{
         }
         //ebug.Log($"rep count {repCount}");
         vec.Replace(i0, repCount, new Invocation(
-            funcName, arguments
+            funcName, id, arguments
         ), this);
     }
 

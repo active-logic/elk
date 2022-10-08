@@ -8,10 +8,13 @@ public class Invocation : Expression{
     public readonly string name;
     public readonly object[] arguments;
     public readonly object[] values;
+    public readonly float id;
     public object binding;
 
-    public Invocation(string name, IEnumerable<object> arguments=null){
+    public Invocation(string name, float id,
+                      IEnumerable<object> arguments=null){
         this.name = name;
+        this.id = id;
         this.arguments = arguments?.ToArray() ?? null;
         this.values = this.arguments != null
             ? new object[this.arguments.Length] : new object[]{};

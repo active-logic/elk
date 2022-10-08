@@ -15,17 +15,19 @@ public class Tokenizer : Elk.Tokenizer{
         var xchars = commentParser.Parse(arg);
         // NOTE - when a word is formed its line number is the same
         // as the next character's.
-        int line = 1;
+        int line = 0;
+        int offset = 0;
         foreach(xchar c in xchars){
             line = c.line;
+            offset = c.offset;
             if(char.IsWhiteSpace(c) || char.IsControl(c)){
                 if(word.Length > 0){
-                    tokens.Add(word, line);
+                    tokens.Add(word, line, offset);
                     word = new StringBuilder();
                 }
             }else if (char.IsLetterOrDigit(c)){
                 if(word.Length > 0 && IsBreaking(word[word.Length-1])){
-                    tokens.Add(word, line);
+                    tokens.Add(word, line, offset);
                     word = new StringBuilder();
                 }
                 word.Append(c);
@@ -34,13 +36,13 @@ public class Tokenizer : Elk.Tokenizer{
                 // is an error, however... +=, -=, ...
                 if(!(Double(c, word) || IsDecimalDot(c, word)
                                      || IsArrowHead(c, word))){
-                    tokens.Add(word, line);
+                    tokens.Add(word, line, offset);
                     word = new StringBuilder();
                 }
                 word.Append(c);
             }
         }
-        if(word.Length > 0) tokens.Add(word, line);
+        if(word.Length > 0) tokens.Add(word, line, offset);
         return tokens.ToArray();
     }
 
