@@ -5,12 +5,15 @@ using System.Linq;
 namespace Elk.Basic.Graph{
 public class Invocation : Expression{
 
+    public static ulong nextId = 0;
+    public readonly ulong id;
     public readonly string name;
     public readonly object[] arguments;
     public readonly object[] values;
     public object binding;
 
     public Invocation(string name, IEnumerable<object> arguments=null){
+        this.id = nextId ++;
         this.name = name;
         this.arguments = arguments?.ToArray() ?? null;
         this.values = this.arguments != null
