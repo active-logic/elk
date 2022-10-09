@@ -5,6 +5,9 @@ using Elk.Basic.Runtime;
 namespace Elk.Bindings.CSharp{
 public static class Externals{
 
+    static readonly InvalidPropertyBinding NoSuchProperty
+                    = new InvalidPropertyBinding();
+
     public static InvocationBinding Bind(
         this IEnumerable cx, string func, object[] args
     ){
@@ -17,6 +20,18 @@ public static class Externals{
         return null;
     }
 
+    // Bind the 'label' property
+    public static PropertyBinding Bind(
+        this IEnumerable cx, string label
+    ){
+        foreach(var obj in cx){
+            var prop = obj.Bind(label);
+            if(prop != null) return prop;
+        }
+        return NoSuchProperty;
+    }
+
+    // Evaluate the 'label' property
     public static object Eval(
         this IEnumerable cx, string label, out bool found
     ){

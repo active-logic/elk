@@ -12,9 +12,12 @@ public class PropEval{
             return cx[label];
         }
         // Check externals
-        var @out = cx.externals.Eval(label, out bool found);
-        if(found){
-            return @out;
+        if(id.binding == null){
+            id.binding = cx.externals.Bind(label);
+        }
+        var binding = id.binding as PropertyBinding;
+        if(binding.exists){
+            return binding.value;
         }else if(cx.domain == null){
             throw new Ex($"Property not found: [{label}]");
         }
