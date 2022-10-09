@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using FuncDef = Elk.Basic.Graph.FuncDef;
-using ArgMap = System.Collections.Generic
-                     .Dictionary<string, object>;
+//using ArgMap = ArgumentStack;
+//using ArgMap = System.Collections.Generic
+//                     .Dictionary<string, object>;
 
 namespace Elk.Basic{
 public class Context{
 
-    public Stack<ArgMap> argumentStack;
+    public ArgumentStack argumentStack;
     public Func<string, object> domain;
     public IEnumerable<FuncDef[]> modules;
     public IEnumerable<object> externals;
@@ -15,8 +16,9 @@ public class Context{
     public Elk.Memory.Record record;
     public Elk.Memory.Cog cog;
 
-    public Context(){
-        argumentStack = new Stack<ArgMap>();
+    public Context(ArgumentStack argstack){
+        argstack.Clear();
+        this.argumentStack = argstack;
         graph = new CallGraph();
     }
 
@@ -26,12 +28,12 @@ public class Context{
     => argumentStack.Peek()[key];
 
     public bool HasKey(string name){
-        if(argumentStack.Count == 0) return false;
-        var map = argumentStack.Peek();
-        return map.ContainsKey(name);
+        if(argumentStack.empty) return false;
+        return argumentStack.Peek().ContainsKey(name);
     }
 
-    public void StackPush(string arg, ulong id) => graph.Push(arg, id);
+    public void StackPush(string arg, ulong id)
+    => graph.Push(arg, id);
 
     public void StackPop(object value){
         var callInfo = graph.Peek();
@@ -39,14 +41,8 @@ public class Context{
         graph.Pop(value);
     }
 
-    public void PushArguments(string[] parameters, object[] arguments){
-        var map = new ArgMap();
-        var len = parameters?.Length ?? 0;
-        for(int i = 0; i < len; i++){
-            map[parameters[i]] = arguments[i];
-        }
-        argumentStack.Push(map);
-    }
+    public void PushArguments(string[] parameters, object[] arguments)
+    => argumentStack.Push(parameters, arguments);
 
     public void PopArguments() => argumentStack.Pop();
 

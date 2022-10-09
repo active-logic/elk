@@ -8,9 +8,14 @@ public class BTLRunner : Elk.Basic.Runner{
     override protected bool IsLiteral(object x)
     => x is status || base.IsLiteral(x);
 
-    override protected Pass Intercept(Invocation ι, Context cx){
+    override protected void Intercept(
+        Invocation ι, Context cx, out Pass pass
+    ){
         var args = ι.arguments;
-        if(args == null){ return new Pass(); }
+        if(args == null){
+            pass = new Pass();
+            return;
+        }
         var len = args.Length;
         for(int i = 0; i < len; i++){
             ι.values[i] = this.ProcessArg(
@@ -23,10 +28,11 @@ public class BTLRunner : Elk.Basic.Runner{
                 for(var j = i + 1; j < len; j++){
                     ι.values[j] = ".";
                 }
-                return new Pass(i: true, e: true, r: state);
+                pass = new Pass(i: true, e: true, r: state);
+                return;
             }
         }
-        return new Pass(i: false, e: true, r: cont());
+        pass = new Pass(i: false, e: true, r: cont());
     }
 
     object ProcessArg(
