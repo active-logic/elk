@@ -22,4 +22,6 @@ public readonly struct StackTrace : Elk.Stack{
         }
     }
 
+    public ulong Id() => tail.id;
+
 }}

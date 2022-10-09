@@ -31,7 +31,7 @@ public class Context{
         return map.ContainsKey(name);
     }
 
-    public void StackPush(string arg) => graph.Push(arg);
+    public void StackPush(string arg, ulong id) => graph.Push(arg, id);
 
     public void StackPop(object value){
         var callInfo = graph.Peek();

@@ -14,23 +14,21 @@ public class InvocationRule : LocalRule{
             //ebug.Log("missing '(' parens");
             return;
         }
-        var funcName = vec.AsWord(i);
-        if( funcName == null){
-            //ebug.Log($"no func name found: [{funcName}]");
-            return;
-        }
+        var funcNameId = vec.Get<Identifier>(i);
+        if(funcNameId == null) return;
+        var funcName = funcNameId.value;
         i += 2;
         // Read arguments or bail out
         List<object> arguments = null;
         while(i < vec.size && vec.AsChar(i) != ')'){
             if(vec.AsChar( i + 1 ) == ')'){
                 if(arguments == null) arguments = new List<object>(3);
-                arguments.Add(vec[i]);
+                arguments.Add(vec.Get(i));
                 //ebug.Log($"Did read final arg {arguments.Count}");
                 break;
             }else if(vec.AsChar( i + 1 ) == ','){
                 if(arguments == null) arguments = new List<object>(3);
-                arguments.Add(vec[i]);
+                arguments.Add(vec.Get(i));
                 //ebug.Log($"Did read arg {arguments.Count}");
             }else{
                 //ebug.Log($"no ',' for arg {i-i0-2} (found {vec.Get(i+1)})");

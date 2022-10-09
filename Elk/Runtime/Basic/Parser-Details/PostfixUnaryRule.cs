@@ -10,11 +10,13 @@ public class PostfixUnaryRule : LocalRule{
     public PostfixUnaryRule(object op) => this.op = op.ToString();
 
     override public void Process(Sequence vec, int i){
+        // TODO should Get<Exp> but that doesn't allow numbers
         var arg  = vec.Get(i);
-        var op   = vec.AsString(i + 1);
-        if(op != this.op) return;
+        if(arg == null || arg is Operator) return;
+        var op   = vec.Get<Operator>(i + 1);
+        if(op == null || !op.Matches(this.op)) return;
         vec.Replace(i, 2,
-            new UnaryExp( arg, op, postfix: true),
+            new UnaryExp( arg, op.value, postfix: true),
             this
         );
     }

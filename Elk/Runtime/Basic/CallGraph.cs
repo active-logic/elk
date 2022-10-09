@@ -13,8 +13,8 @@ public class CallGraph{
     public Elk.Stack CallStack(Cog client, Record record)
     => new StackTrace(stack.Peek(), client, record);
 
-    public void Push(string arg){
-        var node = new Node(arg);
+    public void Push(string arg, ulong id){
+        var node = new Node(arg, id);
         var parent = stack.Count > 0 ? stack.Peek() : null;
         if(parent != null){
             parent.Add(node);
@@ -52,11 +52,15 @@ public class CallGraph{
 
     public class Node{
 
-        public Node parent;
+        public Node parent{ get; private set; }
         public string info;
-        public List<Node> children {get; private set;}
+        public readonly ulong id;
+        public List<Node> children { get; private set; }
 
-        public Node(string info) => this.info = info;
+        public Node(string info, ulong id){
+            this.info = info;
+            this.id = id;
+        }
 
         public void Add(Node arg){
             if(children == null) children = new List<Node>(2);

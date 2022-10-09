@@ -13,6 +13,7 @@ public partial class Parser : Elk.Parser{
 // as an invocation; could also 'promote' said invocation, which
 // would be more concise but perhaps inconvenient later
 // for syntax err reporting
+// TODO: should be FuncPrecursorRule
 public class FuncPrecursor : LocalRule{
 
     string preamble = "func";
@@ -25,16 +26,16 @@ public class FuncPrecursor : LocalRule{
     override public void Process(Sequence vec, int i){
         var i0 = i;
         // First, check preamble and opening parens
-        if(vec.AsString(i) != preamble){
-            //ebug.Log($"Missing [{preamble}] preamble");
+        if(vec.StringValue(i) != preamble){
+            //ebug.Log($"Missing [{preamble}] preamble @{i} (found {vec[i]})");
             return;
         }
         if(vec.AsChar(i + 2) != '('){
             //ebug.Log("missing '(' parens");
             return;
         }
-        var funcName = vec.AsWord(i + 1);
-        if( funcName == null){
+        var funcName = vec.Get<Identifier>(i + 1);
+        if(funcName.value == null){
             //ebug.Log($"no func name found: [{funcName}]");
             return;
         }
@@ -44,13 +45,13 @@ public class FuncPrecursor : LocalRule{
         while(i < vec.size && vec.AsChar(i) != ')'){
             if(vec.AsChar( i + 1 ) == ')'){
                 if(arguments == null) arguments = new List<string>(3);
-                arguments.Add((string)vec[i]);
+                arguments.Add(vec.Get<Identifier>(i).value);
                 i += 2;
                 //ebug.Log($"Did read final arg {arguments.Count}");
                 break;
             }else if(vec.AsChar( i + 1 ) == ','){
                 if(arguments == null) arguments = new List<string>(3);
-                arguments.Add((string)vec[i]);
+                arguments.Add(vec.Get<Identifier>(i).value);
                 //ebug.Log($"Did read arg {arguments.Count}");
             }else{
                 //ebug.Log($"no ',' for arg {i-i0-2} (found {vec.Get(i+1)})");
@@ -63,7 +64,7 @@ public class FuncPrecursor : LocalRule{
         var repCount = i - i0;
         //ebug.Log($"rep count {repCount}");
         vec.Replace(i0, repCount, new FuncDef(
-            funcName, arguments, null
+            funcName.value, arguments, null
         ), this);
     }
 

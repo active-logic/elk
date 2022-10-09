@@ -19,7 +19,7 @@ public class BTLScriptChecker : AssetPostprocessor{
         //ebug.Log($"Process BTL file {assetPath}");
         var content = File.ReadAllText(assetPath).Substring(5);
         try{
-            var obj = interpreter.Parse(content);
+            var obj = interpreter.Parse(content, debug: null);
             foreach(var bt in Object.FindObjectsOfType<BTL>()){
                 if(assetPath.Contains(bt.path)){
                     bt.program = obj;

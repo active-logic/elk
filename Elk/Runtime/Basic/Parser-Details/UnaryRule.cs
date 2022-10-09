@@ -14,12 +14,13 @@ public class UnaryRule : LocalRule{
         // NOTE unary/binary op prec isn't consistent
         // -2 + 3 ------- evals to 1, not -(2 + 3)
         //  2 + 3 ------- evals to 6, not an error
-        if(IsOperand(prev)) return;
-        var op  = vec.AsString(i);
+        if(prev != null && IsOperand(prev)) return;
+        var op  = vec.Get<Operator>(i);
+        if(op == null || !op.Matches(this.op)) return;
+        // TODO should Get<Exp> but that doesn't allow numbers
         var arg = vec.Get(i + 1);
-        if(op != this.op) return;
         if(!IsOperand(arg)) return;
-        vec.Replace(i, 2, new UnaryExp( vec[i+1], op), this);
+        vec.Replace(i, 2, new UnaryExp( vec[i+1], op.value), this);
     }
 
     override public string ToString()
@@ -27,16 +28,14 @@ public class UnaryRule : LocalRule{
 
     bool IsOperand(object arg){
         switch(arg){
-            case null:
+            // Note patch; 'did' should be defined as a keyword
+            // (turning off cause apparently not needed)
+            // case Identifier id when id.value == "did":
+            //    return false;
+            case Operator:
                 return false;
-            case Expression:
-                return true;
-            case string str when str.Length > 0 && char.IsLetterOrDigit(str[0]):
-                return true;
-            case object obj when obj.IsNumber():
-                return true;
             default:
-                return false;
+                return true;
         }
     }
 

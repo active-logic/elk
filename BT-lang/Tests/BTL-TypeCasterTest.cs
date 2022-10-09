@@ -16,7 +16,7 @@ public class BTL_TypeCasterTest{
         );
         typecaster.Transform(s);
         Assert.That( s[0], Is.EqualTo(5)  );
-        Assert.That( s[1], Is.EqualTo("foo")  );
+        Assert.That( s[1].ToString(), Is.EqualTo("(id:foo)")  );
         Assert.That( s[2], Is.EqualTo(true)  );
         Assert.That( s[3], Is.EqualTo(false)  );
         Assert.That( s[4], Is.EqualTo(done)  );

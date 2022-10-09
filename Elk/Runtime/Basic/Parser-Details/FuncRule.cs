@@ -16,8 +16,12 @@ public class FuncRule : LocalRule{
         var i0 = i;
         var func = vec.Get<FuncDef>(i++);
         if(func == null)                    return;
-        if(vec.AsString(i++) != arrow)      return;
-        if(vec.AsString(i + 1) != terminal) return;
+        var arrowCd = vec.Get<Operator>(i++);
+        if(arrowCd == null) return;
+        if(!arrowCd.Matches(arrow))      return;
+        var terminalCd = vec.Get<Operator>(i + 1);
+        if(terminalCd == null) return;
+        if(!terminalCd.Matches(terminal)) return;
         func.body = vec[ i++ ];
         ////ebug.Log("Body set to ")
         var repCount = i + 1 - i0;

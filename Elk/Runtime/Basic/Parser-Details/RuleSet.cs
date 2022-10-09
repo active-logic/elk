@@ -15,11 +15,14 @@ public class RuleSet : Rule{
         from arg in rules select (LocalRule)arg
     ).ToArray();
 
-    override public void Process(Sequence vector){
+    override public void Process(Sequence vector, List<string> debug){
         for(int i = 0; i < vector.size; i++){
             foreach(var rule in rules){
                 rule.Process(vector, i);
-                if(vector.didChange) return;
+                if(vector.didChange){
+                    debug?.Add(rule.GetType().Name + " :: " + vector.lastInsert);
+                    return;
+                }
             }
         }
     }

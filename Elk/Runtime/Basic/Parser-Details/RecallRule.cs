@@ -8,15 +8,15 @@ public class RecallRule : LocalRule{
 
     override public void Process(Sequence vec, int i){
         var i0 = i;
-        var op0  = vec.AsString(i++);
+        var op0  = vec.Get<Identifier>(i++);
         var arg0 = vec.Get<Expression>(i++);
         if(!ValidateOperand(arg0)) return;
-        if(op0 != "did" || arg0 == null){
+        if(op0?.value != "did" || arg0 == null){
             //ebug.Log("'did' not found");
             return;
         }
-        var op1 = vec.AsString(i);
-        if(op1 != "since"){
+        var op1 = vec.Get<Identifier>(i);
+        if(op1?.value != "since"){
             //ebug.Log("Short form because 'since' not found");
             vec.Replace(
                 i0, i - i0,

@@ -1,5 +1,7 @@
 using Elk.Util;
+using Elk.Basic.Graph;
 using UnityEngine;
+using Ex = System.Exception;
 
 namespace Elk.Basic{
 public class TypeCaster : Sequence.Transformer{
@@ -22,10 +24,21 @@ public class TypeCaster : Sequence.Transformer{
             case "true" : return true;
             case "false" : return false;
             case "null": return null;
-            default: return arg;
+            default:
+                if(IsIdentifier(arg))
+                    return new Identifier(arg);
+                else if(IsOperator(arg))
+                    return new Operator(arg);
+                else
+                    throw new Ex($"Unrecognized string: {arg}");
         }
     }
 
+    bool IsIdentifier(string arg)
+    => arg.Length > 0 && char.IsLetter(arg[0]);
 
+    bool IsOperator(string arg)
+    => arg.Length > 0 && arg.Length < 3
+    && !char.IsLetterOrDigit(arg[0]);
 
 }}

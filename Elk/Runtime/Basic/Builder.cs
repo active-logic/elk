@@ -35,7 +35,7 @@ public class Builder{
         if(shebang != null && src.StartsWith(shebang))
             src = src.Substring(shebang.Length);
         try{
-            return (Module)reader.Parse(src);
+            return (Module)reader.Parse(src, debug: null);
         }catch(ParsingException ex){
             throw new ParsingException
                 ( ex.Message + $" in {path}.txt", ex );

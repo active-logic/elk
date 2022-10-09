@@ -25,9 +25,9 @@ public class Runner : Elk.Runner<Context>{
 
     public object Eval(object arg, Context cx){
         switch(arg){
-            case BinaryExp op: return bin.Eval(op, this, cx);
-            case UnaryExp  op: return una.Eval(op, this, cx);
-            case string label: return prp.Eval(label, cx);
+            case BinaryExp     op: return bin.Eval(op, this, cx);
+            case UnaryExp      op: return una.Eval(op, this, cx);
+            case Identifier label: return prp.Eval(label, cx);
             case Invocation ι:
                 var pass = Intercept(ι, cx);
                 if(pass.i){

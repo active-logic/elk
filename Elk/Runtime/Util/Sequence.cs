@@ -11,6 +11,7 @@ public class Sequence{
     List<Token> elements;
     public bool dirty{ get; private set; }
     public System.Action<object> log;
+    public object lastInsert{ get; private set; }
 
     public Sequence(params Token[] args)
     => elements = args.ToList();
@@ -22,6 +23,9 @@ public class Sequence{
     => elements = (from x in args select new Token(x, 0)).ToList();
 
     public static implicit operator Sequence(string[] args)
+    => new Sequence(args);
+
+    public static implicit operator Sequence(object[] args)
     => new Sequence(args);
 
     // -------------------------------------------------------------
@@ -53,12 +57,25 @@ public class Sequence{
     // -------------------------------------------------------------
 
     public char? AsChar(int index){
+        // TODO -
+        var op = this.Get<Elk.Basic.Graph.Operator>(index);
+        if(op != null && op.value.Length == 1){
+            return op.value[0];
+        }
         var str = AsString(index);
         if(str == null || str.Length != 1) return null;
         return str[0];
     }
 
     public string AsString(int index) => Get(index) as string;
+
+    public string StringValue(int index){
+        switch(Get(index)){
+            case Elk.Basic.Graph.Operator op   : return op.value;
+            case Elk.Basic.Graph.Identifier id : return id.value;
+            default: return null;
+        }
+    }
 
     public string AsWord(int index){
         var str = AsString(index);
@@ -95,6 +112,7 @@ public class Sequence{
         var lineNum = LineNumber(i);
         elements.RemoveRange(i, count);
         elements.Insert(i, new Token(arg, lineNum));
+        lastInsert = arg;
         dirty = true;
     }
 
