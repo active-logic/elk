@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using FuncDef = Elk.Basic.Graph.FuncDef;
 using Module = Elk.Basic.Graph.Module;
+using Elk.Basic.Graph;
 
 namespace Elk_Test{
 public class ParserTest{
@@ -14,83 +16,118 @@ public class ParserTest{
     }
 
     [Test] public void Test_FuncDef_1() => Assert.AreEqual(
-        "main → {body}",
+        "main → {(id:body)}",
         ((Module)(
-            p["func", "main", "(", ")", "=>", "body", ";"]
+            Parse("func", "main", "(", ")", "=>", "body", ";")
         )).functions[0].ToString()
     );
 
     [Test] public void Test_FuncDef_2() => Assert.AreEqual(
-        "(main(arg) → {(attack|flee)})",
+        "(main(arg) → {((id:attack)|(id:flee))});",
         ((Module)(
-            p["func", "main", "(", "arg", ")", "=>", "attack", "|", "flee", ";"]
+            Parse("func", "main", "(", "arg", ")", "=>", "attack", "|", "flee", ";")
         )).functions[0].ToString()
     );
 
-    [Test] public void Test_NOT() => Assert.AreEqual(
-        "(!true)",
-        p["!", "true"]?.ToString()
+    [Test] public void Test_NOT_identifier() => Assert.AreEqual(
+        "(!foo)",
+        p[new Operator("!"), "foo"]?.ToString()
+    );
+
+    [Test] public void Test_Invocation_1() => Assert.AreEqual(
+        "Attack((id:player))",
+        Parse("Attack", "(", "player", ")")?.ToString()
+    );
+
+    [Test] public void Test_NOT_bool_1() => Assert.AreEqual(
+        "(!True)",
+        p[new Operator("!"), true]?.ToString()
+    );
+
+    [Test] public void Test_NOT_bool_2() => Assert.AreEqual(
+        "(!True)",
+        Parse("!", "true")?.ToString()
+    );
+
+    [Test] public void Test_NOT_float() => Assert.AreEqual(
+        "(!2.5)",
+        p[new Operator("!"), 2.5f]?.ToString()
     );
 
     [Test] public void Test_Module() => Assert.AreEqual(
         "(includes: 1, functions: 1)",
-        p["with", "mod", ";",
-        "func", "main", "(", ")", "=>", "body", ";"]?.ToString()
+        Parse("with", "mod", ";",
+        "func", "main", "(", ")", "=>", "body", ";")?.ToString()
     );
 
     [Test] public void Test_MUL() => Assert.AreEqual(
         "(1*2)",
-        p["1", "*", "2"]?.ToString()
+        Parse("1", "*", "2")?.ToString()
     );
 
     [Test] public void Test_MUL_PLUS_ops() => Assert.AreEqual(
         "((1*2)+3)",
-        p["1", "*", "2", "+", "3"]?.ToString()
+        Parse("1", "*", "2", "+", "3")?.ToString()
     );
 
     [Test] public void Test_PLUS() => Assert.AreEqual(
         "(1+2)",
-        p["1", "+", "2"]?.ToString()
+        Parse("1", "+", "2")?.ToString()
     );
 
     [Test] public void Test_PLUS_MUL() => Assert.AreEqual(
         "(1+(2*3))",
-        p["1", "+", "2", "*", "3"]?.ToString()
+        Parse("1", "+", "2", "*", "3")?.ToString()
     );
 
     [Test] public void Test_PLUS_MUL_parens() => Assert.AreEqual(
         "(((1+2))*3)",
-        p["(", "1", "+", "2", ")", "*", "3"]?.ToString()
+        Parse("(", "1", "+", "2", ")", "*", "3")?.ToString()
     );
 
     [Test] public void Test_PLUS_PLUS() => Assert.AreEqual(
         "((1+2)+3)",
-        p["1", "+", "2", "+", "3"]?.ToString()
+        Parse("1", "+", "2", "+", "3")?.ToString()
     );
 
     [Test] public void Test_PLUS_MINUS_ops() => Assert.AreEqual(
         "((1+2)-3)",
-        p["1", "+", "2", "-", "3"]?.ToString()
+        Parse("1", "+", "2", "-", "3")?.ToString()
     );
 
-    [Test] public void Test_PostfixUnary() => Assert.AreEqual(
-        "Attack((player!))",
-        p["Attack", "(", "player", "!", ")"]?.ToString()
+    [Test] public void Test_PostfixUnary_1() => Assert.AreEqual(
+        "((id:player)!)",
+        Parse("player", "!")?.ToString()
+    );
+
+    [Test] public void Test_PostfixUnary_2() => Assert.AreEqual(
+        "Attack(((id:player)!))",
+        Parse("Attack", "(", "player", "!", ")")?.ToString()
     );
 
     [Test] public void Test_UNARY_PREC_quirk() => Assert.AreEqual(
         "((-2)+3)",
-        p["-", "2", "+", "3"]?.ToString()
+        Parse("-", "2", "+", "3")?.ToString()
     );
 
     [Test] public void Test_Singleton() => Assert.AreEqual(
         "(5)",
-        p["(", "5", ")"]?.ToString()
+        Parse("(", "5", ")")?.ToString()
     );
 
     [Test] public void Test_With() => Assert.AreEqual(
         "(includes: 1, functions: 0)",
-        p["with", "encounters", ";"]?.ToString()
+        Parse("with", "encounters", ";")?.ToString()
     );
+
+    object Parse(params string[] tokens){
+        var caster = new Elk.Basic.TypeCaster();
+        var seq = new Elk.Util.Sequence(tokens);
+        caster.Transform(seq);
+        var debug = new List<string>();
+        var @out = p.Parse(seq, debug);
+        UnityEngine.Debug.Log($"OUTPUT: {@out}");
+        return @out;
+    }
 
 }}

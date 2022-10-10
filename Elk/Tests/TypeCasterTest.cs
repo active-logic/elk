@@ -14,12 +14,12 @@ public class TypeCasterTest{
         typecaster.Transform(s);
         Assert.That( s[0], Is.EqualTo(5)  );
         Assert.That( s[1], Is.EqualTo(5.4f).Within(0.001f) );
-        Assert.That( s[2], Is.EqualTo("foo")  );
+        Assert.That( s[2].ToString(), Is.EqualTo("(id:foo)")  );
         Assert.That( s[3], Is.EqualTo(true)  );
         Assert.That( s[4], Is.EqualTo(false)  );
-        Assert.That( s[5], Is.EqualTo("done")  );
-        Assert.That( s[6], Is.EqualTo("cont")  );
-        Assert.That( s[7], Is.EqualTo("fail")  );
+        Assert.That( s[5].ToString(), Is.EqualTo("(id:done)")  );
+        Assert.That( s[6].ToString(), Is.EqualTo("(id:cont)")  );
+        Assert.That( s[7].ToString(), Is.EqualTo("(id:fail)")  );
         Assert.That( s[8], Is.EqualTo(null)  );
     }
 

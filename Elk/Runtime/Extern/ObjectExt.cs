@@ -15,6 +15,21 @@ public static class ObjectExt{
         return (method != null);
     }
 
+    public static PropertyBinding Bind(
+        this object self, string label
+    ){
+        var type = self.GetType();
+        var field = type.GetField(label);
+        if(field != null){
+            return new ExternalFieldBinding(self, field);
+        }
+        var prop = type.GetProperty(label);
+        if(prop != null){
+            return new ExternalPropertyBinding(self, prop);
+        }
+        return null;
+    }
+
     public static bool Eval(
         this object self, string label, out object @out
     ){

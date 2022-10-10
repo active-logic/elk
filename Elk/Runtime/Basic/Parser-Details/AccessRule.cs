@@ -12,6 +12,6 @@ public class AccessRule : BinaryRule{
     // 0   1  2  3
     // foo . bar (
     override protected bool Validate(Sequence vec, int i)
-    => vec.AsString(i + 3) != "(";
+    => vec.Get<Operator>(i + 3)?.value != "(";
 
 }}}

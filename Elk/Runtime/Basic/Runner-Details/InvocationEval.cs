@@ -12,7 +12,7 @@ public class InvocationEval{
         if(!didEvalArgs){
             ρ.EvalArgs(ι.arguments, @out: ι.values, cx);
         }
-        cx.StackPush(ι.name + ι.values.NeatFormat());
+        cx.StackPush(ι.name + ι.values.NeatFormat(), ι.id);
         var @out = DoEval(ι, ρ, cx);
         cx.StackPop(@out);
         return @out;
@@ -22,7 +22,8 @@ public class InvocationEval{
         Invocation ι, bool didEvalArgs, object sub, Context cx
     ){
         cx.StackPush(
-            ι.name + (didEvalArgs ? ι.values.NeatFormat() : "(-)")
+            ι.name + (didEvalArgs ? ι.values.NeatFormat() : "(-)"),
+            ι.id
         );
         cx.StackPop(sub);
         return sub;

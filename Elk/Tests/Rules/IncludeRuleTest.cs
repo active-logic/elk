@@ -9,8 +9,12 @@ public class IncludeRuleTest{
     [SetUp] public void Setup()
     => rule = new Elk.Basic.Parser.IncludeRule();
 
-    [Test] public void Test_StrongImport(){
-        var seq = new Sequence("with", "encounters", ";");
+    [Test] public void Test_Include(){
+        var seq = new Sequence(
+            new Identifier("with"),
+            new Identifier("encounters"),
+            new Operator(";")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is Include);

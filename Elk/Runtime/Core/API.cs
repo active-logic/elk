@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Elk.Util;
 
 namespace Elk{
@@ -7,7 +8,11 @@ public interface Tokenizer{
 }
 
 public interface Parser{
-    object Parse(Sequence tokens);
+
+    // Parse the specified sequence; accumulate info in 'debug'
+    // (leave null if no debug info is needed)
+    object Parse(Sequence tokens, List<string> debug);
+
 }
 
 public interface Validator{
@@ -24,9 +29,10 @@ public interface Runner<Cx>{
 
 }
 
-// For deferred/client side stack recording
+// For deferred/client side tracking and recording
 public interface Stack{
     void Commit(object result);
+    ulong Id();
 }
 
 }

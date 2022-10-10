@@ -12,6 +12,7 @@ public static class BTLContextFactory{
         params object[] externals
     ){
         var module = (Module) program;
+        //ebug.Log($"Module: {module}, owner:{owner}");
         var cx = new Context(){
             modules   = new FuncDef[][]{ module.functions },
             externals = externals,

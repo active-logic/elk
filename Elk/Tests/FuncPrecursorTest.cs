@@ -13,7 +13,10 @@ public class FuncPrecursorTest{
 
     [Test] public void Test_0_Arg(){
         var seq = new Sequence(
-            "func", "main", "(", ")");
+            new Identifier("func"),
+            new Identifier("main"),
+            new Operator("("), new Operator(")")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is FuncDef);
@@ -21,7 +24,12 @@ public class FuncPrecursorTest{
 
     [Test] public void Test_1_Arg(){
         var seq = new Sequence(
-            "func", "main", "(", "3", ")");
+            new Identifier("func"),
+            new Identifier("main"),
+            new Operator("("),
+            new Identifier("a"),
+            new Operator(")")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is FuncDef);
@@ -29,7 +37,14 @@ public class FuncPrecursorTest{
 
     [Test] public void Test_2_Arg(){
         var seq = new Sequence(
-            "func", "main", "(", "1", ",", "2", ")");
+            new Identifier("func"),
+            new Identifier("main"),
+            new Operator("("),
+            new Identifier("a"),
+            new Operator(","),
+            new Identifier("b"),
+            new Operator(")")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is FuncDef);
@@ -37,7 +52,16 @@ public class FuncPrecursorTest{
 
     [Test] public void Test_3_Arg(){
         var seq = new Sequence(
-            "func", "main", "(", "1", ",", "2", ",", "3", ")");
+            new Identifier("func"),
+            new Identifier("main"),
+            new Operator("("),
+            new Identifier("a"),
+            new Operator(","),
+            new Identifier("b"),
+            new Operator(","),
+            new Identifier("c"),
+            new Operator(")")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is FuncDef);

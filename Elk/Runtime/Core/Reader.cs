@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Elk.Util;
 
 namespace Elk{
@@ -14,10 +15,10 @@ public class Reader{
         tokenizer = t; parser = p;
     }
 
-    public object Parse(string arg){
+    public object Parse(string arg, List<string> debug){
         var tokens = new Sequence(tokenizer.Tokenize(arg));
         typecaster?.Transform(tokens);
-        var @out = parser.Parse(tokens);
+        var @out = parser.Parse(tokens, debug);
         validator?.Validate(@out);
         return @out;
     }

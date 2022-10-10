@@ -63,6 +63,7 @@ public partial class BTL : MonoBehaviour, LogSource{
         if(suspend) return;
         if(string.IsNullOrEmpty(path)) return;
         EvalProgram();
+        if(program == null) return;
         context = BTLContextFactory.Create(
             this, program, useScene, externals
         );

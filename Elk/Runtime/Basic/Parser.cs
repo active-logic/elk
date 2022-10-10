@@ -1,7 +1,6 @@
 using ArgEx = System.ArgumentException;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Linq; using System.Text;
 using Action = System.Action<object>;
 using Elk.Util;
 using FuncDef = Elk.Basic.Graph.FuncDef;
@@ -34,11 +33,11 @@ public partial class Parser : Elk.Parser{
         Rst( new ModuleRule() )
     };
 
-    public object Parse(Sequence vector){
+    public object Parse(Sequence vector, List<string> debug){
         vector.log = this.log;
         for(int prec = 0; prec < rules.Length; prec++){
             Log($"Apply prec level {prec}");
-            rules[prec].Process(vector);
+            rules[prec].Process(vector, debug);
             if(vector.Check()){
                 Log("Reset prec");
                 prec = -1;
@@ -66,7 +65,8 @@ public partial class Parser : Elk.Parser{
         return "\n" + vector.XFormat();
     }
 
-    public object this[params string[] tokens] => Parse(tokens);
+    public object this[params object[] tokens]
+    => Parse(tokens, debug: null);
 
     void Log(object arg) => log?.Invoke(arg);
 

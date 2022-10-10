@@ -12,28 +12,49 @@ public class InvocationRuleTest{
     => rule = new Elk.Basic.Parser.InvocationRule();
 
     [Test] public void Test_0_Arg(){
-        var seq = new Sequence("main", "(", ")");
+        var seq = new Sequence(
+            new Identifier("main"),
+            new Operator("("),
+            new Operator(")")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is Invocation);
     }
 
     [Test] public void Test_1_Arg(){
-        var seq = new Sequence("main", "(", "3", ")");
+        var seq = new Sequence(
+            new Identifier("main"),
+            new Operator("("),
+            3,
+            new Operator(")")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is Invocation);
     }
 
     [Test] public void Test_2_Arg(){
-        var seq = new Sequence("main", "(", "1", "," ,"2", ")");
+        var seq = new Sequence(
+            new Identifier("main"),
+            new Operator("("),
+            1, ",", 5f,
+            new Operator(")")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is Invocation);
     }
 
     [Test] public void Test_3_Arg(){
-        var seq = new Sequence("main", "(", "1", "," ,"2", ",", "3", ")");
+        var seq = new Sequence(
+            new Identifier("main"),
+            new Operator("("),
+            1, ",",
+            null, ",",
+            new Identifier("abc"),
+            new Operator(")")
+        );
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is Invocation);

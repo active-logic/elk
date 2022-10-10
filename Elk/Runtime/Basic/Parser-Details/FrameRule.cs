@@ -17,8 +17,9 @@ public class Frame<T, Q> : LocalRule where T : class{
     }
 
     override public void Process(Sequence vec, int i){
-        if(vec.AsString(i    ) != left ) return;
-        if(vec.AsString(i + 2) != right) return;
+        var a = vec.StringValue(i);
+        var b = vec.StringValue(i+2);
+        if(a != left || b != right) return;
         var arg = vec.Get<T>(i + 1);
         if(arg == null) return;
         vec.Replace(i, 3, generator(arg), this);

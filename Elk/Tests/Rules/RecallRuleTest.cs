@@ -13,7 +13,7 @@ public class RecallRuleTest{
 
     [Test] public void Test_did(){
         var inv = new Invocation("foo");
-        var seq = new Sequence("did", inv);
+        var seq = new Sequence(new Identifier("did"), inv);
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is Recall);
@@ -22,7 +22,7 @@ public class RecallRuleTest{
     [Test] public void Test_did_since(){
         var inv0 = new Invocation("foo");
         var inv1 = new Invocation("bar");
-        var seq = new Sequence("did", inv0, "since", inv1);
+        var seq = new Sequence(new Identifier("did"), inv0, new Identifier("since"), inv1);
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is Recall);
@@ -33,7 +33,7 @@ public class RecallRuleTest{
     [Test] public void Test_did_since_strict(){
         var inv0 = new Invocation("foo");
         var inv1 = new Invocation("bar");
-        var seq = new Sequence("did", inv0, "since", inv1, "!");
+        var seq = new Sequence(new Identifier("did"), inv0, new Identifier("since"), inv1, "!");
         rule.Process(seq, 0);
         Assert.AreEqual(1, seq.size);
         Assert.That(seq[0] is Recall);
