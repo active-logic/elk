@@ -38,13 +38,12 @@ public class InvocationEval{
     }
 
     public object DoEval(Invocation ι, Runner ρ, Context cx){
-        if(ι.binding == null){
-            ι.binding =  cx.modules  .Bind(ι, ρ, cx)
-                      ?? cx.externals.Bind(ι.name, ι.values);
-        }
-        var binding = (InvocationBinding)ι.binding;
-        if(binding == null) throw new Ex($"`{ι}` not found");
-        return ((InvocationBinding)ι.binding).Eval(ι, ρ, cx);
+        if(ι.binding == null)
+            ι.binding = cx.BindMethod(ι, ρ, cx);
+        var binding = ι.binding as InvocationBinding;
+        return binding != null
+             ? binding.Eval(ι, ρ, cx)
+             : throw new Ex($"`{ι}` not found");
     }
 
 }}

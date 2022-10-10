@@ -6,8 +6,7 @@ namespace Elk.Basic.Runtime{
 public static class Modules{
 
     public static InvocationBinding Bind(
-        this IEnumerable<FuncDef[]> self, Invocation ι,
-        Runner ρ, Context cx
+        this IEnumerable<FuncDef[]> self, Invocation ι, Context cx
     ){
         foreach(var module in self){
             var fdef = Array.Find(
