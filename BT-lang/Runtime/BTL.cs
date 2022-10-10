@@ -103,7 +103,7 @@ public partial class BTL : MonoBehaviour, LogSource{
         return program;
     }
 
-    public System.Func<string, object> findInScene{ get{
+    public System.Func<string, Transform> findInScene{ get{
         var finder = GetComponent<Finder>();
         return finder != null ? finder.FindInScene : null;
     }}

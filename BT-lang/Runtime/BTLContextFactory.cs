@@ -1,6 +1,7 @@
 using Elk;
 using Elk.Basic;
 using Elk.Basic.Graph;
+using Elk.Basic.Runtime;
 using Active.Core;
 using UnityEngine;
 
@@ -14,14 +15,18 @@ public class BTLContextFactory{
         params object[] externals
     ){
         var module = (Module) program;
-        //ebug.Log($"Module: {module}, owner:{owner}");
         var cx = new Context(argStack){
             modules   = new FuncDef[][]{ module.functions },
-            externals = externals,
-            domain    = useScene ? owner.findInScene : null,
             record    = owner.record,
             cog      = owner.cognition
         };
+        cx.domains.Add( new InternalDomain(cx) );
+        cx.domains.Add( new CsDomain(externals) );
+        if(useScene){
+            cx.domains.Add(
+                new DynamicDomain<Transform>(owner.findInScene)
+            );
+        }
         cx.graph.returnValueFormatter = x => {
             var str = x?.ToString() ?? "∅";
             if(x is Active.Core.status){
@@ -35,7 +40,7 @@ public class BTLContextFactory{
         return cx;
     }
 
-    public static object FindInScene(string arg)
+    public static Transform FindInScene(string arg)
     => GameObject.Find(arg)?.transform;
 
 }}

@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using FuncDef = Elk.Basic.Graph.FuncDef;
-//using ArgMap = ArgumentStack;
-//using ArgMap = System.Collections.Generic
-//                     .Dictionary<string, object>;
+using Elk.Basic.Runtime;
+using Elk.Basic.Graph;
 
 namespace Elk.Basic{
 public class Context{
 
     public ArgumentStack argumentStack;
-    public Func<string, object> domain;
     public IEnumerable<FuncDef[]> modules;
-    public IEnumerable<object> externals;
+    public List<Domain> domains = new List<Domain>(5);
     public CallGraph graph;
     public Elk.Memory.Record record;
     public Elk.Memory.Cog cog;
@@ -23,6 +21,26 @@ public class Context{
     }
 
     public Elk.Stack callStack => graph.CallStack(cog, record);
+
+    public InvocationBinding BindMethod(
+        Invocation ι, Runner ρ, Context cx
+    ){
+        foreach(var domain in domains){
+            var binding = domain.Bind(ι, cx);
+            if(binding != null) return binding;
+        }
+        return new InvalidInvocation(ι.name);
+    }
+
+    public PropertyBinding BindProperty(
+        Identifier prop, Context cx
+    ){
+        foreach(var domain in domains){
+            var binding = domain.Bind(prop, cx);
+            if(binding != null) return binding;
+        }
+        return new InvalidPropertyBinding(prop.value);
+    }
 
     public object this[string key]
     => argumentStack.Peek()[key];
