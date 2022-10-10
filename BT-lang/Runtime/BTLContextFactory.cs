@@ -5,15 +5,17 @@ using Active.Core;
 using UnityEngine;
 
 namespace Activ.BTL{
-public static class BTLContextFactory{
+public class BTLContextFactory{
 
-    public static Context Create(
+    ArgumentStack argStack = new ArgumentStack();
+
+    public Context Create(
         BTL owner, object program, bool useScene,
         params object[] externals
     ){
         var module = (Module) program;
         //ebug.Log($"Module: {module}, owner:{owner}");
-        var cx = new Context(){
+        var cx = new Context(argStack){
             modules   = new FuncDef[][]{ module.functions },
             externals = externals,
             domain    = useScene ? owner.findInScene : null,

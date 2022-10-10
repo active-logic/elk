@@ -27,6 +27,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     History _history;
     bool useScene = false;
     bool suspend = false;
+    BTLContextFactory contextFactory = new BTLContextFactory();
     // refreshed at every iteration; keeping this handy
     // for clients to access the stack
     Context context;
@@ -64,7 +65,7 @@ public partial class BTL : MonoBehaviour, LogSource{
         if(string.IsNullOrEmpty(path)) return;
         EvalProgram();
         if(program == null) return;
-        context = BTLContextFactory.Create(
+        context = contextFactory.Create(
             this, program, useScene, externals
         );
         output = interpreter.Run(context)?.ToString();

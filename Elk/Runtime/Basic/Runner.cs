@@ -29,7 +29,8 @@ public class Runner : Elk.Runner<Context>{
             case UnaryExp      op: return una.Eval(op, this, cx);
             case Identifier label: return prp.Eval(label, cx);
             case Invocation ι:
-                var pass = Intercept(ι, cx);
+                Pass pass;
+                Intercept(ι, cx, out pass);
                 if(pass.i){
                     return inv.Bypass(ι, pass.e, pass.r, cx);
                 }else{
@@ -50,8 +51,9 @@ public class Runner : Elk.Runner<Context>{
     }
 
     // Override to intercept invocations; ref 'Pass.cs'
-    virtual protected Pass Intercept(Invocation ι, Context cx)
-    => new Pass();
+    virtual protected void Intercept(
+        Invocation ι, Context cx, out Pass pass
+    ) => pass = new Pass();
 
     // Whereas unknown types will cause an error, traversed literals
     // are returned 'as is'
