@@ -1,4 +1,5 @@
 using System.Reflection;
+using Elk.Basic.Runtime;
 
 namespace Elk.Bindings.CSharp{
 public static class ObjectExt{

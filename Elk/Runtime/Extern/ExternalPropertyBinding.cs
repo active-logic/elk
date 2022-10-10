@@ -1,21 +1,9 @@
 using System.Reflection;
 using Ex = System.Exception;
+// TODO unwanted dep
+using Elk.Basic.Runtime;
 
 namespace Elk.Bindings.CSharp{
-
-public interface PropertyBinding{
-    object value{ get; }
-    bool exists { get; }
-}
-
-public class InvalidPropertyBinding : PropertyBinding{
-
-    public object value => throw new Ex("No such property");
-    public bool exists => false;
-
-}
-
-// -----------------------------------------------------------------
 
 public abstract class CsPropBinding<T>{
 
