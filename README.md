@@ -1,5 +1,11 @@
 *ELK and BT-Lang are under development; do not use in production; this repository is shared for early feedback around BT-Lang development; planned alpha: Oct 15 2022.*
 
+Git URL
+
+```
+git@github.com:active-logic/elk.git
+```
+
 # ELK / BT-lang
 
 This Unity package includes the following:
