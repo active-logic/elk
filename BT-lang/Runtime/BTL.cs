@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 using Elk; using Elk.Basic;
@@ -15,8 +16,15 @@ public partial class BTL : MonoBehaviour, LogSource{
     public bool useHistory = true;
     public bool recordIntents = false;
     public bool sparse = true;
+    [Header("Debugging")]
+    public bool pauseOnErrors = false;
+    public bool logErrors = true;
+    //
     public Record record;
     public BTLCog cognition;
+    //
+    [NonSerialized] public bool hasValidPath = true;
+    [NonSerialized] public string exceptionMessage;
     //
     string log, output, loadedFrom;
     // TODO don't see a point in making this public but see
@@ -32,7 +40,11 @@ public partial class BTL : MonoBehaviour, LogSource{
     // for clients to access the stack
     Context context;
 
+    // -------------------------------------------------------------
+
     public Elk.Stack stack => context?.callStack;
+
+    // -------------------------------------------------------------
 
     public void Hold(bool flag, object src){
         if(!sparse){ suspend = false; return; }
@@ -61,17 +73,24 @@ public partial class BTL : MonoBehaviour, LogSource{
     }
 
     void Update(){
-        if(suspend) return;
-        if(string.IsNullOrEmpty(path)) return;
-        EvalProgram();
-        if(program == null) return;
-        context = contextFactory.Create(
-            this, program, useScene, externals
-        );
-        output = interpreter.Run(context)?.ToString();
-        log = context.graph.Format();
-        if(useHistory) history.Log(log, transform);
-        context = null;
+        try{
+            if(suspend) return;
+            if(string.IsNullOrEmpty(path)) return;
+            EvalProgram();
+            if(program == null) return;
+            context = contextFactory.Create(
+                this, program, useScene, externals
+            );
+            output = interpreter.Run(context)?.ToString();
+            log = context.graph.Format();
+            if(useHistory) history.Log(log, transform);
+            context = null;
+            exceptionMessage = null;
+        }catch(Exception ex){
+            exceptionMessage = ex.Message;
+            if(pauseOnErrors) Debug.Break();
+            if(logErrors) throw;
+        }
     }
 
     void OnValidate(){
@@ -79,6 +98,7 @@ public partial class BTL : MonoBehaviour, LogSource{
         if(path.EndsWith(".txt")){
             path = path.Substring(0, path.Length-4);
         }
+        IsValidPath(path);
     }
 
     void OnDisable() => log = "DISABLED";
@@ -91,7 +111,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     }
 
     bool IsValidPath(string path)
-    => Resources.Load<TextAsset>(path) != null;
+    => hasValidPath = Resources.Load<TextAsset>(path) != null;
 
     object Build(string path){
         var ph      = new BTLPathHandler();
