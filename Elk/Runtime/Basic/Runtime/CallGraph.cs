@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Elk.Memory;
 
-namespace Elk.Basic{
-public class CallGraph{
+namespace Elk.Basic.Runtime{
+public partial class CallGraph{
 
     Node root;
     Stack<Node> stack = new Stack<Node>();
-    public Func<object, string> returnValueFormatter;
+    public Formatter format = new DefaultFormatter();
 
     public Elk.Stack CallStack(Cog client, Record record)
     => new StackTrace(stack.Peek(), client, record);
@@ -27,10 +27,14 @@ public class CallGraph{
     public string Peek() => stack.Peek().info;
 
     public void Pop(object returnValue){
-        var str = returnValueFormatter?.Invoke(returnValue)
-                  ?? returnValue?.ToString() ?? "null";
+        var str = format.ReturnValue(returnValue);
         var node = stack.Pop();
         node.info = str + " " + node.info;
+    }
+
+    public void PushPopProp(string name, object value){
+        Push(format.Property(name, value), 0);
+        stack.Pop();
     }
 
     public string Format(){

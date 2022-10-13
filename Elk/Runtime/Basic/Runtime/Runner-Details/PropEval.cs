@@ -1,6 +1,7 @@
 using Ex = System.Exception;
-using Elk.Bindings.CSharp;
+using Elk.Util;
 using Elk.Basic.Graph;
+using Elk.Bindings.CSharp;
 
 namespace Elk.Basic.Runtime{
 public class PropEval{
@@ -9,9 +10,11 @@ public class PropEval{
         if(prop.binding == null)
             prop.binding = cx.BindProperty(prop, cx);
         var binding = prop.binding as PropertyBinding;
-        return binding != null
+        var @out = binding != null
              ? binding.value
              : throw new Ex($"`{prop.value}` not found");
+        cx.StackPushPopProp(prop.value, @out);
+        return @out;
     }
 
 }}

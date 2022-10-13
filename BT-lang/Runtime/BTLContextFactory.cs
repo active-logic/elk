@@ -27,16 +27,7 @@ public class BTLContextFactory{
                 new DynamicDomain<Transform>(owner.findInScene)
             );
         }
-        cx.graph.returnValueFormatter = x => {
-            var str = x?.ToString() ?? "∅";
-            if(x is Active.Core.status){
-                var s = (Active.Core.status) x;
-                if(s.failing) str = "✗";
-                if(s.running) str = "→";
-                if(s.complete) str = "✓";
-            };
-            return str;
-        };
+        cx.graph.format = new BTL.GraphFormatter();
         return cx;
     }
 

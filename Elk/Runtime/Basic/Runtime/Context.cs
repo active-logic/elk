@@ -4,13 +4,16 @@ using FuncDef = Elk.Basic.Graph.FuncDef;
 using Elk.Basic.Runtime;
 using Elk.Basic.Graph;
 
-namespace Elk.Basic{
+namespace Elk.Basic.Runtime{
 public class Context{
 
     public ArgumentStack argumentStack;
     public IEnumerable<FuncDef[]> modules;
     public List<Domain> domains = new List<Domain>(5);
     public CallGraph graph;
+    // NOTE: used to decide whether to output props to the stack
+    // or not; guesswork
+    public bool propsToStack = true;
     public Elk.Memory.Record record;
     public Elk.Memory.Cog cog;
 
@@ -62,6 +65,11 @@ public class Context{
         var callInfo = graph.Peek();
         cog.CommitCall(callInfo, value, record);
         graph.Pop(value);
+    }
+
+    public void StackPushPopProp(string name, object value){
+        var callInfo = graph.Peek();
+        if(propsToStack) graph.PushPopProp(name, value);
     }
 
     public void PushArguments(string[] parameters, object[] arguments)

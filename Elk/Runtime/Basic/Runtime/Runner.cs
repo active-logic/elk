@@ -28,16 +28,9 @@ public class Runner : Elk.Runner<Context>{
             case BinaryExp     op: return bin.Eval(op, this, cx);
             case UnaryExp      op: return una.Eval(op, this, cx);
             case Identifier label: return prp.Eval(label, cx);
-            case Invocation ι:
-                Pass pass;
-                Intercept(ι, cx, out pass);
-                if(pass.i){
-                    return inv.Bypass(ι, pass.e, pass.r, cx);
-                }else{
-                    return inv.Eval(ι, pass.e, this, cx);
-                }
-            case Recall     r: return rec.Eval(r, this, cx);
-            case Singleton  s: return Eval(s.content, cx);
+            case Invocation ι:     return inv.Eval(ι, this, cx);
+            case Recall     r:     return rec.Eval(r, this, cx);
+            case Singleton  s:     return Eval(s.content, cx);
             case object val when IsLiteral(val): return val;
             default: throw new Ex($"Cannot evaluate {arg} of type {arg.GetType()}");
         }
@@ -51,7 +44,7 @@ public class Runner : Elk.Runner<Context>{
     }
 
     // Override to intercept invocations; ref 'Pass.cs'
-    virtual protected void Intercept(
+    public virtual void Intercept(
         Invocation ι, Context cx, out Pass pass
     ) => pass = new Pass();
 
