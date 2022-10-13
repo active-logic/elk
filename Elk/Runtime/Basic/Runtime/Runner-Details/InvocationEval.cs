@@ -7,18 +7,34 @@ using Elk.Basic.Runtime;
 namespace Elk.Basic{
 public class InvocationEval{
 
-    public object Eval(Invocation ι, bool didEvalArgs,
-                       Runner ρ, Context cx){
-        if(!didEvalArgs){
+    public object Eval(
+        Invocation ι, Runner ρ, Context cx
+    ){
+        // Process args or intercept
+        cx.propsToStack = false;
+        ρ.Intercept(ι, cx, out Pass pass);
+        if(!pass.e && pass.i){
             ρ.EvalArgs(ι.arguments, @out: ι.values, cx);
         }
+        cx.propsToStack = true;
+        // Eval or bypass
+        if(pass.i){
+            return Bypass(ι, pass.e, pass.r, cx);
+        }else{
+            return EvalBody(ι, pass.e, ρ, cx);
+        }
+    }
+
+    object EvalBody(Invocation ι, bool didEvalArgs,
+                       Runner ρ, Context cx){
+        cx.propsToStack = true;
         cx.StackPush(ι.name + ι.values.NeatFormat(), ι.id);
         var @out = DoEval(ι, ρ, cx);
         cx.StackPop(@out);
         return @out;
     }
 
-    public object Bypass(
+    object Bypass(
         Invocation ι, bool didEvalArgs, object sub, Context cx
     ){
         cx.StackPush(
@@ -37,7 +53,7 @@ public class InvocationEval{
         return ι.name + ι.values.NeatFormat();
     }
 
-    public object DoEval(Invocation ι, Runner ρ, Context cx){
+    object DoEval(Invocation ι, Runner ρ, Context cx){
         if(ι.binding == null)
             ι.binding = cx.BindMethod(ι, ρ, cx);
         var binding = ι.binding as InvocationBinding;

@@ -9,7 +9,7 @@ public class BTLRunner : Elk.Basic.Runner{
     override protected bool IsLiteral(object x)
     => x is status || base.IsLiteral(x);
 
-    override protected void Intercept(
+    override public void Intercept(
         Invocation ι, Context cx, out Pass pass
     ){
         var args = ι.arguments;
