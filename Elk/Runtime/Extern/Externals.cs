@@ -6,10 +6,10 @@ namespace Elk.Bindings.CSharp{
 public static class Externals{
 
     public static InvocationBinding Bind(
-        this IEnumerable cx, string func, object[] args
+        this IEnumerable cx, string func, object[] args, bool debug
     ){
         foreach(var obj in cx){
-            var method = obj.Bind(func, args);
+            var method = obj.Bind(func, args, debug);
             if(method != null){
                 return new ExternalFunctionBinding(obj, method);
             }

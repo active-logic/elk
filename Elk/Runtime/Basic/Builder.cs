@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Elk;
-using Elk.Basic.Graph;
+using Elk; using Elk.Basic.Graph;
 
 namespace Elk.Basic{
 public class Builder{
@@ -36,9 +35,10 @@ public class Builder{
             src = src.Substring(shebang.Length);
         try{
             return (Module)reader.Parse(src, debug: null);
-        }catch(ParsingException ex){
-            throw new ParsingException
-                ( ex.Message + $" in {path}.txt", ex );
+        }catch(ElkParsingException ex){
+            throw new ElkParsingException(
+                ex.Message + $" in {path}.txt", ex
+            );
         }
     }
 

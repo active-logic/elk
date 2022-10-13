@@ -26,7 +26,12 @@ public class Context{
         Invocation ι, Runner ρ, Context cx
     ){
         foreach(var domain in domains){
-            var binding = domain.Bind(ι, cx);
+            var binding = domain.Bind(ι, cx, debug: false);
+            if(binding != null) return binding;
+        }
+        // diagnostic level
+        foreach(var domain in domains){
+            var binding = domain.Bind(ι, cx, debug: true);
             if(binding != null) return binding;
         }
         return new InvalidInvocation(ι.name);

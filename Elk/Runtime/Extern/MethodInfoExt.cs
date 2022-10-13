@@ -6,14 +6,20 @@ namespace Elk.Bindings.CSharp{
 public static class MethodInfoExt{
 
     public static bool Matches(
-        this MethodInfo method, string func, Type[] argTypes
+        this MethodInfo method, string func, Type[] argTypes, bool debug
     ){
-        if(method.Name != func) return false;
+        if(method.Name != func){
+            //if(debug) Log($"Method name {func} does not match {method.Name}");
+            return false;
+        }
         var parameters        = method.GetParameters();
         var argCount          = argTypes.Length;
         var maxParamCount = parameters.Length;
         if(argCount > maxParamCount){
-            //ebug.Log("- arg count is over max param count");
+            if(debug) Warn(
+                  $"C# '{func}' matches but arg count ({argCount})"
+                + $" > max param count ({maxParamCount})"
+            );
             return false;
         }
         for(int i = 0; i < maxParamCount; i++){
@@ -29,12 +35,14 @@ public static class MethodInfoExt{
                 continue;
             }
             if(!p.ParameterType.IsAssignableFrom(argTypes[i])){
-                //ebug.Log($"- [{i}]: {p.ParameterType} not assignable from {argTypes[i]}");
+                Warn($"C# [{i}]: {p.ParameterType} is not assignable from {argTypes[i]}");
                 return false;
             }
         }
         //ebug.Log("! did match");
         return true;
     }
+
+    static void Warn(string arg) => Debug.Log(arg);
 
 }}

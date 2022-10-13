@@ -30,34 +30,35 @@ public class BTLCog : Cog{
 
     // Called by clients (via BTL.CommitAction) when a memorable
     // event or action has occurred
-    public void CommitEvent(
+    public string CommitEvent(
         string action, string args, status @out, Record record
-    ){
-        DoCommit($"{action}({args})", @out, record);
-    }
+    )
+    => DoCommit($"{action}({args})", @out, record);
 
     public static string ArgsToString(object args){
         switch(args){
             case System.Array array:
                 return array.NeatFormat();
             default:
-                return ArrayExt.ToCleanString(args);
+                return args.Format();
         }
     }
 
     // NOTE may want to be more generous in what we record here;
     // negative results (and others) can be useful
-    public void DoCommit(string call, object output, Record record){
+    public string DoCommit(string call, object output, Record record){
         bool complete = (output is status task && task.complete)
                      || (output is bool flag && flag);
+        string @out = null;
         if(complete){
             var time = Time.time;
-            record.Append("self." + call, Time.time);
+            @out = record.Append("self." + call, Time.time);
             foreach(var other in instances){
                 if(other == this) continue;
                 other.Notify(owner, call, time);
             }
         }
+        return @out;
     }
 
     // NOTE - this just adds anything done by another agent to our

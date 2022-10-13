@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Elk.Util;
 
 namespace Elk.Memory{
 // Captures actions observed by an agent, including those performed
@@ -10,6 +11,9 @@ public class Record{
     List<Frame> events = new List<Frame>(256);
 
     public Record(string name) => this.name = name;
+
+    public bool Did(string verb, object obj)
+    => Contains($"{verb}.({obj.Format()})");
 
     public bool Contains(string arg, string since, bool strict){
         if(events.Count == 0) return false;
@@ -37,8 +41,9 @@ public class Record{
         return false;
     }
 
-    public void Append(string @event, float time){
+    public string Append(string @event, float time){
         events.Add(new Frame(@event, time));
+        return @event;
     }
 
 }}

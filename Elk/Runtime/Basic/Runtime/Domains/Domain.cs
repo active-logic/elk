@@ -6,6 +6,6 @@ public interface Domain{
 
     PropertyBinding Bind(Identifier id, Context cx);
 
-    InvocationBinding Bind(Invocation inv, Context cx);
+    InvocationBinding Bind(Invocation inv, Context cx, bool debug);
 
 }}

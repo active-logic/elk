@@ -10,30 +10,33 @@ public class TypeExtTest{
 
     [Test] public void TestF0_NullArgs(){
         Type t = typeof(Cog);
-        t.GetMethod("F0", (object[])null);
+        t.LookupMethod("F0", (object[])null, debug: false);
     }
 
     [Test] public void TestF0_NoArgs(){
         Type t = typeof(Cog);
-        var m = t.GetMethod("F0", noArgs);
+        var m = t.LookupMethod("F0", noArgs, debug: false);
     }
 
     [Test] public void TestF1(){
         Type t = typeof(Cog);
-        var m = t.GetMethod("F1", new object[]{"str"});
+        var m = t.LookupMethod("F1", new object[]{"str"},
+                               debug: false);
         Assert.IsTrue( m != null );
     }
 
     [Test] public void TestF1_argIsNull(){
         Type t = typeof(Cog);
-        var m = t.GetMethod("F1", new object[]{null});
+        var m = t.LookupMethod("F1", new object[]{null},
+                            debug: false);
         Assert.IsTrue( m != null );
     }
 
     [Test] public void TestF2_ambiguousBinding_throws(){
         Type t = typeof(Cog);
         Assert.Throws<Exception>(
-            () => t.GetMethod("F2a", new object[]{null})
+            () => t.LookupMethod("F2a", new object[]{null},
+                                 debug: false)
         );
     }
 

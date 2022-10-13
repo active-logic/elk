@@ -13,7 +13,7 @@ public class BTLPathHandler : PathHandler{
         }else{
             var src = Resources.Load<TextAsset>(path)?.text;
             return src ??
-                   throw new ParsingException($"Invalid path {path}");
+                   throw new ElkParsingException($"Invalid path {path}");
         }
     }
 

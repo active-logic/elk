@@ -12,7 +12,7 @@ public class CsDomain : Domain{
     public PropertyBinding Bind(Identifier id, Context cx)
     => objects.Bind(id.value);
 
-    public InvocationBinding Bind(Invocation inv, Context cx)
-    => objects.Bind(inv.name, inv.values);
+    public InvocationBinding Bind(Invocation inv, Context cx, bool debug)
+    => objects.Bind(inv.name, inv.values, debug);
 
 }}

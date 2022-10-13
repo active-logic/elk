@@ -13,7 +13,7 @@ public class DynamicDomain<T> : Domain{
     public PropertyBinding Bind(Identifier id, Context cx)
     => new DelegatedPropertyBinding<T>(id.value, finder);
 
-    public InvocationBinding Bind(Invocation inv, Context cx)
+    public InvocationBinding Bind(Invocation inv, Context cx, bool debug)
     => null;
 
 }}

@@ -1,8 +1,8 @@
 using Ex = System.Exception;
 using O = System.Object;
 using BF = System.Reflection.BindingFlags;
-using Elk.Basic;
-using Elk.Basic.Graph;
+using Elk.Basic; using Elk.Basic.Graph; using Elk.Util;
+using RtEx = Elk.ElkRuntimeException;
 using Active.Core; using static Active.Raw;
 
 namespace Activ.BTL.Imp{
@@ -31,7 +31,7 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
                 X, right, op, ρ, cx
             );
         }
-        throw new Ex($"Unsupported operation: {X} {op} ? ({X.GetType()})");
+        throw new RtEx($"Unsupported operation: {X} {op} ? ({X.GetType()})");
     }
 
     // NOTE - only && and || are not directly overloaded, therefore
@@ -42,7 +42,7 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
             case "||": return !X ? ToStatus(ρ.Eval(right, cx)) : done;
             case "&&": return  X ? ToStatus(ρ.Eval(right, cx)) : fail;
         }
-        throw new Ex($"Unimplemented op {op}");
+        throw new RtEx($"Unimplemented op {op}");
     }
 
     // NOTE - only && and || are not directly overloaded, therefore
@@ -53,11 +53,11 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
             case "||": return X.failing  ? ToStatus(ρ.Eval(right, cx)) : X;
             case "&&": return X.complete ? ToStatus(ρ.Eval(right, cx)) : X;
         }
-        throw new Ex($"Unimplemented op {op}");
+        throw new RtEx($"Unimplemented op {op}");
     }
 
     status ToStatus(object arg)
     => arg is status s ? s : arg is bool b ? (status)b
-    : throw new Ex($"Don't know how to convert {arg} to status");
+    : throw new RtEx($"Don't know how to convert {arg.Format()} to status");
 
 }}

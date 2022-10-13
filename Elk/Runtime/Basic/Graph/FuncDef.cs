@@ -21,10 +21,21 @@ public class FuncDef{
     public int paramCount => parameters?.Length ?? 0;
 
     public bool MatchesSignatureOf(FuncDef that)
-    => Matches(that.name, that.paramCount);
+    => Matches(that.name, that.paramCount, debug: false);
 
-    public bool Matches(string name, int paramCount)
-    => name == this.name && paramCount == this.paramCount;
+    public bool Matches(string name, int paramCount, bool debug){
+        if(name != this.name){
+            if(debug && name.ToLower() == this.name.ToLower()){
+                Warn($"Func name mistach: {name} (did you mean {this.name})");
+            }
+            return false;
+        }
+        if(paramCount != this.paramCount){
+            Warn($"Provided {paramCount} parameters, found {this.paramCount}");
+            return false;
+        }
+        return true;
+    }
 
     bool FuncMatches(FuncDef fdef, string name, int argLength){
         if(fdef == null){
@@ -50,5 +61,7 @@ public class FuncDef{
         }
         return "(" + @out.ToString() + " → {" + body + "});";
     }
+
+    static void Warn(string arg) => Debug.LogWarning(arg);
 
 }}

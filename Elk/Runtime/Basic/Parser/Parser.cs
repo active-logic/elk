@@ -45,7 +45,7 @@ public partial class Parser : Elk.Parser{
         }
         return vector.isSingleton
             ? vector[0]
-            : throw new ParsingException(
+            : throw new ElkParsingException(
                 $"{ErrorInfo(vector)}{ErrorDetails(vector)}"
             );
     }

@@ -49,7 +49,7 @@ public class BTL_InterpreterTest{
         try{
             var @out = i.Parse(arg, debug);
             return @out;
-        }catch(ParsingException ex){
+        }catch(ElkParsingException ex){
             Log("PARSING FAILED; DEBUG INFO...");
             //foreach(var k in debug) Log(k);
             Log(string.Join("\n", debug));
