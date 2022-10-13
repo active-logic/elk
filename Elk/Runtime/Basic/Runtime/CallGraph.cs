@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Elk.Memory;
 
-namespace Elk.Basic{
-public class CallGraph{
+namespace Elk.Basic.Runtime{
+public partial class CallGraph{
 
     Node root;
     Stack<Node> stack = new Stack<Node>();

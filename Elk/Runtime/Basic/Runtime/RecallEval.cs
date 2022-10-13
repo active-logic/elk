@@ -3,7 +3,7 @@ using Elk.Util;
 using Elk.Basic.Graph;
 using Elk.Memory;
 
-namespace Elk.Basic{
+namespace Elk.Basic.Runtime{
 public class RecallEval{
 
     public bool Eval(Recall r, Runner ρ, Context cx){

@@ -1,6 +1,6 @@
 using Elk.Memory;
 
-namespace Elk.Basic{
+namespace Elk.Basic.Runtime{
 public readonly struct StackTrace : Elk.Stack{
 
     readonly CallGraph.Node tail;

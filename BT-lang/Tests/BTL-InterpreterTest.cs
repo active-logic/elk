@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Elk;
 using BinaryExp = Elk.Basic.Graph.BinaryExp;
-using Context = Elk.Basic.Context;
+using Context = Elk.Basic.Runtime.Context;
 using Activ.BTL; using Active.Core;
 
 namespace BTL_Test{

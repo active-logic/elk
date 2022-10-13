@@ -4,7 +4,7 @@ using FuncDef = Elk.Basic.Graph.FuncDef;
 using Elk.Basic.Runtime;
 using Elk.Basic.Graph;
 
-namespace Elk.Basic{
+namespace Elk.Basic.Runtime{
 public class Context{
 
     public ArgumentStack argumentStack;

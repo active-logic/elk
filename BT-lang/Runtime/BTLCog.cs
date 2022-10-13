@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using Ex = System.Exception;
 using UnityEngine;
 using Active.Core;
-using Elk.Util; using Elk.Memory; using Context = Elk.Basic.Context;
+using Elk.Util; using Elk.Memory;
+using Context = Elk.Basic.Runtime.Context;
 
 namespace Activ.BTL{
 public class BTLCog : Cog{

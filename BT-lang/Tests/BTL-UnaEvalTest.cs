@@ -4,7 +4,7 @@ using Activ.BTL.Imp;
 using Activ.BTL;
 using Elk;
 using Elk.Basic.Graph;
-using Context = Elk.Basic.Context;
+using Context = Elk.Basic.Runtime.Context;
 using UnaEval = Elk.Basic.Runtime.UnaEval;
 
 namespace BTL_Test{
