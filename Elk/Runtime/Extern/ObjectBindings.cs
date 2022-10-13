@@ -2,16 +2,16 @@ using System.Reflection;
 using Elk.Basic.Runtime;
 
 namespace Elk.Bindings.CSharp{
-public static class ObjectExt{
+public static class ObjectBindings{
 
     public static MethodInfo Bind(
-        this object self, string func, object[] args
-    ) => self.GetType().GetMethod(func, args);
+        this object self, string func, object[] args, bool debug
+    ) => self.GetType().LookupMethod(func, args, debug);
 
     public static bool Invoke(
         this object self, string func, object[] args, out object @out
     ){
-        var method = self.GetType().GetMethod(func, args);
+        var method = self.GetType().LookupMethod(func, args, debug: false);
         @out = method?.Invoke(self, args);
         return (method != null);
     }

@@ -25,10 +25,9 @@ public class BTLScriptChecker : AssetPostprocessor{
                     bt.program = obj;
                 }
             }
-        }catch(ParsingException ex){
-            // TODO when details are shown this misplaces the
-            // path
-            throw new ParsingException(ex.Message + $" in {assetPath}", ex);
+        }catch(ElkParsingException ex){
+            // TODO when details are shown misplaces the path
+            throw new ElkParsingException(ex.Message + $" in {assetPath}", ex);
         }
     }
 

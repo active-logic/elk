@@ -35,9 +35,11 @@ public class BTL_BinEvalTest{
                                             [Range(-1, 1)] int r)
     => Assert.That( ε(l, "*", r), Is.EqualTo(S(l) * S(r)) );
 
+    /*
     [Test] public void TestNeutralCombinator([Range(-1, 1)] int l,
                                              [Range(-1, 1)] int r)
     => Assert.That( ε(l, "%", r), Is.EqualTo(S(l) % S(r)) );
+    */
 
     // Status/bool ==================================================
 
@@ -57,9 +59,11 @@ public class BTL_BinEvalTest{
                                             [Values(false, true)] bool r)
     => Assert.That( ε(l, "*", r), Is.EqualTo(S(l) * r) );
 
+    /*
     [Test] public void TestNeutralCombinator([Range(-1, 1)] int l,
                                              [Values(false, true)] bool r)
     => Assert.That( ε(l, "%", r), Is.EqualTo(S(l) % r) );
+    */
 
     // bool/status ==================================================
 
@@ -79,9 +83,11 @@ public class BTL_BinEvalTest{
                                             [Range(-1, 1)] int r)
     => Assert.That( ε(l, "*", r), Is.EqualTo(l * S(r)) );
 
+    /*
     [Test] public void TestNeutralCombinator([Values(false, true)] bool l,
                                              [Range(-1, 1)] int r)
     => Assert.That( ε(l, "%", r), Is.EqualTo(l % S(r)) );
+    */
 
     // ==============================================================
 

@@ -18,22 +18,11 @@ public static class ArrayExt{
         o.Append("(");
         var len = arr.Length;
         for(int i = 0; i < len; i++){
-            o.Append(ToCleanString(arr.GetValue(i)));
+            o.Append( arr.GetValue(i).Format() );
             if(i < len -1) o.Append(", ");
         }
         o.Append(")");
         return o.ToString();
-    }
-
-    // TODO clarity? this is mainly for
-    // rendering arguments in ELK memory record
-    public static string ToCleanString(object arg){
-        switch(arg){
-            case GameObject go: return go.name;
-            case Component c:   return c.gameObject.name;
-            case null: return "null";
-            default: return arg.ToString();
-        }
     }
 
 }}

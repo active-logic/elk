@@ -9,8 +9,7 @@ using UnityEngine;
 namespace Elk.Basic.Runtime{
 public class BinEval{
 
-    public object Eval(BinaryExp operation,
-                       Runner ρ, Context cx){
+    public object Eval(BinaryExp operation, Runner ρ, Context cx){
         var left = ρ.Eval(operation.arg0, cx);
         // TODO - CS binding calls should be in 'Extern'
         var binding = operation.binding;

@@ -14,7 +14,7 @@ public class InternalDomain : Domain{
         ? new InternalPropertyBinding(id.value, cx.argumentStack)
         : null;
 
-    public InvocationBinding Bind(Invocation inv, Context cx)
-    => cx.modules.Bind(inv, cx);
+    public InvocationBinding Bind(Invocation inv, Context cx, bool debug)
+    => cx.modules.Bind(inv, cx, debug);
 
 }}

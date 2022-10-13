@@ -4,7 +4,7 @@ using UnityEngine;
 using Elk; using Elk.Basic;
 using Cx = Elk.Basic.Context;
 using Record = Elk.Memory.Record;
-using Active.Core;
+using Active.Core; using static Active.Status;
 using History = Active.Core.Details.History;
 
 namespace Activ.BTL{
@@ -60,14 +60,18 @@ public partial class BTL : MonoBehaviour, LogSource{
     // non-actions, such as snowfall, physics and apperception
     // (spotted "x")
     // NOTE convert args early via BTLCog.ArgsToString(object)
-    public void RecordEvent(string action, string args, status @out)
+    public string RecordEvent(string action, string args)
+    => cognition.CommitEvent(action, args, done(), record);
+
+    public string RecordEvent(string action, string args, status @out)
     => cognition.CommitEvent(action, args, @out, record);
 
     // -------------------------------------------------------------
 
     void Start() => EvalExternals();
 
-    void Awake(){
+    // NOTE: public for testing
+    public void Awake(){
         record = new Record(gameObject.name);
         cognition = new BTLCog(this);
     }
