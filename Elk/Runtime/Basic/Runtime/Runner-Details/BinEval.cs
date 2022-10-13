@@ -1,8 +1,8 @@
 using System;
-using Ex = System.Exception;
+using RtEx = Elk.ElkRuntimeException;
 using O = System.Object;
 using BF = System.Reflection.BindingFlags;
-using Elk.Basic;
+using Elk.Util; using Elk.Basic;
 using Elk.Basic.Graph;
 using UnityEngine;
 
@@ -50,7 +50,12 @@ public class BinEval{
                 op, intVal,  (int)Y
             );
         }
-        throw new Ex($"Unsupported: {X} {op} {Y} ({X.GetType()}, {Y.GetType()})");
+        var Tx = X?.GetType();
+        var Ty = Y?.GetType();
+        throw new RtEx(
+              $"Unsupported: {X.Format()} {op} {Y.Format()}"
+            + $" ({Tx.Format()}, {Ty.Format()})"
+        );
     }
 
     object EvalFloat(string op, float X, float Y){
@@ -70,7 +75,7 @@ public class BinEval{
             case "==": return X == Y;
             case "!=": return X != Y;
             //
-            default: throw new Ex($"Unimplemented op {op}");
+            default: throw new RtEx($"Unimplemented op {op}");
         }
     }
 
@@ -91,7 +96,7 @@ public class BinEval{
             case "==": return X == Y;
             case "!=": return X != Y;
             //
-            default: throw new Ex($"Unimplemented op {op}");
+            default: throw new RtEx($"Unimplemented op {op}");
         }
     }
 
