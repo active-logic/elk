@@ -77,23 +77,24 @@ public partial class BTL : MonoBehaviour, LogSource{
     }
 
     void Update(){
+        if(suspend) return;
+        if(string.IsNullOrEmpty(path)) return;
         try{
-            if(suspend) return;
-            if(string.IsNullOrEmpty(path)) return;
             EvalProgram();
             if(program == null) return;
             context = contextFactory.Create(
                 this, program, useScene, externals
             );
             output = interpreter.Run(context)?.ToString();
-            log = context.graph.Format();
-            if(useHistory) history.Log(log, transform);
-            context = null;
             exceptionMessage = null;
         }catch(Exception ex){
             exceptionMessage = ex.Message;
             if(pauseOnErrors) Debug.Break();
             if(logErrors) throw;
+        }finally{
+            log = context.graph.Format();
+            if(useHistory) history.Log(log, transform);
+            context = null;
         }
     }
 
