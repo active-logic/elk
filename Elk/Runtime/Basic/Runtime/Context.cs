@@ -22,6 +22,7 @@ public class Context{
         argstack.Clear();
         this.argumentStack = argstack;
         graph = new CallGraph();
+        this.rs = rs;
     }
 
     public Elk.Stack callStack => graph.CallStack(cog, record);
@@ -51,8 +52,8 @@ public class Context{
         return new InvalidPropertyBinding(prop.value);
     }
 
-    public object ResolveRole(Activ.DPE.Set s)
-    => rs.Resolve(s);
+    public object ResolveRole(Activ.DPE.Set s, string label)
+    => rs.Resolve(s, label);
 
     public object this[string key]
     => argumentStack.Peek()[key];

@@ -3,10 +3,15 @@ using System.Linq;
 using T = UnityEngine.Transform;
 
 namespace Activ.DPE{
+
+public delegate void Logger(string arg);
+
 public abstract class Set{
 
     // Evaluate a set
     abstract public bool Contains(T arg);
+
+    abstract public bool Contains(T arg, Logger lg);
 
     // intersection of two sets
     public static Set operator * (Set x, Set y)

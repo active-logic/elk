@@ -9,4 +9,13 @@ public class Intersection: BinarySet{
     override public bool Contains(T arg)
     => x.Contains(arg) && y.Contains(arg);
 
+    override public bool Contains(T arg, Logger lg){
+        lg("(");
+        var X = x.Contains(arg, lg);
+        lg(" ∩ ");
+        var Y = y.Contains(arg, lg);
+        lg(")");
+        return X && Y;
+    }
+
 }}
