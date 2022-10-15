@@ -16,8 +16,9 @@ public class Context{
     public bool propsToStack = true;
     public Elk.Memory.Record record;
     public Elk.Memory.Cog cog;
+    public Activ.DPE.Solver rs;
 
-    public Context(ArgumentStack argstack){
+    public Context(ArgumentStack argstack, Activ.DPE.Solver rs){
         argstack.Clear();
         this.argumentStack = argstack;
         graph = new CallGraph();
@@ -49,6 +50,9 @@ public class Context{
         }
         return new InvalidPropertyBinding(prop.value);
     }
+
+    public object ResolveRole(Activ.DPE.Set s)
+    => rs.Resolve(s);
 
     public object this[string key]
     => argumentStack.Peek()[key];
