@@ -2,7 +2,8 @@
     "name": "activ.bt-lang.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:d58c4e1f87679844bbca671e41245ea0"
+        "GUID:d58c4e1f87679844bbca671e41245ea0",
+        "GUID:a2ff5af9626f78f4ea826476bb24b320"
     ],
     "includePlatforms": [
         "Editor"

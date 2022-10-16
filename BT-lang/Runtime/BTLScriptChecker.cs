@@ -16,7 +16,7 @@ public class BTLScriptChecker : AssetPostprocessor{
         if(!assetPath.Contains("Resources")) return;
         if(!assetPath.EndsWith(".txt"))      return;
         if(!Match(assetPath, Shebang))       return;
-        //ebug.Log($"Process BTL file {assetPath}");
+        Debug.Log($"Process BTL file {assetPath}");
         var content = File.ReadAllText(assetPath).Substring(5);
         try{
             var obj = interpreter.Parse(content, debug: null);

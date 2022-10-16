@@ -15,7 +15,10 @@ public class BTLContextFactory{
         params object[] externals
     ){
         var module = (Module) program;
-        var cx = new Context(argStack){
+        var cx = new Context(
+            argStack,
+            owner.GetComponent<Activ.DPE.Solver>()
+        ){
             modules   = new FuncDef[][]{ module.functions },
             record    = owner.record,
             cog      = owner.cognition
