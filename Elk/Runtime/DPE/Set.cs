@@ -1,11 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using T = UnityEngine.Transform;
 
 namespace Activ.DPE{
-
-public delegate void Logger(string arg);
-
 public abstract class Set{
 
     // Evaluate a set

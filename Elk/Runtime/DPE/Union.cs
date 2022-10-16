@@ -1,4 +1,3 @@
-using System.Linq;
 using T = UnityEngine.Transform;
 
 namespace Activ.DPE{
@@ -10,12 +9,12 @@ public class Union: BinarySet{
     => x.Contains(arg) || y.Contains(arg);
 
     override public bool Contains(T arg, Logger lg){
-        lg("(");
+        lg.Log("(", this);
         var X = x.Contains(arg, lg);
-        lg(" ∪ ");
+        lg.Log(" ∪ ", this);
         var Y = y.Contains(arg, lg);
-        lg(")");
-        return X && Y;
+        lg.Log(")", this);
+        return lg[X && Y];
     }
 
 }}
