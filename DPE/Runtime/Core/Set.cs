@@ -4,6 +4,9 @@ using T = UnityEngine.Transform;
 namespace Activ.DPE{
 public abstract class Set{
 
+    public T value;
+    public List<LogEntry> log = new List<LogEntry>(0);
+
     // Evaluate a set
     abstract public bool Contains(T arg);
 

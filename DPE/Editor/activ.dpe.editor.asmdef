@@ -1,12 +1,13 @@
 {
-    "name": "activ.bt-lang",
+    "name": "activ.dpe.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:a2ff5af9626f78f4ea826476bb24b320",
-        "GUID:0ac1f3691e2014712a8da587ee61dc19",
-        "GUID:a678ba6d0fde7584b9e4a16e9433152c"
+        "GUID:a678ba6d0fde7584b9e4a16e9433152c",
+        "GUID:a2ff5af9626f78f4ea826476bb24b320"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

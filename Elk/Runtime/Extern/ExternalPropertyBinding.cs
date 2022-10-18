@@ -20,18 +20,6 @@ public abstract class CsPropBinding<T>{
 
 // -----------------------------------------------------------------
 
-public class ExternalFieldBinding : CsPropBinding<FieldInfo>,
-                                    PropertyBinding{
-
-    public ExternalFieldBinding(object target, FieldInfo prop)
-    : base(target, prop){}
-
-    public object value => property.GetValue(target);
-
-}
-
-// -----------------------------------------------------------------
-
 public class ExternalPropertyBinding : CsPropBinding<PropertyInfo>,
                                        PropertyBinding{
 

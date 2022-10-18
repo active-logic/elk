@@ -8,12 +8,9 @@ public class PropEval{
 
     public object Eval(Identifier prop, Context cx){
         var @out = DoEval(prop, cx);
-        switch(@out){
-            case Activ.DPE.Set s:
-                return cx.ResolveRole(s, prop.value);
-            default:
-                return @out;
-        }
+        return (cx.caster != null)
+            ? cx.caster(@out)
+            : @out;
     }
 
     public object DoEval(Identifier prop, Context cx){

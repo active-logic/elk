@@ -16,8 +16,7 @@ public class BTLContextFactory{
     ){
         var module = (Module) program;
         var cx = new Context(
-            argStack,
-            owner.GetComponent<Activ.DPE.Solver>()
+            argStack
         ){
             modules   = new FuncDef[][]{ module.functions },
             record    = owner.record,
@@ -30,8 +29,18 @@ public class BTLContextFactory{
                 new DynamicDomain<Transform>(owner.findInScene)
             );
         }
+        cx.caster = CastWithDPESupport;
         cx.graph.format = new BTL.GraphFormatter();
         return cx;
+    }
+
+    public static object CastWithDPESupport(object arg){
+        switch(arg){
+            case Activ.DPE.Set set:
+                return set.value;
+            default:
+                return arg;
+        }
     }
 
     public static Transform FindInScene(string arg)

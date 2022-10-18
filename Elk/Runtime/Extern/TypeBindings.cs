@@ -3,9 +3,10 @@ using Ex = System.Exception;
 using System.Reflection;
 using UnityEngine;
 using Elk.Util;
+using BF = System.Reflection.BindingFlags;
 
 namespace Elk.Bindings.CSharp{
-public static class TypeExt{
+public static class TypeBindings{
 
     static Type[] NoArgs = new Type[]{};
 
