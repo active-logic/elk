@@ -5,17 +5,17 @@ using static UnityEditor.EditorGUILayout;
 using Ed = UnityEditor.EditorApplication;
 using GL = UnityEngine.GUILayout;
 using EGL = UnityEditor.EditorGUILayout;
+using Activ.DPE;
 
 namespace Activ.DPE.Editor{
 public partial class DPEWindow : EditorWindow{
 
     Vector2 p_scroll;
+    const string DS = "\n\n";
     const int FontSize = 13;
     const float ScrubberButtonsHeight = 24f;
     public static DPEWindow instance;
-    //LogWindowModel model = new LogWindowModel();
     string breakpoint;
-    //int breakpointDelayFrames = 0;
     //
     Activ.DPE.Solver target;
     GameObject targetObject;
@@ -27,32 +27,43 @@ public partial class DPEWindow : EditorWindow{
     int offBy = -1;
 
     string currentLog;
-    //int frame = -1;  // Last frame while playing (store this?)
-    // approx msg count (helps tracking memory overheads)
     public static int cumulatedMessageCount;
 
-    DPEWindow(){
-        /*
-        Ed.pauseStateChanged +=
-            (PauseState s) => { if(s == PauseState.Paused) Repaint(); };
-        Activ.Loggr.Logger<LogMessage, object>.onMessage += OnGenericMessage;
-        */
-    }
+    DPEWindow(){}
 
-    //void OnFocus(){
-    //    SceneView.duringSceneGui -= OnSceneGUI;
-    //    SceneView.duringSceneGui += OnSceneGUI;
-    //}
+    string GetOutput(Solver target, bool passOnly){
+        var perceived
+        = $"Perceived: {PerceivedObjectsFormatter.Format(target)}";
+        //
+        var fields = VarExtractor.LookupFields(target);
+        var fieldstr = "";
+        //
+        foreach(var field in fields){
+            Set set = (Set)field.value;
+            string setLogFmt = "-";
+            if(set != null){
+                if(set.value != null){
+                    var entry = set.log.Find(
+                        x => x.entity == set.value
+                    );
+                    setLogFmt = LogFormat.FormatLogEntry(entry);
+                }else{
+                    setLogFmt = LogFormat.FormatBestMatch(set.log);
+                }
+            }
+            fieldstr += $"{field.name}:\n{setLogFmt}\n\n";
+        }
+        //
+        return targetName + DS
+             + perceived  + DS
+             + fieldstr;
+    }
 
     void OnGUI(){
         UpdateSelection();
         var output = "Select a DPE agent";
         bool passOnly = !Ed.isPaused && isPlaying;
-        if(target != null) output =
-            targetName+"\n"+
-            Activ.DPE.LogFormat.Format(
-                target.GetLog(), passOnly, minRating, offBy
-            );
+        if(target != null) output = GetOutput(target, passOnly);
         DrawTextView(output, ref p_scroll);
         //
         GL.BeginHorizontal();

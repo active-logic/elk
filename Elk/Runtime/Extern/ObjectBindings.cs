@@ -1,5 +1,6 @@
 using System.Reflection;
 using Elk.Basic.Runtime;
+using System.Linq;
 
 namespace Elk.Bindings.CSharp{
 public static class ObjectBindings{
@@ -7,14 +8,6 @@ public static class ObjectBindings{
     public static MethodInfo Bind(
         this object self, string func, object[] args, bool debug
     ) => self.GetType().LookupMethod(func, args, debug);
-
-    public static bool Invoke(
-        this object self, string func, object[] args, out object @out
-    ){
-        var method = self.GetType().LookupMethod(func, args, debug: false);
-        @out = method?.Invoke(self, args);
-        return (method != null);
-    }
 
     public static PropertyBinding Bind(
         this object self, string label
@@ -47,6 +40,23 @@ public static class ObjectBindings{
         }
         @out = null;
         return false;
+    }
+
+    public static bool Invoke(
+        this object self, string func, object[] args, out object @out
+    ){
+        var method = self.GetType().LookupMethod(func, args, debug: false);
+        @out = method?.Invoke(self, args);
+        return (method != null);
+    }
+
+    public static ExternalFieldBinding[] LookupFields<T>(this object self){
+        var type = self.GetType();
+        var fields = type.GetFields();
+        var @out = from field in fields
+            where field.FieldType.IsAssignableFrom(typeof(T))
+            select new ExternalFieldBinding(self, field);
+        return @out.ToArray();
     }
 
 }}

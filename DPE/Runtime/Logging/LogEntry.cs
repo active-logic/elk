@@ -25,7 +25,7 @@ public class LogEntry{
         this.sum    = sum;
     }
 
-    float rating => score/(float)sum;
+    public float rating => score/(float)sum;
 
     public bool Satisfies(float r, int offBy){
         if(offBy != -1 && sum - score > offBy)

@@ -11,18 +11,18 @@ public class Context{
     public IEnumerable<FuncDef[]> modules;
     public List<Domain> domains = new List<Domain>(5);
     public CallGraph graph;
+    public Func<object, object> caster;
     // NOTE: used to decide whether to output props to the stack
     // or not; guesswork
     public bool propsToStack = true;
     public Elk.Memory.Record record;
     public Elk.Memory.Cog cog;
-    public Activ.DPE.Solver rs;
+    //public Activ.DPE.Solver rs;
 
-    public Context(ArgumentStack argstack, Activ.DPE.Solver rs){
+    public Context(ArgumentStack argstack){
         argstack.Clear();
         this.argumentStack = argstack;
         graph = new CallGraph();
-        this.rs = rs;
     }
 
     public Elk.Stack callStack => graph.CallStack(cog, record);
@@ -52,8 +52,8 @@ public class Context{
         return new InvalidPropertyBinding(prop.value);
     }
 
-    public object ResolveRole(Activ.DPE.Set s, string label)
-    => rs.Resolve(s, label);
+    //public object ResolveRole(Activ.DPE.Set s, string label)
+    //=> rs.Resolve(s, label);
 
     public object this[string key]
     => argumentStack.Peek()[key];
