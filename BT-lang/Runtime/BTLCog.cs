@@ -18,7 +18,10 @@ public class BTLCog : Cog{
 
     public bool Did(
         Call @event, Call since, bool strict, Context cx
-    ) => cx.record.Contains(@event, since, strict);
+    ){
+        //ebug.Log($"Did {@event} since:{since}?");
+        return cx.record.Contains(@event, since, strict);
+    }
 
     // Called by elk runtime to submit function calls
     public void CommitCall(string call, object output, Record record){
@@ -77,6 +80,8 @@ public class BTLCog : Cog{
                 return go.name;
             case Component co:
                 return co.gameObject.name;
+            case string str:
+                return str;
             case null:
                 return "self";
             default:

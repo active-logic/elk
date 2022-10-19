@@ -46,6 +46,14 @@ public partial class BTL : MonoBehaviour, LogSource{
 
     // -------------------------------------------------------------
 
+    public action Wait(float duration){
+        this.enabled = false;
+        Invoke("Resume", duration);
+        return @void();
+    }
+
+    public void Resume() => this.enabled = true;
+
     public void Hold(bool flag, object src){
         if(!sparse){ suspend = false; return; }
         if(flag){
