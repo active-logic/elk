@@ -12,6 +12,8 @@ public class GraphFormatter : CallGraph.Formatter{
                 return ReturnValue(value) + " " + name;
             case bool:
                 return ReturnValue(value) + " " + name;
+            case null:
+                return name + " : " + null;
             default:
                 return name + " : " + value.ToString();
         }

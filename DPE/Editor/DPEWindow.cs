@@ -41,22 +41,34 @@ public partial class DPEWindow : EditorWindow{
         foreach(var field in fields){
             Set set = (Set)field.value;
             string setLogFmt = "-";
+            string valueFmt = "";
             if(set != null){
                 if(set.value != null){
-                    var entry = set.log.Find(
-                        x => x.entity == set.value
-                    );
-                    setLogFmt = LogFormat.FormatLogEntry(entry);
+                    valueFmt = FormatValue(set);
+                    if(!Application.isPlaying){
+                        var entry = set.log.Find(
+                            x => x.entity == set.value
+                        );
+                        setLogFmt = LogFormat.FormatLogEntry(entry)+"\n";
+                    }
                 }else{
-                    setLogFmt = LogFormat.FormatBestMatch(set.log);
+                    if(!Application.isPlaying){
+                        setLogFmt = LogFormat.FormatBestMatch(set.log);
+                    }
                 }
             }
-            fieldstr += $"{field.name}:\n{setLogFmt}\n\n";
+            fieldstr += $"{field.name}: "
+                     +  valueFmt
+                     +  $"{setLogFmt}\n";
         }
         //
         return targetName + DS
              + perceived  + DS
              + fieldstr;
+    }
+
+    string FormatValue(Set set){
+        return $"{set.value}\n";
     }
 
     void OnGUI(){
