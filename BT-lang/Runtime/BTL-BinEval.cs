@@ -59,8 +59,22 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
         throw new RtEx($"Unimplemented op {op}");
     }
 
-    status ToStatus(object arg)
-    => arg is status s ? s : arg is bool b ? (status)b
-    : throw new RtEx($"Don't know how to convert {arg.Format()} to status");
+    status ToStatus(object arg){
+        switch(arg){
+            case status x:    return x;
+            case impending x: return (status)x;
+            case pending x:   return (status)x;
+            case bool x:      return (status)x;
+            case failure x:   return (status)x;
+            case action x:    return (status)x;
+            case loop x:      return (status)x;
+            default:
+                throw new RtEx(
+                    $"Don't know how to convert {arg.Format()} to status"
+                );
+        }
+    }
+    //=> arg is status s ? s : arg is bool b ? (status)b
+//: ;
 
 }}
