@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Elk.Util;
@@ -10,15 +11,34 @@ public class Record{
     public string name;
     List<Frame> events = new List<Frame>(256);
 
+    // -------------------------------------------------------------
+
     public Record(string name) => this.name = name;
 
-    public bool Did(string verb, object obj)
-    => Contains($"{verb}.({obj.Format()})");
+    public int count => events.Count;
 
-    public bool Contains(string arg, string since, bool strict){
+    public Frame this[int index, bool fromEnd]
+    => fromEnd ? events[count - index - 1] : events[index];
+
+    // -------------------------------------------------------------
+
+    public void Append(
+        Occurence arg, float time
+    ){
+        events.Add(new Frame(arg, time));
+        //return @event;
+    }
+
+    public void Append(Frame arg){
+        if(!events.Contains(arg)){
+            events.Add(arg);
+        }
+        //return arg.@event;
+    }
+
+    public bool Contains(Occurence arg, Occurence since, bool strict){
         if(events.Count == 0) return false;
         if(since == null) return Contains(arg);
-        //ebug.Log($"Check {arg} since [{since}, strict: {strict}]");
         var found = false;
 		for(int i = events.Count - 1; i >= 0; i--){
 			if(events[i].Matches(arg)){
@@ -30,20 +50,16 @@ public class Record{
 		return false;
     }
 
-    bool Contains(string @event){
-        //ebug.Log($"Check {@event} / ({events.Count})");
+    public bool Contains(Occurence arg){
         for(int i = events.Count - 1; i >= 0; i--){
-            if(events[i].Matches(@event)){
-                //ebug.Log($"Did match {@event}");
+            if(events[i].Matches(arg)){
                 return true;
             }
         }
         return false;
     }
 
-    public string Append(string @event, float time){
-        events.Add(new Frame(@event, time));
-        return @event;
-    }
+    public bool Did(string subj, string verb, string obj)
+    => Contains((subj, verb, obj));
 
 }}

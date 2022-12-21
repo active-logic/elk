@@ -30,7 +30,7 @@ public class InvocationEval{
         cx.propsToStack = true;
         cx.StackPush(ι.name + ι.values.NeatFormat(), ι.id);
         var @out = DoEval(ι, ρ, cx);
-        cx.StackPop(@out);
+        cx.StackPop(@out, bypass: false);
         return @out;
     }
 
@@ -41,16 +41,18 @@ public class InvocationEval{
             ι.name + (didEvalArgs ? ι.values.NeatFormat() : "(-)"),
             ι.id
         );
-        cx.StackPop(sub);
+        cx.StackPop(sub, bypass: true);
         return sub;
     }
 
     // PROVISIONAL - evaluate invocation arguments, then return
     // the matching stack entry, without a return value
-    public string Recall(Invocation ι, Runner ρ, Context cx){
-        if(ι == null) return null;
+    public (string verb, object[] args) Recall(
+        Invocation ι, Runner ρ, Context cx
+    ){
+        if(ι == null) return (null, null);
         ρ.EvalArgs(ι.arguments, @out: ι.values, cx);
-        return ι.name + ι.values.NeatFormat();
+        return (ι.name, ι.values);
     }
 
     object DoEval(Invocation ι, Runner ρ, Context cx){

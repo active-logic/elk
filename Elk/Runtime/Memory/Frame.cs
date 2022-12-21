@@ -1,13 +1,19 @@
-public class Frame{
-    
-    float time;
-    string @event;
+using UnityEngine;
 
-    public Frame(string e, float t){
+namespace Elk.Memory{
+public class Frame{
+
+    public Occurence @event;
+    public readonly float time;
+
+    public Frame(Occurence arg, float t){
+        this.@event = arg;
         time = t;
-        @event = e;
     }
 
-    public bool Matches(string arg) => @event == arg;
+    public bool Matches(Occurence arg) => this.@event == arg;
 
-}
+    override public string ToString()
+    => $"[{@event.subject}.{@event.verb}({@event.@object})/{time:0.0}]";
+
+}}

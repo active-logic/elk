@@ -16,28 +16,32 @@ public class BTLCog : Cog{
         instances.Add(this);
     }
 
+    // NOTE used by Elk.Runtime when matching reified recalls
     public bool Did(
-        Call @event, Call since, bool strict, Context cx
+        Occurence @event, Occurence? since, bool strict, Context cx
     ){
-        //ebug.Log($"Did {@event} since:{since}?");
-        return cx.record.Contains(@event, since, strict);
+        return since.HasValue
+            ? cx.record.Contains(@event, since.Value, strict)
+            : cx.record.Contains(@event);
     }
 
-    // Called by elk runtime to submit function calls
-    public void CommitCall(string call, object output, Record record){
-        if(recordIntents) DoCommit(call, output, record);
+    // Called by elk runtime to submit function calls; "self"
+    // is implied as subject
+    public void CommitCall(
+        string func, string arg, object output, Record record
+    ){
+        if(recordIntents){
+            var caller = owner.gameObject.name;
+            DoCommit((caller, func, arg), output, record);
+        }
     }
 
-    public void CommitAction(string call, object output, Record record){
-        DoCommit(call, output, record);
+    public void CommitEvent(
+        Occurence @event, object output, Record record
+    ){
+        Debug.Log($"Commit event {@event} -> {output}");
+        DoCommit(@event, output, record);
     }
-
-    // Called by clients (via BTL.CommitAction) when a memorable
-    // event or action has occurred
-    public string CommitEvent(
-        string action, string args, status @out, Record record
-    )
-    => DoCommit($"{action}({args})", @out, record);
 
     public static string ArgsToString(object args){
         switch(args){
@@ -50,29 +54,29 @@ public class BTLCog : Cog{
 
     // NOTE may want to be more generous in what we record here;
     // negative results (and others) can be useful
-    public string DoCommit(string call, object output, Record record){
+    public void DoCommit(
+        Occurence @event, object output, Record record
+    ){
         bool complete = (output is status task && task.complete)
                      || (output is bool flag && flag);
-        string @out = null;
+        //string @out = null;
         if(complete){
             var time = Time.time;
-            @out = record.Append("self." + call, Time.time);
+            //@out =
+            record.Append(@event, Time.time);
+            //ebug.Log($"notify {instances.Count} of {call} in {owner.gameObject.name}");
             foreach(var other in instances){
                 if(other == this) continue;
-                other.Notify(owner, call, time);
+                other.Notify(@event, time);
             }
         }
-        return @out;
+        //return @out;
     }
 
-    // NOTE - this just adds anything done by another agent to our
-    // record; normally filtering would be added for perception
-    void Notify(object agent, string call, float time){
-        owner.record.Append(
-            NameOf(agent, allowDefault: false) + "." + call,
-            time
-        );
-    }
+    // TODO - adds anything done by another agent to our record;
+    // perception filtering should be used
+    public void Notify(Occurence @event, float time)
+    => owner.record.Append(@event, time);
 
     public string NameOf(object agent, bool allowDefault){
         switch(agent){

@@ -6,6 +6,7 @@ using Cx = Elk.Basic.Runtime.Context;
 using Record = Elk.Memory.Record;
 using Active.Core; using static Active.Status;
 using History = Active.Core.Details.History;
+using Occurence = Elk.Memory.Occurence;
 
 namespace Activ.BTL{
 public partial class BTL : MonoBehaviour, LogSource{
@@ -63,16 +64,8 @@ public partial class BTL : MonoBehaviour, LogSource{
         }
     }
 
-    // Use this function to record events; BTL takes care of
-    // recording what agents are doing but doesn't keep track of
-    // non-actions, such as snowfall, physics and apperception
-    // (spotted "x")
-    // NOTE convert args early via BTLCog.ArgsToString(object)
-    public string RecordEvent(string action, string args)
-    => cognition.CommitEvent(action, args, done(), record);
-
-    public string RecordEvent(string action, string args, status @out)
-    => cognition.CommitEvent(action, args, @out, record);
+    public void RecordEvent(Occurence arg, status @out)
+    => cognition.CommitEvent(arg, @out, record);
 
     // -------------------------------------------------------------
 
