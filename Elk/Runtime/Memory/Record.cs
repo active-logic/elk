@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Elk.Util;
@@ -8,8 +9,11 @@ namespace Elk.Memory{
 // by the agent itself and other agents
 public class Record{
 
+    public delegate void FrameEvent(object frame);
+
     public string name;
     List<Frame> events = new List<Frame>(256);
+    public event OnEvent FrameEvent;
 
     // -------------------------------------------------------------
 
@@ -17,23 +21,27 @@ public class Record{
 
     public int count => events.Count;
 
+    public Frame this[Predicate<Frame> cond]
+    => events.Find(cond);
+
     public Frame this[int index, bool fromEnd]
     => fromEnd ? events[count - index - 1] : events[index];
 
     // -------------------------------------------------------------
 
-    public void Append(
-        Occurence arg, float time
-    ){
-        events.Add(new Frame(arg, time));
-        //return @event;
+    public List<Frame> All(Predicate<Frame> cond)
+    => events.FindAll(cond);
+
+    public void Append(Occurence arg, float time){
+        Frame frame = new Frame(arg, time);
+        events.Add(frame);
+        OnEvent?.Invoke(frame);
     }
 
     public void Append(Frame arg){
-        if(!events.Contains(arg)){
-            events.Add(arg);
-        }
-        //return arg.@event;
+        if(events.Contains(arg)) return;
+        events.Add(arg);
+        OnEvent?.Invoke(arg);
     }
 
     public bool Contains(Occurence arg, Occurence since, bool strict){

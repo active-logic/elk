@@ -11,9 +11,13 @@ public class Frame{
         time = t;
     }
 
+    public string subject => @event.subject;
+    public string verb => @event.verb;
+    public string @object => @event.@object;
+
     public bool Matches(Occurence arg) => this.@event == arg;
 
     override public string ToString()
-    => $"[{@event.subject}.{@event.verb}({@event.@object})/{time:0.0}]";
+    => $"{@event.subject}.{@event.verb}( {@event.@object} ) / {time:0.0}";
 
 }}
