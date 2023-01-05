@@ -11,7 +11,7 @@ public class InternalDomain : Domain{
 
     public PropertyBinding Bind(Identifier id, Context cx)
     => cx.HasKey(id.value)
-        ? new InternalPropertyBinding(id.value, cx.argumentStack)
+        ? new ArgumentBinding(id.value, cx.argumentStack)
         : null;
 
     public InvocationBinding Bind(Invocation inv, Context cx, bool debug)

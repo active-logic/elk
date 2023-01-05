@@ -20,7 +20,8 @@ public class ExternalFunctionBinding : InvocationBinding{
         object[] values, Runner<Context> ρ, Context cx
     ){
         try{
-            return method.Invoke(target, values);
+            var val = method.Invoke(target, values);
+            return val == null || val.Equals(null) ? null : val;
         }catch(TargetParameterCountException ex){
             Debug.LogError(
                 $"Wrong param count calling {method.Name} ({values.Length})");

@@ -1,5 +1,6 @@
 using System.Reflection;
 using Ex = System.Exception;
+using UnityEngine;
 // TODO unwanted dep
 using Elk.Basic.Runtime;
 
@@ -26,7 +27,11 @@ public class ExternalPropertyBinding : CsPropBinding<PropertyInfo>,
     public ExternalPropertyBinding(object target, PropertyInfo prop)
     : base(target, prop){}
 
-    public object value => property.GetValue(target);
+    // NOTE: explicit nulls possible after hot reloading
+    public object value{ get{
+        var val = property.GetValue(target);
+        return val == null || val.Equals(null) ? null : val;
+    }}
 
 }
 

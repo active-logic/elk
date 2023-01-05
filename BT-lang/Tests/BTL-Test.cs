@@ -19,8 +19,6 @@ public class BTL_Test{
     [SetUp] public void Setup(){
         temp = new GameObject("Temp");
         btl = temp.AddComponent<BTL>();
-        //btl.cognition = new BTLCog(btl);
-        btl.Awake();
     }
 
     [TearDown] public void Teardown(){
