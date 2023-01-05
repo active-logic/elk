@@ -1,4 +1,5 @@
 using Elk.Memory;
+using Ex = System.Exception;
 
 namespace Elk.Basic.Runtime{
 public readonly struct StackTrace : Elk.Stack{
@@ -13,11 +14,16 @@ public readonly struct StackTrace : Elk.Stack{
         this.record = record;
     }
 
-    public void Commit(object result){
+    public void Commit(string subject, object result){
         var node = tail;
         while(node != null){
             var msg = node.info.Substring(2);
-            client.CommitAction(msg, result, record);
+            var info = Context.ParseCallInfo(msg);
+            UnityEngine.Debug.Log($"{msg} ==> {info}");
+            client.CommitEvent(
+                (subject, info.verb, info.obj),
+                result, record
+            );
             node = node.parent;
         }
     }

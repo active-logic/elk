@@ -31,7 +31,7 @@ public interface Runner<Cx>{
 
 // For deferred/client side tracking and recording
 public interface Stack{
-    void Commit(object result);
+    void Commit(string subject, object result);
     ulong Id();
 }
 

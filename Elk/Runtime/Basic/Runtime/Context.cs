@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FuncDef = Elk.Basic.Graph.FuncDef;
 using Elk.Basic.Runtime;
 using Elk.Basic.Graph;
+using Occurence = Elk.Memory.Occurence;
 
 namespace Elk.Basic.Runtime{
 public class Context{
@@ -52,9 +53,6 @@ public class Context{
         return new InvalidPropertyBinding(prop.value);
     }
 
-    //public object ResolveRole(Activ.DPE.Set s, string label)
-    //=> rs.Resolve(s, label);
-
     public object this[string key]
     => argumentStack.Peek()[key];
 
@@ -66,10 +64,25 @@ public class Context{
     public void StackPush(string arg, ulong id)
     => graph.Push(arg, id);
 
-    public void StackPop(object value){
+    // NOTE: bypass indicates the function was not called
+    public void StackPop(object value, bool bypass){
         var callInfo = graph.Peek();
-        cog.CommitCall(callInfo, value, record);
+        //
+        var details = ParseCallInfo(callInfo);
+        //
+        if(!bypass){
+            cog.CommitCall(details.verb, details.obj, value, record);
+        }
         graph.Pop(value);
+    }
+
+    // TODO this should not be needed
+    public static (string verb, string obj) ParseCallInfo(string arg){
+        int i = arg.IndexOf("(");
+        var verb = arg.Substring(0, i);
+        var obj = arg.Substring(i + 1);
+        obj = obj.Substring(0, obj.Length-1);
+        return (verb, obj);
     }
 
     public void StackPushPopProp(string name, object value){

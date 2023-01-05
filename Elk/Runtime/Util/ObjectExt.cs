@@ -7,7 +7,9 @@ public static class ObjectExt{
     public static string Format(this object self){
         switch(self){
             case GameObject go: return go.name;
-            case Component c:   return c.gameObject.name;
+            case Component c:
+                if(c == null) return "null";
+                return c.gameObject.name;
             case null: return "null";
             default: return self.ToString();
         }
