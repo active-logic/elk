@@ -13,7 +13,7 @@ public class Record{
 
     public string name;
     List<Frame> events = new List<Frame>(256);
-    public event OnEvent FrameEvent;
+    public event FrameEvent OnEvent;
 
     // -------------------------------------------------------------
 

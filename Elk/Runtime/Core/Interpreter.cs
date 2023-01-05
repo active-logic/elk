@@ -17,7 +17,8 @@ public class Interpreter<Cx>{
     public object Run(Cx context)
     => runner.Invoke(entry, context);
 
+    // TODO why no path here?
     public object Parse(string arg, List<string> debug)
-    => reader.Parse(arg, debug);
+    => reader.Parse(arg, path: null, debug: debug);
 
 }}

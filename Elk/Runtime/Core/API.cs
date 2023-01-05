@@ -16,7 +16,7 @@ public interface Parser{
 }
 
 public interface Validator{
-    void Validate(object program);
+    void Validate(object program, string path);
 }
 
 public interface Runner<Cx>{

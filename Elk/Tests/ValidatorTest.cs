@@ -11,7 +11,7 @@ public class ValidatorTest{
 
     [Test] public void Test_NonModule(){
         var program = "program";
-        Assert.Throws<Exception>( () => v.Validate(program) );
+        Assert.Throws<Exception>( () => v.Validate(program, path: null) );
     }
 
     [Test] public void Test_withDistinctNames(){
@@ -20,7 +20,7 @@ public class ValidatorTest{
             new FuncDef("B", new string[]{"p0", "p1"}, null)
         );
         // Nothing to assert, ensure no throw
-        v.Validate(program);
+        v.Validate(program, path: null);
     }
 
     [Test] public void Test_withDistinctParamCount(){
@@ -29,7 +29,7 @@ public class ValidatorTest{
             new FuncDef("A", new string[]{"p0", "p1", "p2"}, null)
         );
         // Nothing to assert, ensure no throw
-        v.Validate(program);
+        v.Validate(program, path: null);
     }
 
     [Test] public void Test_disallowDupeFunctionDef(){
@@ -37,7 +37,7 @@ public class ValidatorTest{
             new FuncDef("A", new string[]{"p0", "p1"}, null),
             new FuncDef("A", new string[]{"r0", "r1"}, null)
         );
-        Assert.Throws<Exception>( () => v.Validate(program) );
+        Assert.Throws<Exception>( () => v.Validate(program, path: null) );
     }
 
     Module Create(params FuncDef[] args)

@@ -15,11 +15,11 @@ public class Reader{
         tokenizer = t; parser = p;
     }
 
-    public object Parse(string arg, List<string> debug){
+    public object Parse(string arg, string path, List<string> debug){
         var tokens = new Sequence(tokenizer.Tokenize(arg));
         typecaster?.Transform(tokens);
         var @out = parser.Parse(tokens, debug);
-        validator?.Validate(@out);
+        validator?.Validate(@out, path);
         return @out;
     }
 
