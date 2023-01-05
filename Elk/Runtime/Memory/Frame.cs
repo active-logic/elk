@@ -15,6 +15,12 @@ public class Frame{
     public string verb => @event.verb;
     public string @object => @event.@object;
 
+    public static bool operator < (Frame x, float time)
+    => x.time < time;
+
+    public static bool operator > (Frame x, float time)
+    => x.time > time;
+
     public bool Matches(Occurence arg) => this.@event == arg;
 
     override public string ToString()

@@ -31,7 +31,10 @@ public class FuncDef{
             return false;
         }
         if(paramCount != this.paramCount){
-            Warn($"Provided {paramCount} parameters, found {this.paramCount}");
+            int x = this.paramCount, y = paramCount;
+            if(debug){
+                Warn($"{name} requires {x} parameter(s), found {y}");
+            }
             return false;
         }
         return true;

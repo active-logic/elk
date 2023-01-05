@@ -34,7 +34,7 @@ public class Builder{
         if(shebang != null && src.StartsWith(shebang))
             src = src.Substring(shebang.Length);
         try{
-            return (Module)reader.Parse(src, debug: null);
+            return (Module)reader.Parse(src, path, debug: null);
         }catch(ElkParsingException ex){
             throw new ElkParsingException(
                 ex.Message + $" in {path}.txt", ex

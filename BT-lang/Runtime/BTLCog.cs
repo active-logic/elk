@@ -39,7 +39,7 @@ public class BTLCog : Cog{
     public void CommitEvent(
         Occurence @event, object output, Record record
     ){
-        Debug.Log($"Commit event {@event} -> {output}");
+        //ebug.Log($"Commit event {@event} -> {output}");
         DoCommit(@event, output, record);
     }
 

@@ -19,7 +19,7 @@ public readonly struct StackTrace : Elk.Stack{
         while(node != null){
             var msg = node.info.Substring(2);
             var info = Context.ParseCallInfo(msg);
-            UnityEngine.Debug.Log($"{msg} ==> {info}");
+            //nityEngine.Debug.Log($"{msg} ==> {info}");
             client.CommitEvent(
                 (subject, info.verb, info.obj),
                 result, record
