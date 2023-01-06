@@ -7,43 +7,37 @@ using Record = Elk.Memory.Record;
 using Active.Core; using static Active.Status;
 using History = Active.Core.Details.History;
 using Occurence = Elk.Memory.Occurence;
+#if UNITY_EDITOR
+using Ed = UnityEditor.EditorApplication;
+#endif
 
 namespace Activ.BTL{
 public partial class BTL : MonoBehaviour, LogSource{
 
     public string path;
     public Component[] @import;
+    public object[] externals;
     public string[] requirements;
     public bool useHistory = true;
     public bool recordIntents = false;
     public bool sparse = true;
+    public int postroll = 1;  // postpone running by N frames
     [Header("Debugging")]
     public bool pauseOnErrors = false;
     public bool logErrors = true;
     //
-    public Record record;
-    public BTLCog cognition;
-    //
-    [NonSerialized] public bool hasValidPath = true;
-    [NonSerialized] public string exceptionMessage;
-    //
-    string log, output, loadedFrom;
-    // TODO don't see a point in making this public but see
-    // BTL script checker
-    public object program;
-    object[] externals;
-    Interpreter<Cx> ι;
-    History _history;
-    bool useScene = false;
-    bool suspend = false;
-    BTLContextFactory contextFactory = new BTLContextFactory();
-    // refreshed at every iteration; keeping this handy
-    // for clients to access the stack
-    Context context;
+    Vars _vars;
 
     // -------------------------------------------------------------
 
-    public Elk.Stack stack => context?.callStack;
+    public object program
+    { get => vars.program; set => vars.program = value; }
+
+    public Record record => vars.record;
+    public BTLCog cognition => vars.cognition;
+    public string exceptionMessage => vars.exceptionMessage;
+    public bool hasValidPath => vars.hasValidPath;
+    public Elk.Stack stack => vars.stack;
 
     // -------------------------------------------------------------
 
@@ -53,49 +47,57 @@ public partial class BTL : MonoBehaviour, LogSource{
         return @void();
     }
 
+    Vars Init(){
+        var self = new Vars();
+        self.contextFactory = new BTLContextFactory();
+        self.record = new Record(gameObject.name);
+        self.cognition = new BTLCog(this);
+        EvalExternals();
+        return self;
+    }
+
     public void Resume() => this.enabled = true;
 
     public void Hold(bool flag, object src){
-        if(!sparse){ suspend = false; return; }
+        if(!sparse){ vars.suspend = false; return; }
         if(flag){
-            suspend = true;
+            vars.suspend = true;
         }else{
-            suspend = false;
+            vars.suspend = false;
         }
     }
 
     public void RecordEvent(Occurence arg, status @out)
-    => cognition.CommitEvent(arg, @out, record);
+    => vars.cognition.CommitEvent(arg, @out, record);
 
     // -------------------------------------------------------------
 
-    void Start() => EvalExternals();
-
-    // NOTE: public for testing
-    public void Awake(){
-        record = new Record(gameObject.name);
-        cognition = new BTLCog(this);
-    }
+    bool initialized = false;
 
     void Update(){
-        if(suspend) return;
+        #if UNITY_EDITOR
+        // NOTE BTL while compiling may cause an arg stack error
+        if(Ed.isCompiling) return;
+        #endif
+        if(vars.frame++ < postroll) return;
+        if(vars.suspend) return;
         if(string.IsNullOrEmpty(path)) return;
         try{
             EvalProgram();
-            if(program == null) return;
-            context = contextFactory.Create(
-                this, program, useScene, externals
+            if(vars.program == null) return;
+            vars.context = vars.contextFactory.Create(
+                this, vars.program, vars.useScene, externals
             );
-            output = interpreter.Run(context)?.ToString();
-            exceptionMessage = null;
+            vars.output = interpreter.Run(vars.context)?.ToString();
+            vars.exceptionMessage = null;
         }catch(Exception ex){
-            exceptionMessage = ex.Message;
+            vars.exceptionMessage = ex.Message;
             if(pauseOnErrors) Debug.Break();
             if(logErrors) throw;
         }finally{
-            log = context.graph.Format();
-            if(useHistory) history.Log(log, transform);
-            context = null;
+            vars.log = vars.context.graph.Format();
+            if(useHistory) history.Log(vars.log, transform);
+            vars.context = null;
         }
     }
 
@@ -107,17 +109,15 @@ public partial class BTL : MonoBehaviour, LogSource{
         IsValidPath(path);
     }
 
-    void OnDisable() => log = "DISABLED";
-
     void EvalProgram(){
-        if(loadedFrom != path && IsValidPath(path)){
-            program    = Build(path);
-            loadedFrom = path;
+        if(vars.loadedFrom != path && IsValidPath(path)){
+            vars.program = Build(path);
+            vars.loadedFrom = path;
         }
     }
 
     bool IsValidPath(string path)
-    => hasValidPath = Resources.Load<TextAsset>(path) != null;
+    => vars.hasValidPath = Resources.Load<TextAsset>(path) != null;
 
     object Build(string path){
         var ph      = new BTLPathHandler();
@@ -125,7 +125,7 @@ public partial class BTL : MonoBehaviour, LogSource{
             interpreter.reader, ph, BTLScriptChecker.Shebang
         );
         var program = builder.Build(path);
-        useScene = ph.useScene;
+        vars.useScene = ph.useScene;
         return program;
     }
 
@@ -135,18 +135,20 @@ public partial class BTL : MonoBehaviour, LogSource{
     }}
 
     Interpreter<Cx> interpreter
-    => ι != null ? ι : (ι = BTLInterpreterFactory.Create());
+    => vars.ι != null
+        ? vars.ι : (vars.ι = BTLInterpreterFactory.Create());
 
     // History related ---------------------------------------------
 
     public History history => useHistory
-        ? _history ?? (_history = new History())
-        : _history = null;
+        ? vars.history ?? (vars.history = new History())
+        : vars.history = null;
 
     // <LogSource> =================================================
 
+    Vars vars => _vars ?? (_vars = Init());
     History LogSource.GetHistory() => history;
     bool    LogSource.IsLogging()  => true;
-    string  LogSource.GetLog()     => log;
+    string  LogSource.GetLog()     => vars.log;
 
 }}

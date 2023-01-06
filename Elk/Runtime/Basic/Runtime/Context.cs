@@ -53,13 +53,8 @@ public class Context{
         return new InvalidPropertyBinding(prop.value);
     }
 
-    public object this[string key]
-    => argumentStack.Peek()[key];
-
-    public bool HasKey(string name){
-        if(argumentStack.empty) return false;
-        return argumentStack.Peek().ContainsKey(name);
-    }
+    public bool HasKey(string name)
+    => argumentStack.Exists(name);
 
     public void StackPush(string arg, ulong id)
     => graph.Push(arg, id);

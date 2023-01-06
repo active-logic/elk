@@ -1,4 +1,5 @@
 using Ex = System.Exception;
+using Elk;
 
 public class ArgumentStack{
 
@@ -17,13 +18,16 @@ public class ArgumentStack{
 
     public void Pop() => index--;
 
-    public void Push(string[] parameters, object[] arguments){
-        stack[++index].Set(parameters, arguments);
-    }
+    public void Push(string[] parameters, object[] arguments)
+    => stack[++index].Set(parameters, arguments);
 
-    public ArgMap Peek() => stack[index];
+    public bool Exists(string varname)
+    => !empty && stack[index].ContainsKey(varname);
 
-    // -------------------------------------------------------------
+    public object this[string varname]
+    => empty ? throw new ElkRuntimeError(
+        $"Cannot retrieve '{varname}' (argument stack is empty)"
+    ) : stack[index][varname];
 
     public class ArgMap{
 

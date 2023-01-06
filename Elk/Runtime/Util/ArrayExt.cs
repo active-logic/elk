@@ -9,7 +9,7 @@ public static class ArrayExt{
     // NOTE: concise but not so clean
     // TODO if no good remove it
     public static string Format(this object[] arr)
-    => "(" + string.Join(", ", arr) + ")";
+    => arr == null ? "null" : "(" + string.Join(", ", arr) + ")";
 
     // TODO clarity? this is mainly for
     // rendering arguments in ELK memory record
