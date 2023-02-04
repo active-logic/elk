@@ -28,7 +28,7 @@ public partial class Parser : Elk.Parser{
         Bin("< > <= >="),
         Bin("== !="),
         Bin("| &"),
-        Bin("|| &&"),
+        Bin("|| && ::"),
         Rst( new ParensRule() ),
         Rst( new ModuleRule() )
     };

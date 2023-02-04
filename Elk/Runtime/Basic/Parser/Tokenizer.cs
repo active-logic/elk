@@ -6,7 +6,7 @@ namespace Elk.Basic{
 public class Tokenizer : Elk.Tokenizer{
 
     public char decimalDot = '.';
-    public string doubleSymbols = "+-&|=";
+    public string doubleSymbols = "+-&|=:";
     CommentParser commentParser = new CommentParser();
 
     public Token[] Tokenize(string arg){
