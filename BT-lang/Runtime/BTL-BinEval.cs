@@ -42,6 +42,7 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
     object EvalBool(string op, bool X, object right,
                                Runner ρ, Context cx){
         switch(op){
+            case "::": return ToStatus(ρ.Eval(right, cx));
             case "||": return !X ? ToStatus(ρ.Eval(right, cx)) : done;
             case "&&": return  X ? ToStatus(ρ.Eval(right, cx)) : fail;
         }
@@ -53,6 +54,7 @@ public class BinEval : Elk.Basic.Runtime.BinEval{
     object EvalStatus(string op, status X, object right,
                              Runner ρ, Context cx){
         switch(op){
+            case "::": return X.running ? X : ToStatus(ρ.Eval(right, cx));
             case "||": return X.failing  ? ToStatus(ρ.Eval(right, cx)) : X;
             case "&&": return X.complete ? ToStatus(ρ.Eval(right, cx)) : X;
         }
