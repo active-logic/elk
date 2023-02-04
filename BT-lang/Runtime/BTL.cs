@@ -63,7 +63,10 @@ public partial class BTL : MonoBehaviour, LogSource{
         if(!sparse){ vars.suspend = false; return; }
         if(flag){
             vars.suspend = true;
+            //OnHold?.Invoke(this);
         }else{
+            var h = GetComponent<HoldListener>();
+            h.Bump(this);
             vars.suspend = false;
         }
     }
