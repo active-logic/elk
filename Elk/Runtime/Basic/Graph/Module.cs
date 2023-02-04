@@ -1,17 +1,27 @@
 using Ex = System.Exception;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 //using Elk.Bindings.CSharp;
 
 namespace Elk.Basic.Graph{
 public class Module{
 
-    public readonly Include[] includes;
+    public Include[] includes;
     public FuncDef[] functions;
 
     public Module(Include[] includes, FuncDef[] functions){
         this.includes = includes;
         this.functions = functions;
+    }
+
+    public void AddIncludes(IEnumerable<string> args, string except){
+        var list = includes?.ToList() ?? new List<Include>();
+        foreach(var x in args){
+            if(x == except) continue;
+            list.Add(new Include(x));
+        }
+        includes = list.ToArray();
     }
 
     public void Merge(Module other, string path){

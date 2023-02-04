@@ -18,6 +18,7 @@ public partial class BTL : MonoBehaviour, LogSource{
     public Component[] @import;
     public object[] externals;
     public string[] requirements;
+    public string[] submodules;
     public bool useHistory = true;
     public bool recordIntents = false;
     public bool sparse = true;
@@ -72,8 +73,6 @@ public partial class BTL : MonoBehaviour, LogSource{
 
     // -------------------------------------------------------------
 
-    bool initialized = false;
-
     void Update(){
         #if UNITY_EDITOR
         // NOTE BTL while compiling may cause an arg stack error
@@ -90,14 +89,15 @@ public partial class BTL : MonoBehaviour, LogSource{
             );
             vars.output = interpreter.Run(vars.context)?.ToString();
             vars.exceptionMessage = null;
-        }catch(Exception ex){
-            vars.exceptionMessage = ex.Message;
-            if(pauseOnErrors) Debug.Break();
-            if(logErrors) throw;
-        }finally{
             vars.log = vars.context.graph.Format();
             if(useHistory) history.Log(vars.log, transform);
             vars.context = null;
+        }catch(Exception ex){
+            vars.exceptionMessage = ex.Message;
+            vars.log = "ERROR";
+            vars.context = null;
+            if(pauseOnErrors) Debug.Break();
+            if(logErrors) throw;
         }
     }
 
@@ -124,7 +124,7 @@ public partial class BTL : MonoBehaviour, LogSource{
         var builder = new Builder(
             interpreter.reader, ph, BTLScriptChecker.Shebang
         );
-        var program = builder.Build(path);
+        var program = builder.Build(path, submodules);
         vars.useScene = ph.useScene;
         return program;
     }
@@ -147,8 +147,14 @@ public partial class BTL : MonoBehaviour, LogSource{
     // <LogSource> =================================================
 
     Vars vars => _vars ?? (_vars = Init());
-    History LogSource.GetHistory() => history;
-    bool    LogSource.IsLogging()  => true;
-    string  LogSource.GetLog()     => vars.log;
+
+    History LogSource.GetHistory()
+    => (_vars == null) ? null : history;
+
+    bool LogSource.IsLogging() => true;
+
+    // NOTE - history window may not cause BTL to instantiate.
+    string LogSource.GetLog()
+    => (_vars == null) ? null : vars.log;
 
 }}
