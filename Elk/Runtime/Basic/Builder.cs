@@ -39,7 +39,7 @@ public class Builder{
             src = src.Substring(shebang.Length);
             // TODO submodule injection will confuse line numbers
             if(submodules != null) foreach(var e in submodules){
-                //nityEngine.Debug.Log($"Add submodule {e} (ref: {path})");
+                if(string.IsNullOrEmpty(e)) continue;
                 src = "with " + e + ";\n" + src;
             }
         try{

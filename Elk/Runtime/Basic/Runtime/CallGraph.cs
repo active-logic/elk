@@ -43,6 +43,17 @@ public partial class CallGraph{
         return @out.ToString();
     }
 
+    public void Dump(List<string> @out)
+    => Dump(@out, root);
+
+    void Dump(List<string> @out, Node arg){
+        @out.Add(arg.info);
+        if(arg.children == null) return;
+        foreach(var child in arg.children){
+            Dump(@out, child);
+        }
+    }
+
     void Format(Node node, StringBuilder @out, string spaces){
         @out.Append(spaces);
         @out.Append(node.info);
