@@ -1,6 +1,5 @@
-using System;
-using System.Linq;
-using UnityEngine;
+using System; using System.Collections.Generic; using System.Linq;
+using UnityEngine; using UnityEditor;
 using Elk; using Elk.Basic; using Elk.Basic.Runtime;
 using Cx = Elk.Basic.Runtime.Context;
 using Record = Elk.Memory.Record;
@@ -26,6 +25,12 @@ public partial class BTL : MonoBehaviour, LogSource{
     [Header("Debugging")]
     public bool pauseOnErrors = false;
     public bool logErrors = true;
+    #if UNITY_EDITOR
+    const float editorLabelHeight = 3.2f;
+    Color editorLabelColor = Color.black;
+    string editorLabelText = "Hello";
+    static Summarizer summarizer = new Summarizer();
+    #endif
     //
     Vars _vars;
 
@@ -93,6 +98,9 @@ public partial class BTL : MonoBehaviour, LogSource{
             vars.output = interpreter.Run(vars.context)?.ToString();
             vars.exceptionMessage = null;
             vars.log = vars.context.graph.Format();
+            var strings = new List<string>();
+            vars.context.graph.Dump(strings);
+            editorLabelText = summarizer.AddAll(strings);
             if(useHistory) history.Log(vars.log, transform);
             vars.context = null;
         }catch(Exception ex){
@@ -103,6 +111,18 @@ public partial class BTL : MonoBehaviour, LogSource{
             if(logErrors) throw;
         }
     }
+
+    #if UNITY_EDITOR
+    void OnDrawGizmos(){
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = editorLabelColor;
+        Handles.Label(
+            transform.position + Vector3.up * editorLabelHeight,
+            editorLabelText,
+            style
+        );
+    }
+    #endif
 
     void OnValidate(){
         if(path == null) return;
